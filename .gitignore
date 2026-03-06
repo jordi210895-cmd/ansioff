@@ -40,12 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# large binary / audio files
+# large binary / audio files (excluded - too large for GitHub)
 public/audio/
 *.m4a
 *.mp3
 *.wav
-public/logo.png
-public/apple-touch-icon.png
-public/favicon-*.png
-public/icon-*.png
