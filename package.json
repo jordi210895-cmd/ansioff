@@ -1,5 +1,5 @@
 {
-    "name": "app-ansiedad",
+    "name": "ansioff",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -9,11 +9,12 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@supabase/ssr": "^0.5.2",
+        "@supabase/supabase-js": "^2.48.1",
+        "lucide-react": "^0.577.0",
         "next": "16.1.6",
         "react": "19.2.3",
-        "react-dom": "19.2.3",
-        "@supabase/supabase-js": "^2.48.1",
-        "@supabase/ssr": "^0.5.2"
+        "react-dom": "19.2.3"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4",
