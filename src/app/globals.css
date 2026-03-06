@@ -20,6 +20,21 @@
   animation: breathe 6s ease-in-out infinite;
 }
 
+/* ── UI EFFECTS ── */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-primary {
+  background: rgba(37, 106, 244, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(37, 106, 244, 0.2);
+}
+
 :root {
   /* Slate 950 background */
   --bg: #020617;

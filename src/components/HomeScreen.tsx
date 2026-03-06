@@ -1,6 +1,6 @@
 'use client';
 
-import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, AlertCircle, Sparkles, Brain, Phone } from 'lucide-react';
+import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, Clock, ChevronRight, AlertTriangle } from 'lucide-react';
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
@@ -9,150 +9,148 @@ interface HomeScreenProps {
     cbtCount?: number;
 }
 
-export default function HomeScreen({ onNav, noteCount, trackCount, cbtCount = 0 }: HomeScreenProps) {
+export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
     return (
-        <div className="h-full bg-slate-950 text-white overflow-hidden flex flex-col pt-4 pb-12 px-6 justify-between">
+        <div className="h-full bg-slate-950 text-white overflow-y-auto overflow-x-hidden flex flex-col pt-4 pb-28 px-4 scrollbar-hide">
             <style jsx>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
 
-            {/* Top Bar - Very Compact */}
-            <div className="flex items-center justify-between mb-4">
-                <div className="text-[10px] font-bold text-blue-500/50 uppercase tracking-[0.2em]">Ansioff • Premium</div>
-                <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-500 font-medium tracking-tighter">12:58</span>
-                    <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-                </div>
-            </div>
+            {/* Main Content Container matching max-w-md */}
+            <div className="w-full max-w-md mx-auto flex flex-col gap-8">
 
-            {/* Brand - Centered */}
-            <div className="flex-none flex flex-col items-center pt-2 pb-2">
-                <img
-                    src="/logo.png"
-                    alt="Ansioff Logo"
-                    className="h-24 w-auto object-contain mb-2 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]"
-                />
-                <p className="text-[10px] text-blue-400/80 font-bold tracking-[0.3em] uppercase">Tu espacio seguro</p>
-            </div>
-
-            <div className="flex-grow"></div>
-
-            {/* Emergency Button */}
-            <div className="flex-none">
-                <button
-                    onClick={() => onNav('sc-sos')}
-                    className="w-full bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white rounded-[2rem] p-9 transition-all duration-300 shadow-2xl shadow-blue-500/40 active:scale-[0.98]"
-                >
-                    <div className="flex items-center justify-center gap-6">
-                        <AlertCircle className="w-9 h-9" strokeWidth={2.5} />
-                        <div className="text-left">
-                            <div className="text-2xl font-semibold mb-0.5">Necesito ayuda ahora</div>
-                            <div className="text-xs text-blue-100/90 uppercase tracking-widest">Guía de crisis inmediata</div>
-                        </div>
-                    </div>
-                </button>
-            </div>
-
-            <div className="flex-grow"></div>
-
-            {/* Main Feature */}
-            <div className="flex-none">
-                <button
-                    onClick={() => onNav('sc-breath')}
-                    className="w-full bg-gradient-to-br from-blue-900 to-blue-950 border-2 border-blue-500/30 hover:border-blue-500/50 rounded-[2rem] p-8 transition-all active:scale-[0.98] shadow-xl shadow-blue-950/50"
-                >
-                    <div className="flex items-center gap-6">
-                        <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/40">
-                            <Wind className="w-8 h-8 text-white" strokeWidth={2.5} />
-                        </div>
-                        <div className="text-left">
-                            <h2 className="text-2xl text-white font-medium mb-1" style={{ fontFamily: 'Georgia, serif' }}>Respiración guiada</h2>
-                            <div className="flex items-center gap-3">
-                                <span className="text-xs text-blue-300 font-bold uppercase tracking-widest">Patrón 4-2-6</span>
-                                <span className="w-1 h-1 rounded-full bg-slate-600"></span>
-                                <span className="text-xs text-slate-400">5 min</span>
-                            </div>
-                        </div>
-                    </div>
-                </button>
-            </div>
-
-            <div className="flex-grow"></div>
-
-            {/* Quick Access - TCC & Emergency */}
-            <div className="flex-none">
-                <div className="flex justify-between items-center px-1 mb-3">
-                    <h3 className="text-[9px] uppercase tracking-[0.25em] text-slate-500 font-bold">Acceso Rápido</h3>
-                    <div className="h-[1px] flex-1 bg-slate-900 ml-4"></div>
-                </div>
-                <div className="grid grid-cols-2 gap-3 mb-3">
-                    {/* TCC Card */}
+                {/* 1. SOS Button Area */}
+                <section className="mt-2">
                     <button
-                        onClick={() => onNav('sc-cbt')}
-                        className="bg-gradient-to-br from-purple-900/60 to-purple-950 border border-purple-500/30 hover:border-purple-400/60 rounded-2xl p-4 flex flex-col gap-2 active:scale-[0.96] transition-all shadow-lg text-left"
+                        onClick={() => onNav('sc-sos')}
+                        className="w-full group relative overflow-hidden rounded-3xl p-px bg-gradient-to-r from-red-500/50 via-blue-500/50 to-red-500/50 shadow-2xl shadow-blue-500/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-md">
-                            <Brain className="w-5 h-5 text-white" strokeWidth={2.5} />
-                        </div>
-                        <div>
-                            <div className="text-xs font-bold text-white">Mis Registros</div>
-                            <div className="text-[10px] text-purple-300/70">Pensamientos TCC</div>
-                        </div>
-                        {cbtCount > 0 && (
-                            <div className="bg-purple-500/20 text-purple-300 text-[10px] font-bold px-2 py-0.5 rounded-full self-start">
-                                {cbtCount} guardados
+                        <div className="relative bg-slate-950 rounded-[23px] px-6 py-6 flex items-center justify-between overflow-hidden">
+                            <div className="flex items-center gap-5 z-10 text-left">
+                                <div className="w-14 h-14 rounded-full bg-red-500/15 flex items-center justify-center text-red-500 ring-4 ring-red-500/10 shrink-0">
+                                    <AlertTriangle className="w-7 h-7" strokeWidth={2.5} />
+                                </div>
+                                <div className="flex flex-col justify-center">
+                                    <h3 className="text-[1.15rem] font-bold text-white leading-tight mb-1">Necesito ayuda ahora</h3>
+                                    <p className="text-slate-400 text-[13px] font-medium">Asistencia de crisis inmediata</p>
+                                </div>
                             </div>
-                        )}
+                            <ChevronRight className="text-slate-600 group-hover:text-white transition-colors shrink-0" size={24} />
+
+                            {/* Decorative background glow */}
+                            <div className="absolute -right-4 -top-4 w-32 h-32 bg-red-600/15 blur-3xl rounded-full pointer-events-none"></div>
+                        </div>
                     </button>
+                </section>
 
-                    {/* Emergency 112 Card */}
-                    <a
-                        href="tel:112"
-                        className="bg-gradient-to-br from-red-900/60 to-red-950 border border-red-500/30 hover:border-red-400/60 rounded-2xl p-4 flex flex-col gap-2 active:scale-[0.96] transition-all shadow-lg text-left no-underline"
-                    >
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shadow-md">
-                            <Phone className="w-5 h-5 text-white" strokeWidth={2.5} />
-                        </div>
-                        <div>
-                            <div className="text-xs font-bold text-white">Llamar al 112</div>
-                            <div className="text-[10px] text-red-300/70">Emergencias</div>
-                        </div>
-                        <div className="bg-red-500/20 text-red-300 text-[10px] font-bold px-2 py-0.5 rounded-full self-start">
-                            Llamada directa
-                        </div>
-                    </a>
-                </div>
-            </div>
+                {/* 2. Featured Breathing Card */}
+                <section>
+                    <div className="flex items-center justify-between mb-4 px-1">
+                        <h2 className="text-lg font-bold text-white tracking-tight">Respiración guiada</h2>
+                        <button onClick={() => onNav('sc-breath')} className="text-xs text-blue-500 font-bold hover:underline transition-all">Ver todos</button>
+                    </div>
 
-            {/* Tools Grid */}
-            <div className="flex-none">
-                <div className="flex justify-between items-center px-1 mb-3">
-                    <h3 className="text-[9px] uppercase tracking-[0.25em] text-slate-500 font-bold">Herramientas</h3>
-                    <div className="h-[1px] flex-1 bg-slate-900 ml-4"></div>
-                </div>
+                    <div className="relative group rounded-3xl overflow-hidden glass p-7 border border-white/5 flex flex-col gap-6 shadow-xl">
+                        {/* Abstract pattern background */}
+                        <div className="absolute -top-6 -right-6 p-4 opacity-[0.15] group-hover:rotate-12 transition-transform duration-700 pointer-events-none">
+                            <Wind className="w-40 h-40 text-blue-500" strokeWidth={1} />
+                        </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                    {[
-                        { icon: Volume2, label: 'Audios', screen: 'sc-audio', color: 'from-blue-500 to-indigo-600' },
-                        { icon: BookOpen, label: 'Diario', screen: 'sc-notes', color: 'from-indigo-500 to-purple-600' },
-                        { icon: Gamepad2, label: 'Juegos', screen: 'sc-games', color: 'from-purple-500 to-pink-600' },
-                        { icon: GraduationCap, label: 'Módulos', screen: 'sc-tools', color: 'from-blue-600 to-cyan-600' }
-                    ].map((item, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => onNav(item.screen)}
-                            className="bg-slate-900/50 border border-slate-800/80 hover:border-blue-500/40 rounded-2xl p-4 flex items-center gap-4 active:scale-[0.96] transition-all shadow-lg"
-                        >
-                            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center flex-shrink-0 shadow-md`}>
-                                <item.icon className="w-5 h-5 text-white" strokeWidth={2.5} />
+                        <div className="flex flex-col gap-3 relative z-10">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-wider w-fit border border-blue-500/20">
+                                Patrón 4-2-6
+                            </span>
+                            <h3 className="text-3xl font-light text-white leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                                Alivio del estrés <br /><span className="font-bold tracking-tight">Profundo</span>
+                            </h3>
+                        </div>
+
+                        <div className="flex items-center justify-between relative z-10 mt-2">
+                            <div className="flex items-center gap-2 text-slate-400">
+                                <Clock size={16} className="text-blue-500/70" />
+                                <span className="text-sm font-medium">5 min</span>
                             </div>
-                            <span className="text-sm font-semibold text-slate-100">{item.label}</span>
+                            <button
+                                onClick={() => onNav('sc-breath')}
+                                className="bg-blue-600 hover:bg-blue-500 text-white rounded-full py-2.5 px-7 font-bold text-sm transition-all shadow-lg shadow-blue-600/30 active:scale-95"
+                            >
+                                COMENZAR
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 3. Tools Grid */}
+                <section>
+                    <div className="px-1 mb-4">
+                        <h2 className="text-[11px] font-bold text-slate-500 tracking-[0.2em] uppercase">Herramientas</h2>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Audio Tool */}
+                        <button
+                            onClick={() => onNav('sc-audio')}
+                            className="glass p-5 rounded-3xl hover:bg-white/5 active:scale-95 transition-all text-left group overflow-hidden relative shadow-lg"
+                        >
+                            <div className="w-12 h-12 rounded-[14px] bg-indigo-500/15 flex items-center justify-center text-indigo-400 mb-4 group-hover:scale-110 group-hover:bg-indigo-500/25 transition-all duration-300">
+                                <Volume2 size={24} strokeWidth={2.5} />
+                            </div>
+                            <h4 className="font-bold text-white text-[15px] mb-1">Audios</h4>
+                            <p className="text-[12px] text-slate-400 font-medium">Paisajes sonoros</p>
                         </button>
-                    ))}
-                </div>
+
+                        {/* Diary Tool */}
+                        <button
+                            onClick={() => onNav('sc-notes')}
+                            className="glass p-5 rounded-3xl hover:bg-white/5 active:scale-95 transition-all text-left group overflow-hidden relative shadow-lg"
+                        >
+                            <div className="w-12 h-12 rounded-[14px] bg-emerald-500/15 flex items-center justify-center text-emerald-400 mb-4 group-hover:scale-110 group-hover:bg-emerald-500/25 transition-all duration-300">
+                                <BookOpen size={24} strokeWidth={2.5} />
+                            </div>
+                            <h4 className="font-bold text-white text-[15px] mb-1">Diario</h4>
+                            <p className="text-[12px] text-slate-400 font-medium">Reflexión diaria</p>
+                        </button>
+
+                        {/* Games Tool */}
+                        <button
+                            onClick={() => onNav('sc-games')}
+                            className="glass p-5 rounded-3xl hover:bg-white/5 active:scale-95 transition-all text-left group overflow-hidden relative shadow-lg"
+                        >
+                            <div className="w-12 h-12 rounded-[14px] bg-orange-500/15 flex items-center justify-center text-orange-400 mb-4 group-hover:scale-110 group-hover:bg-orange-500/25 transition-all duration-300">
+                                <Gamepad2 size={24} strokeWidth={2.5} />
+                            </div>
+                            <h4 className="font-bold text-white text-[15px] mb-1">Juegos</h4>
+                            <p className="text-[12px] text-slate-400 font-medium">Distracción sana</p>
+                        </button>
+
+                        {/* Modules Tool */}
+                        <button
+                            onClick={() => onNav('sc-tools')}
+                            className="glass p-5 rounded-3xl hover:bg-white/5 active:scale-95 transition-all text-left group overflow-hidden relative shadow-lg"
+                        >
+                            <div className="w-12 h-12 rounded-[14px] bg-blue-500/15 flex items-center justify-center text-blue-500 mb-4 group-hover:scale-110 group-hover:bg-blue-500/25 transition-all duration-300">
+                                <GraduationCap size={24} strokeWidth={2.5} />
+                            </div>
+                            <h4 className="font-bold text-white text-[15px] mb-1">Módulos</h4>
+                            <p className="text-[12px] text-slate-400 font-medium">Aprende y sana</p>
+                        </button>
+                    </div>
+                </section>
+
+                {/* 4. Quote of the Day */}
+                <section className="mb-6">
+                    <div className="glass-primary p-7 rounded-[2rem] text-center shadow-inner relative overflow-hidden">
+                        {/* Decorative quotes */}
+                        <div className="absolute top-2 left-4 text-blue-500/20 text-6xl font-serif">"</div>
+                        <p className="relative z-10 italic text-blue-100/90 text-[15px] leading-relaxed font-light" style={{ fontFamily: 'Georgia, serif' }}>
+                            Tus sentimientos son válidos, pero no son tu destino. Respira y confía en el proceso.
+                        </p>
+                        <div className="absolute bottom-[-1rem] right-4 text-blue-500/20 text-6xl font-serif rotate-180">"</div>
+                    </div>
+                </section>
+
             </div>
         </div>
     );
 }
-
