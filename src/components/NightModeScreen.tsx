@@ -55,7 +55,7 @@ export default function NightModeScreen({ onBack }: NightModeScreenProps) {
                             Siente el peso de tu cuerpo apoyado y seguro.
                         </p>
                         <div className="bg-blue-500/5 p-8 rounded-[32px] border border-blue-500/10 italic text-sm text-blue-300/40 leading-relaxed mb-12 max-w-sm">
-                            "Mi cuerpo sabe descansar. Estas sensaciones son solo restos de adrenalina. Mi cama es un lugar de paz."
+                            &quot;Mi cuerpo sabe descansar. Estas sensaciones son solo restos de adrenalina. Mi cama es un lugar de paz.&quot;
                         </div>
                         <button
                             className="flex items-center gap-2 text-blue-500/60 text-xs hover:text-blue-400 transition-colors mx-auto"

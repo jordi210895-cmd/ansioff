@@ -158,7 +158,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                                 <h2 className="text-3xl font-medium mb-4" style={{ fontFamily: 'Georgia, serif' }}>Cuestiona la lógica</h2>
                                 <div className="bg-blue-500/5 border border-blue-500/10 p-5 rounded-2xl mb-8 flex gap-3">
                                     <Quote className="text-blue-500/30 shrink-0" size={20} />
-                                    <p className="text-blue-100/70 text-sm italic">"{thought}"</p>
+                                    <p className="text-blue-100/70 text-sm italic">&quot;{thought}&quot;</p>
                                 </div>
                                 <p className="text-blue-300/60 text-sm mb-6 leading-relaxed">
                                     ¿Qué error de razonamiento detectas en este pensamiento?
@@ -212,7 +212,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                                     <CheckCircle2 className="text-blue-500 mb-6" size={32} />
                                     <h2 className="text-3xl font-medium mb-6" style={{ fontFamily: 'Georgia, serif' }}>Pensamiento Alternativo</h2>
                                     <p className="text-blue-100/90 text-base italic leading-relaxed mb-8">
-                                        "{alternative}"
+                                        &quot;{alternative}&quot;
                                     </p>
                                     <div className="h-px bg-slate-800 w-full mb-4"></div>
                                     <div className="flex items-center gap-2 text-green-400/70 text-xs">

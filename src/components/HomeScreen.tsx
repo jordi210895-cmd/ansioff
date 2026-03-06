@@ -140,11 +140,11 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                 <section className="mb-6">
                     <div className="glass-primary p-7 rounded-[2rem] text-center shadow-inner relative overflow-hidden">
                         {/* Decorative quotes */}
-                        <div className="absolute top-2 left-4 text-blue-500/20 text-6xl font-serif">"</div>
+                        <div className="absolute top-2 left-4 text-blue-500/20 text-6xl font-serif">&quot;</div>
                         <p className="relative z-10 italic text-blue-100/90 text-[15px] leading-relaxed font-light" style={{ fontFamily: 'Georgia, serif' }}>
                             Tus sentimientos son válidos, pero no son tu destino. Respira y confía en el proceso.
                         </p>
-                        <div className="absolute bottom-[-1rem] right-4 text-blue-500/20 text-6xl font-serif rotate-180">"</div>
+                        <div className="absolute bottom-[-1rem] right-4 text-blue-500/20 text-6xl font-serif rotate-180">&quot;</div>
                     </div>
                 </section>
 
