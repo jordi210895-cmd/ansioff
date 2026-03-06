@@ -49,17 +49,19 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         <button onClick={() => onNav('sc-breath')} className="text-xs text-blue-500 font-bold hover:underline transition-all">Ver todos</button>
                     </div>
 
-                    <div className="relative group rounded-3xl overflow-hidden glass p-7 border border-white/5 flex flex-col gap-6 shadow-xl">
-                        {/* Abstract pattern background */}
-                        <div className="absolute -top-6 -right-6 p-4 opacity-[0.15] group-hover:rotate-12 transition-transform duration-700 pointer-events-none">
-                            <Wind className="w-40 h-40 text-blue-500" strokeWidth={1} />
+                    <div className="relative group rounded-3xl glass p-7 border border-white/5 flex flex-col gap-6 shadow-xl w-full">
+                        {/* Abstract pattern background - contained */}
+                        <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
+                            <div className="absolute -top-6 -right-6 p-4 opacity-[0.15] group-hover:rotate-12 transition-transform duration-700">
+                                <Wind className="w-40 h-40 text-blue-500" strokeWidth={1} />
+                            </div>
                         </div>
 
                         <div className="flex flex-col gap-3 relative z-10">
                             <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-wider w-fit border border-blue-500/20">
                                 Patrón 4-2-6
                             </span>
-                            <h3 className="text-3xl font-light text-white leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                            <h3 className="text-2xl sm:text-3xl font-light text-white leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                                 Alivio del estrés <br /><span className="font-bold tracking-tight">Profundo</span>
                             </h3>
                         </div>
