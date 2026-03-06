@@ -189,14 +189,12 @@ export default function App() {
   if (!isLoggedIn) return <AuthScreen onAuth={() => setIsLoggedIn(true)} />;
 
   return (
-    <div className="app bg-slate-950">
+    <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col">
       {curScreen !== 'sc-home' && <Header onLogout={() => { supabase.auth.signOut().then(() => setIsLoggedIn(false)); }} />}
 
-      <div className="screens">
-        <div className={`screen active`}>
-          {renderScreen()}
-        </div>
-      </div>
+      <main className="flex-1 w-full max-w-md mx-auto relative">
+        {renderScreen()}
+      </main>
 
       <BottomNav activeScreen={curScreen} onNav={handleNav} />
     </div>
