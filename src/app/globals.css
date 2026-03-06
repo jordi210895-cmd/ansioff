@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
+@theme {
+  --color-primary: #256af4;
+  --color-background-light: #f5f6f8;
+  --color-background-dark: #101622;
+}
+
 /* ── MICRO ANIMATIONS ── */
 @keyframes breathe {
 
