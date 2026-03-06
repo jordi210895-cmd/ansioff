@@ -19,7 +19,7 @@ export default function Header() {
     return (
         <header className="app-header">
             <div className="flex items-center gap-3">
-                <img src="/assets/logo.png" alt="ANSIOFF Logo" className="w-10 h-10 rounded-xl shadow-lg border border-white/10" />
+                <img src="/logo.png" alt="ANSIOFF Logo" className="w-10 h-10 rounded-xl shadow-lg border border-white/10" />
                 <div className="app-logo">ANSI<span>OFF</span></div>
             </div>
             <div className="header-right">
