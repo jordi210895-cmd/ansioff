@@ -40,13 +40,18 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
 
     return (
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
-            <TopBar title="Sin Miedo · ACT" onBack={onBack} />
+            <TopBar title="Sin Miedo" onBack={onBack} />
             <div className="flex-1 overflow-y-auto px-6 pb-24">
                 <div className="mb-8 mt-4">
-                    <div className="text-blue-500 text-[10px] uppercase tracking-widest font-bold mb-2">El Método Weekes</div>
-                    <p className="text-blue-300/60 text-sm leading-relaxed">
-                        La Dra. Claire Weekes descubrió que el pánico se alimenta de la "tensión" y la "lucha". Estos 4 pasos son la clave para romper el ciclo.
-                    </p>
+                    {/* Claire Weekes Attribution Card */}
+                    <div className="bg-gradient-to-br from-blue-900/30 to-blue-950/50 border border-blue-500/20 rounded-2xl p-5 mb-2">
+                        <div className="text-blue-500 text-[9px] uppercase tracking-[0.2em] font-bold mb-1">Método creado por</div>
+                        <div className="text-white text-lg font-medium" style={{ fontFamily: 'Georgia, serif' }}>Dra. Claire Weekes</div>
+                        <div className="text-blue-300/50 text-[10px] mt-1 mb-3">Psiquiatra y pionera en el tratamiento del pánico · 1962</div>
+                        <p className="text-blue-200/60 text-xs leading-relaxed">
+                            La Dra. Weekes descubrió que el pánico se alimenta de la lucha y la huida. Sus 4 pasos — Afrontar, Aceptar, Flotar y Dejar pasar — rompen ese ciclo de raíz.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Step Selector */}
@@ -82,8 +87,8 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
                     </div>
                 </div>
 
-                <div className="mt-12 text-center text-slate-600 text-[10px] uppercase tracking-[0.2em]">
-                    Toca los iconos superiores para aprender cada paso
+                <div className="mt-8 text-center text-slate-600 text-[10px] uppercase tracking-[0.2em]">
+                    Toca los pasos de arriba para explorar cada uno
                 </div>
             </div>
         </div>
