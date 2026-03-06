@@ -19,12 +19,6 @@ import * as db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
 import AuthScreen from '@/components/AuthScreen';
 
-interface Note {
-  id: number;
-  text: string;
-  date: string;
-}
-
 interface Track {
   id?: number;
   name: string;
@@ -38,7 +32,6 @@ const ICONS = ['🌊', '🌧️', '🌿', '🎵', '🔔', '🌬️', '🌙', '�
 export default function App() {
   const [curScreen, setCurScreen] = useState('sc-home');
   const [prevScreen, setPrevScreen] = useState('sc-home');
-  const [notes, setNotes] = useState<Note[]>([]);
   const [cbtCount, setCbtCount] = useState(0);
   const [authChecked, setAuthChecked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -55,18 +48,11 @@ export default function App() {
       setIsLoggedIn(!!session);
       setAuthChecked(true);
     });
+
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session);
     });
-
-    // 1. Notes (legacy localStorage - kept for backward compat)
-    const savedNotes = localStorage.getItem('ansioff_notes');
-    if (savedNotes) {
-      try {
-        setNotes(JSON.parse(savedNotes));
-      } catch (e) { console.error("Error loading notes", e); }
-    }
 
     // 2. Audio Tracks from IndexedDB
     const loadTracks = async () => {
@@ -81,24 +67,10 @@ export default function App() {
         }));
 
         setTracks(prev => {
-          // Keep defaults if they are not already there
           const defaults = prev.filter(t => t.url.startsWith('/audio'));
           return [...defaults, ...loadedTracks];
         });
 
-        // Get durations for defaults
-        tracks.forEach((track, idx) => {
-          if (track.duration === '—') {
-            const audio = new Audio(track.url);
-            audio.addEventListener('loadedmetadata', () => {
-              setTracks(prev => prev.map((t, i) =>
-                t.url === track.url ? { ...t, duration: fmt(audio.duration) } : t
-              ));
-            });
-          }
-        });
-
-        // Get durations for loaded tracks
         loadedTracks.forEach(track => {
           const audio = new Audio(track.url);
           audio.addEventListener('loadedmetadata', () => {
@@ -111,6 +83,18 @@ export default function App() {
       } catch (e) { console.error("Error loading tracks", e); }
     };
 
+    // Get durations for defaults
+    tracks.forEach((track) => {
+      if (track.duration === '—') {
+        const audio = new Audio(track.url);
+        audio.addEventListener('loadedmetadata', () => {
+          setTracks(prev => prev.map(t =>
+            t.url === track.url ? { ...t, duration: fmt(audio.duration) } : t
+          ));
+        });
+      }
+    });
+
     loadTracks();
 
     // 3. CBT record count
@@ -119,7 +103,7 @@ export default function App() {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleNav = (id: string) => {
     if (id === curScreen) return;
@@ -131,33 +115,16 @@ export default function App() {
     setCurScreen(prevScreen);
   };
 
-  // Notes Logic
-  const saveNote = (text: string) => {
-    const now = new Date();
-    const newNote = {
-      id: Date.now(),
-      text,
-      date: now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }) + ' · ' +
-        now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0')
-    };
-    setNotes([newNote, ...notes]);
-  };
-
-  const deleteNote = (id: number) => {
-    setNotes(notes.filter(n => n.id !== id));
-  };
-
   // Audio Logic
   const addTrack = async (file: File) => {
     const name = file.name.replace(/\.[^/.]+$/, '');
     const icon = ICONS[tracks.length % ICONS.length];
 
     try {
-      // Save to IndexedDB
       const id = await db.saveTrack({ name, data: file, icon });
       const url = URL.createObjectURL(file);
-
       const newTrack: Track = { id, name, url, icon, duration: '—' };
+
       setTracks(prev => [...prev, newTrack]);
 
       const tmp = new Audio(url);
@@ -174,7 +141,6 @@ export default function App() {
   const removeTrack = async (idxIdx: number) => {
     const track = tracks[idxIdx];
     if (!track.id) return; // Can't delete default tracks for now
-
     try {
       await db.deleteTrack(track.id);
       setTracks(prev => prev.filter((_, i) => i !== idxIdx));
@@ -191,7 +157,7 @@ export default function App() {
   const renderScreen = () => {
     switch (curScreen) {
       case 'sc-home':
-        return <HomeScreen onNav={handleNav} noteCount={notes.length} trackCount={tracks.length} cbtCount={cbtCount} />;
+        return <HomeScreen onNav={handleNav} cbtCount={cbtCount} />;
       case 'sc-audio':
         return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} />;
       case 'sc-notes':
@@ -215,7 +181,7 @@ export default function App() {
       case 'sc-night':
         return <NightModeScreen onBack={goBack} />;
       default:
-        return <HomeScreen onNav={handleNav} noteCount={notes.length} trackCount={tracks.length} cbtCount={cbtCount} />;
+        return <HomeScreen onNav={handleNav} cbtCount={cbtCount} />;
     }
   };
 
@@ -224,7 +190,7 @@ export default function App() {
 
   return (
     <div className="app bg-slate-950">
-      {curScreen !== 'sc-home' && <Header onLogout={async () => { await supabase.auth.signOut(); setIsLoggedIn(false); }} />}
+      {curScreen !== 'sc-home' && <Header onLogout={() => { supabase.auth.signOut().then(() => setIsLoggedIn(false)); }} />}
 
       <div className="screens">
         <div className={`screen active`}>

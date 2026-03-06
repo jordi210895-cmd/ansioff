@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Music, Play, Pause, SkipBack, SkipForward, Volume2, Trash2, Plus, PlayCircle, Waves } from 'lucide-react';
+import { Music, Play, Pause, SkipBack, SkipForward, Volume2, Trash2, Plus, Waves } from 'lucide-react';
 import TopBar from './TopBar';
 
 interface Track {

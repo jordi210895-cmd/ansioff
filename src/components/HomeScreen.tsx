@@ -4,8 +4,6 @@ import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, Clock, ChevronRight, 
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
-    noteCount: number;
-    trackCount: number;
     cbtCount?: number;
 }
 
