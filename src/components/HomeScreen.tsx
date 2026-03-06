@@ -1,14 +1,15 @@
 'use client';
 
-import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, AlertCircle, Sparkles } from 'lucide-react';
+import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, AlertCircle, Sparkles, Brain, Phone } from 'lucide-react';
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
     noteCount: number;
     trackCount: number;
+    cbtCount?: number;
 }
 
-export default function HomeScreen({ onNav, noteCount, trackCount }: HomeScreenProps) {
+export default function HomeScreen({ onNav, noteCount, trackCount, cbtCount = 0 }: HomeScreenProps) {
     return (
         <div className="h-full bg-slate-950 text-white overflow-hidden flex flex-col pt-4 pb-12 px-6 justify-between">
             <style jsx>{`
@@ -79,7 +80,52 @@ export default function HomeScreen({ onNav, noteCount, trackCount }: HomeScreenP
 
             <div className="flex-grow"></div>
 
-            {/* Tools Grid - Using 2x2 for extreme vertical efficiency */}
+            {/* Quick Access - TCC & Emergency */}
+            <div className="flex-none">
+                <div className="flex justify-between items-center px-1 mb-3">
+                    <h3 className="text-[9px] uppercase tracking-[0.25em] text-slate-500 font-bold">Acceso Rápido</h3>
+                    <div className="h-[1px] flex-1 bg-slate-900 ml-4"></div>
+                </div>
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                    {/* TCC Card */}
+                    <button
+                        onClick={() => onNav('sc-cbt')}
+                        className="bg-gradient-to-br from-purple-900/60 to-purple-950 border border-purple-500/30 hover:border-purple-400/60 rounded-2xl p-4 flex flex-col gap-2 active:scale-[0.96] transition-all shadow-lg text-left"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-md">
+                            <Brain className="w-5 h-5 text-white" strokeWidth={2.5} />
+                        </div>
+                        <div>
+                            <div className="text-xs font-bold text-white">Mis Registros</div>
+                            <div className="text-[10px] text-purple-300/70">Pensamientos TCC</div>
+                        </div>
+                        {cbtCount > 0 && (
+                            <div className="bg-purple-500/20 text-purple-300 text-[10px] font-bold px-2 py-0.5 rounded-full self-start">
+                                {cbtCount} guardados
+                            </div>
+                        )}
+                    </button>
+
+                    {/* Emergency 112 Card */}
+                    <a
+                        href="tel:112"
+                        className="bg-gradient-to-br from-red-900/60 to-red-950 border border-red-500/30 hover:border-red-400/60 rounded-2xl p-4 flex flex-col gap-2 active:scale-[0.96] transition-all shadow-lg text-left no-underline"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shadow-md">
+                            <Phone className="w-5 h-5 text-white" strokeWidth={2.5} />
+                        </div>
+                        <div>
+                            <div className="text-xs font-bold text-white">Llamar al 112</div>
+                            <div className="text-[10px] text-red-300/70">Emergencias</div>
+                        </div>
+                        <div className="bg-red-500/20 text-red-300 text-[10px] font-bold px-2 py-0.5 rounded-full self-start">
+                            Llamada directa
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            {/* Tools Grid */}
             <div className="flex-none">
                 <div className="flex justify-between items-center px-1 mb-3">
                     <h3 className="text-[9px] uppercase tracking-[0.25em] text-slate-500 font-bold">Herramientas</h3>

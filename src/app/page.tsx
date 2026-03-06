@@ -16,6 +16,7 @@ import EvaluationScreen from '@/components/EvaluationScreen';
 import SupportScreen from '@/components/SupportScreen';
 import NightModeScreen from '@/components/NightModeScreen';
 import * as db from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 interface Note {
   id: number;
@@ -37,6 +38,7 @@ export default function App() {
   const [curScreen, setCurScreen] = useState('sc-home');
   const [prevScreen, setPrevScreen] = useState('sc-home');
   const [notes, setNotes] = useState<Note[]>([]);
+  const [cbtCount, setCbtCount] = useState(0);
   const [tracks, setTracks] = useState<Track[]>([
     { name: 'Superación Agorafobia', url: '/audio/audio1.m4a', icon: '🧘', duration: '—' },
     { name: 'Calma Profunda', url: '/audio/audio2.m4a', icon: '🌊', duration: '—' },
@@ -97,6 +99,11 @@ export default function App() {
     };
 
     loadTracks();
+
+    // 3. CBT record count
+    supabase.from('cbt_records').select('id', { count: 'exact', head: true }).then(({ count }) => {
+      if (count !== null) setCbtCount(count);
+    });
   }, []);
 
   const handleNav = (id: string) => {
@@ -169,7 +176,7 @@ export default function App() {
   const renderScreen = () => {
     switch (curScreen) {
       case 'sc-home':
-        return <HomeScreen onNav={handleNav} noteCount={notes.length} trackCount={tracks.length} />;
+        return <HomeScreen onNav={handleNav} noteCount={notes.length} trackCount={tracks.length} cbtCount={cbtCount} />;
       case 'sc-audio':
         return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} />;
       case 'sc-notes':
@@ -193,7 +200,7 @@ export default function App() {
       case 'sc-night':
         return <NightModeScreen onBack={goBack} />;
       default:
-        return <HomeScreen onNav={handleNav} noteCount={notes.length} trackCount={tracks.length} />;
+        return <HomeScreen onNav={handleNav} noteCount={notes.length} trackCount={tracks.length} cbtCount={cbtCount} />;
     }
   };
 
