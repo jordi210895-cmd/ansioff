@@ -185,8 +185,9 @@ export default function App() {
     }
   };
 
-  if (!authChecked) return null; // Wait silently while checking session
-  if (!isLoggedIn) return <AuthScreen onAuth={() => setIsLoggedIn(true)} />;
+  // Authentication is disabled per user request
+  // if (!authChecked) return null; // Wait silently while checking session
+  // if (!isLoggedIn) return <AuthScreen onAuth={() => setIsLoggedIn(true)} />;
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col">
