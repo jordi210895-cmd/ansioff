@@ -68,11 +68,13 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
         setAlternative(alt);
         setSaving(true);
 
+        const { data: { user } } = await supabase.auth.getUser();
         await supabase.from('cbt_records').insert({
             thought,
             distortion,
             evidence,
             alternative: alt,
+            user_id: user?.id,
         });
 
         setSaving(false);

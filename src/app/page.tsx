@@ -17,6 +17,7 @@ import SupportScreen from '@/components/SupportScreen';
 import NightModeScreen from '@/components/NightModeScreen';
 import * as db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
+import AuthScreen from '@/components/AuthScreen';
 
 interface Note {
   id: number;
@@ -39,6 +40,8 @@ export default function App() {
   const [prevScreen, setPrevScreen] = useState('sc-home');
   const [notes, setNotes] = useState<Note[]>([]);
   const [cbtCount, setCbtCount] = useState(0);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [tracks, setTracks] = useState<Track[]>([
     { name: 'Superación Agorafobia', url: '/audio/audio1.m4a', icon: '🧘', duration: '—' },
     { name: 'Calma Profunda', url: '/audio/audio2.m4a', icon: '🌊', duration: '—' },
@@ -47,7 +50,17 @@ export default function App() {
 
   // Load persistence
   useEffect(() => {
-    // 1. Notes
+    // 0. Check auth session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session);
+      setAuthChecked(true);
+    });
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+    });
+
+    // 1. Notes (legacy localStorage - kept for backward compat)
     const savedNotes = localStorage.getItem('ansioff_notes');
     if (savedNotes) {
       try {
@@ -104,6 +117,8 @@ export default function App() {
     supabase.from('cbt_records').select('id', { count: 'exact', head: true }).then(({ count }) => {
       if (count !== null) setCbtCount(count);
     });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleNav = (id: string) => {
@@ -180,7 +195,7 @@ export default function App() {
       case 'sc-audio':
         return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} />;
       case 'sc-notes':
-        return <NotesScreen onBack={goBack} notes={notes} onSave={saveNote} onDelete={deleteNote} />;
+        return <NotesScreen onBack={goBack} />;
       case 'sc-sos':
         return <SOSScreen onBack={goBack} onFinished={() => handleNav('sc-home')} />;
       case 'sc-breath':
@@ -204,9 +219,12 @@ export default function App() {
     }
   };
 
+  if (!authChecked) return null; // Wait silently while checking session
+  if (!isLoggedIn) return <AuthScreen onAuth={() => setIsLoggedIn(true)} />;
+
   return (
     <div className="app bg-slate-950">
-      {curScreen !== 'sc-home' && <Header />}
+      {curScreen !== 'sc-home' && <Header onLogout={async () => { await supabase.auth.signOut(); setIsLoggedIn(false); }} />}
 
       <div className="screens">
         <div className={`screen active`}>
