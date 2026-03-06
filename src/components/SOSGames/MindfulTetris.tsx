@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Play, Pause, RotateCcw, ArrowLeft, Gamepad2, Sparkles } from 'lucide-react';
+import { Play, Pause, RotateCcw, ArrowLeft, Sparkles } from 'lucide-react';
 
 interface MindfulTetrisProps {
     onBack: () => void;
@@ -33,6 +33,25 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
     const [score, setScore] = useState(0);
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const boardRef = useRef<HTMLDivElement>(null);
+    const [cellSize, setCellSize] = useState(22);
+
+    // Dynamically calculate optimal cell size to fit the board on screen
+    useEffect(() => {
+        const calcSize = () => {
+            // Available height = total viewport minus top bar (~80px) and controls (~200px)
+            const availableH = window.innerHeight - 280;
+            // Available width = viewport minus some padding
+            const availableW = window.innerWidth - 48;
+            const byHeight = Math.floor(availableH / ROWS);
+            const byWidth = Math.floor(availableW / COLS);
+            // Use smallest to ensure it fits both dimensions, clamp between 14 and 28
+            setCellSize(Math.max(14, Math.min(28, byHeight, byWidth)));
+        };
+        calcSize();
+        window.addEventListener('resize', calcSize);
+        return () => window.removeEventListener('resize', calcSize);
+    }, []);
 
     const getRandomPiece = useCallback(() => {
         const keys = Object.keys(TETROMINOS) as (keyof typeof TETROMINOS)[];
@@ -212,7 +231,7 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
     }, [moveSide, moveDown, rotate, hardDrop, isPaused, isGameOver]);
 
     return (
-        <div className="flex flex-col items-center h-full bg-slate-950 text-white overflow-hidden">
+        <div className="flex flex-col items-center h-full bg-slate-950 text-white overflow-hidden" style={{ maxHeight: '100dvh' }}>
             <div className="w-full flex justify-between items-center p-6 flex-shrink-0">
                 <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors">
                     <ArrowLeft size={18} />
@@ -262,8 +281,12 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
                                     return (
                                         <div
                                             key={`${y}-${x}`}
-                                            className="w-[min(6.5vw,22px)] h-[min(6.5vw,22px)] sm:w-[26px] sm:h-[26px] rounded-[2px] transition-colors duration-100"
-                                            style={{ backgroundColor: activeColor || cell || 'rgba(15,23,42,0.5)' }}
+                                            className="rounded-[2px] transition-colors duration-100"
+                                            style={{
+                                                backgroundColor: activeColor || cell || 'rgba(15,23,42,0.5)',
+                                                width: cellSize,
+                                                height: cellSize,
+                                            }}
                                         ></div>
                                     );
                                 })
