@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large binary / audio files
+public/audio/
+*.m4a
+*.mp3
+*.wav
+public/logo.png
+public/apple-touch-icon.png
+public/favicon-*.png
+public/icon-*.png
