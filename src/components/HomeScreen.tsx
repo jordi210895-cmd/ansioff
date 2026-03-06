@@ -89,49 +89,49 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         {/* Audio Tool */}
                         <button
                             onClick={() => onNav('sc-audio')}
-                            className="glass p-5 rounded-3xl hover:bg-white/5 active:scale-95 transition-all text-left group overflow-hidden relative shadow-lg"
+                            className="glass flex flex-col items-center justify-center text-center p-4 pb-6 rounded-3xl hover:bg-white/5 active:scale-95 transition-all group overflow-hidden relative shadow-lg"
                         >
-                            <div className="w-12 h-12 rounded-[14px] bg-indigo-500/15 flex items-center justify-center text-indigo-400 mb-4 group-hover:scale-110 group-hover:bg-indigo-500/25 transition-all duration-300">
+                            <div className="w-12 h-12 rounded-[14px] bg-indigo-500/15 flex items-center justify-center text-indigo-400 mb-3 group-hover:scale-110 group-hover:bg-indigo-500/25 transition-all duration-300">
                                 <Volume2 size={24} strokeWidth={2.5} />
                             </div>
                             <h4 className="font-bold text-white text-[15px] mb-1">Audios</h4>
-                            <p className="text-[12px] text-slate-400 font-medium">Paisajes sonoros</p>
+                            <p className="text-[11px] leading-tight text-slate-400 font-medium truncate w-full px-1">Paisajes sonoros</p>
                         </button>
 
                         {/* Diary Tool */}
                         <button
                             onClick={() => onNav('sc-notes')}
-                            className="glass p-5 rounded-3xl hover:bg-white/5 active:scale-95 transition-all text-left group overflow-hidden relative shadow-lg"
+                            className="glass flex flex-col items-center justify-center text-center p-4 pb-6 rounded-3xl hover:bg-white/5 active:scale-95 transition-all group overflow-hidden relative shadow-lg"
                         >
-                            <div className="w-12 h-12 rounded-[14px] bg-emerald-500/15 flex items-center justify-center text-emerald-400 mb-4 group-hover:scale-110 group-hover:bg-emerald-500/25 transition-all duration-300">
+                            <div className="w-12 h-12 rounded-[14px] bg-emerald-500/15 flex items-center justify-center text-emerald-400 mb-3 group-hover:scale-110 group-hover:bg-emerald-500/25 transition-all duration-300">
                                 <BookOpen size={24} strokeWidth={2.5} />
                             </div>
                             <h4 className="font-bold text-white text-[15px] mb-1">Diario</h4>
-                            <p className="text-[12px] text-slate-400 font-medium">Reflexión diaria</p>
+                            <p className="text-[11px] leading-tight text-slate-400 font-medium truncate w-full px-1">Reflexión diaria</p>
                         </button>
 
                         {/* Games Tool */}
                         <button
                             onClick={() => onNav('sc-games')}
-                            className="glass p-5 rounded-3xl hover:bg-white/5 active:scale-95 transition-all text-left group overflow-hidden relative shadow-lg"
+                            className="glass flex flex-col items-center justify-center text-center p-4 pb-6 rounded-3xl hover:bg-white/5 active:scale-95 transition-all group overflow-hidden relative shadow-lg"
                         >
-                            <div className="w-12 h-12 rounded-[14px] bg-orange-500/15 flex items-center justify-center text-orange-400 mb-4 group-hover:scale-110 group-hover:bg-orange-500/25 transition-all duration-300">
+                            <div className="w-12 h-12 rounded-[14px] bg-orange-500/15 flex items-center justify-center text-orange-400 mb-3 group-hover:scale-110 group-hover:bg-orange-500/25 transition-all duration-300">
                                 <Gamepad2 size={24} strokeWidth={2.5} />
                             </div>
                             <h4 className="font-bold text-white text-[15px] mb-1">Juegos</h4>
-                            <p className="text-[12px] text-slate-400 font-medium">Distracción sana</p>
+                            <p className="text-[11px] leading-tight text-slate-400 font-medium truncate w-full px-1">Distracción sana</p>
                         </button>
 
                         {/* Modules Tool */}
                         <button
                             onClick={() => onNav('sc-tools')}
-                            className="glass p-5 rounded-3xl hover:bg-white/5 active:scale-95 transition-all text-left group overflow-hidden relative shadow-lg"
+                            className="glass flex flex-col items-center justify-center text-center p-4 pb-6 rounded-3xl hover:bg-white/5 active:scale-95 transition-all group overflow-hidden relative shadow-lg"
                         >
-                            <div className="w-12 h-12 rounded-[14px] bg-blue-500/15 flex items-center justify-center text-blue-500 mb-4 group-hover:scale-110 group-hover:bg-blue-500/25 transition-all duration-300">
+                            <div className="w-12 h-12 rounded-[14px] bg-blue-500/15 flex items-center justify-center text-blue-500 mb-3 group-hover:scale-110 group-hover:bg-blue-500/25 transition-all duration-300">
                                 <GraduationCap size={24} strokeWidth={2.5} />
                             </div>
                             <h4 className="font-bold text-white text-[15px] mb-1">Módulos</h4>
-                            <p className="text-[12px] text-slate-400 font-medium">Aprende y sana</p>
+                            <p className="text-[11px] leading-tight text-slate-400 font-medium truncate w-full px-1">Aprende y sana</p>
                         </button>
                     </div>
                 </section>
