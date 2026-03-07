@@ -11,7 +11,8 @@ import {
     FileText,
     Stethoscope,
     Moon,
-    ChevronRight
+    ChevronRight,
+    Target
 } from 'lucide-react';
 import TopBar from './TopBar';
 
@@ -32,6 +33,7 @@ export default function ToolsScreen({ onBack, onNav }: ToolsScreenProps) {
         { id: 'sc-eval', icon: <FileText />, name: 'Evaluación', sub: 'Tests de Hamilton, Goldberg y BAI', color: 'text-amber-400' },
         { id: 'sc-support', icon: <Stethoscope />, name: 'Apoyo Médico', sub: 'Recursos y guía profesional', color: 'text-emerald-400' },
         { id: 'sc-night', icon: <Moon />, name: 'Modo Noche', sub: 'Conciliación del sueño y pánico', color: 'text-blue-500' },
+        { id: 'sc-exposure-why', icon: <Target />, name: '¿Por qué Expongo?', sub: 'Mis motivos para no rendirme', color: 'text-orange-500' },
     ];
 
     return (

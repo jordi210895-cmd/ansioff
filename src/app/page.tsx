@@ -18,6 +18,7 @@ import NightModeScreen from '@/components/NightModeScreen';
 import * as db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
 import AuthScreen from '@/components/AuthScreen';
+import ExposureScreen from '@/components/ExposureScreen';
 
 interface Track {
   id?: number;
@@ -180,6 +181,8 @@ export default function App() {
         return <SupportScreen onBack={goBack} />;
       case 'sc-night':
         return <NightModeScreen onBack={goBack} />;
+      case 'sc-exposure-why':
+        return <ExposureScreen onBack={goBack} />;
       default:
         return <HomeScreen onNav={handleNav} cbtCount={cbtCount} />;
     }
