@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { PenLine, Trash2, Calendar, Loader2 } from 'lucide-react';
+import { PenLine, Trash2, Calendar, Loader2, Sparkles, AlertCircle, BrainCircuit } from 'lucide-react';
 import TopBar from './TopBar';
 import { supabase } from '@/lib/supabase';
 
@@ -9,6 +9,12 @@ interface Note {
     id: number;
     text: string;
     created_at: string;
+}
+
+interface AIResult {
+    triggers: string[];
+    emotion_summary: string;
+    recommendation: string;
 }
 
 interface NotesScreenProps {
@@ -21,6 +27,11 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
     const [showEditor, setShowEditor] = useState(false);
     const [inputText, setInputText] = useState('');
     const [saving, setSaving] = useState(false);
+
+    // AI State
+    const [aiLoading, setAiLoading] = useState(false);
+    const [aiResult, setAiResult] = useState<AIResult | null>(null);
+    const [aiError, setAiError] = useState('');
 
     const loadNotes = async () => {
         setLoading(true);
@@ -57,6 +68,32 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         const d = new Date(iso);
         return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }) +
             ' · ' + d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+    };
+
+    const handleAnalyze = async () => {
+        if (notes.length === 0) return;
+        setAiLoading(true);
+        setAiError('');
+        setAiResult(null);
+
+        try {
+            const res = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ notes })
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setAiError(data.error || 'No se pudo completar el análisis.');
+            } else {
+                setAiResult(data);
+            }
+        } catch (err) {
+            setAiError('Error de conexión con el Asistente Clínico.');
+        } finally {
+            setAiLoading(false);
+        }
     };
 
     return (
@@ -114,6 +151,94 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                     </div>
                 ) : (
                     <div className="space-y-6">
+                        {notes.length > 0 && (
+                            <div className="mb-10">
+                                {!aiResult && !aiLoading && !aiError && (
+                                    <button
+                                        onClick={handleAnalyze}
+                                        className="w-full glass p-5 rounded-3xl flex items-center justify-between group hover:border-indigo-500/40 transition-all active:scale-[0.98] shadow-lg"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+                                                <Sparkles size={24} />
+                                            </div>
+                                            <div className="text-left">
+                                                <h3 className="text-white font-medium text-base mb-1" style={{ fontFamily: 'Georgia, serif' }}>Analizar mis patrones</h3>
+                                                <p className="text-slate-400 text-xs">La IA leerá tu diario para encontrar desencadenantes invisibles.</p>
+                                            </div>
+                                        </div>
+                                    </button>
+                                )}
+
+                                {aiLoading && (
+                                    <div className="w-full glass-primary p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-xl animate-pulse">
+                                        <BrainCircuit size={40} className="text-white/80 mb-4 animate-bounce" />
+                                        <h3 className="text-white font-medium text-lg mb-2" style={{ fontFamily: 'Georgia, serif' }}>Analizando tu mente...</h3>
+                                        <p className="text-blue-100/70 text-sm">Buscando conexiones y patrones emocionales en tus textos.</p>
+                                    </div>
+                                )}
+
+                                {aiError && (
+                                    <div className="w-full bg-red-950/40 border border-red-500/30 p-6 rounded-3xl flex items-start gap-4">
+                                        <AlertCircle size={24} className="text-red-400 shrink-0 mt-1" />
+                                        <div>
+                                            <h3 className="text-red-400 font-medium text-base mb-1">Error de Análisis</h3>
+                                            <p className="text-red-300/70 text-sm leading-relaxed mb-3">{aiError}</p>
+                                            <button onClick={() => setAiError('')} className="text-red-400 text-xs font-bold uppercase tracking-widest hover:text-red-300">Cerrar</button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {aiResult && (
+                                    <div className="w-full glass-primary p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden animate-in fade-in slide-in-from-bottom-4">
+                                        <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white">
+                                                <Sparkles size={20} />
+                                            </div>
+                                            <h3 className="text-2xl font-light text-white" style={{ fontFamily: 'Georgia, serif' }}>Informe Cognitivo</h3>
+                                        </div>
+
+                                        <div className="space-y-6">
+                                            <div>
+                                                <div className="text-blue-200/60 text-[10px] uppercase font-bold tracking-widest mb-2 flex items-center gap-2">
+                                                    <AlertCircle size={12} /> Desencadenantes Detectados
+                                                </div>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {aiResult.triggers.map((trigger, i) => (
+                                                        <span key={i} className="px-3 py-1.5 bg-blue-900/50 border border-blue-400/20 rounded-xl text-blue-100 text-xs font-medium">
+                                                            {trigger}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <div className="text-blue-200/60 text-[10px] uppercase font-bold tracking-widest mb-2">Resumen Emocional</div>
+                                                <p className="text-white/90 text-sm leading-relaxed italic">
+                                                    "{aiResult.emotion_summary}"
+                                                </p>
+                                            </div>
+
+                                            <div className="bg-white/10 rounded-2xl p-5 border border-white/5">
+                                                <div className="text-white/60 text-[10px] uppercase font-bold tracking-widest mb-2">Recomendación Clínica</div>
+                                                <p className="text-white text-sm font-medium leading-relaxed">
+                                                    {aiResult.recommendation}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            onClick={() => setAiResult(null)}
+                                            className="w-full mt-6 py-4 bg-blue-900/40 hover:bg-blue-900/60 text-blue-200 text-sm font-bold rounded-2xl transition-colors"
+                                        >
+                                            Entendido
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
                         {notes.map((note) => (
                             <div key={note.id} className="group relative bg-slate-900/40 backdrop-blur-sm border-2 border-slate-800/50 hover:border-blue-500/30 p-8 rounded-[2rem] transition-all hover:translate-y-[-2px] shadow-lg">
                                 <div className="flex items-center justify-between mb-5">
