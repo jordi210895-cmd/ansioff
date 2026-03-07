@@ -44,18 +44,18 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
             <div className="flex-1 overflow-y-auto px-6 pb-24">
                 <div className="mb-8 mt-4">
                     {/* Claire Weekes Attribution Card */}
-                    <div className="bg-gradient-to-br from-blue-900/30 to-blue-950/50 border border-blue-500/20 rounded-2xl p-5 mb-2">
-                        <div className="text-blue-500 text-[9px] uppercase tracking-[0.2em] font-bold mb-1">Método creado por</div>
-                        <div className="text-white text-lg font-medium" style={{ fontFamily: 'Georgia, serif' }}>Dra. Claire Weekes</div>
-                        <div className="text-blue-300/50 text-[10px] mt-1 mb-3">Psiquiatra y pionera en el tratamiento del pánico · 1962</div>
-                        <p className="text-blue-200/60 text-xs leading-relaxed">
+                    <div className="glass-primary border border-blue-500/20 rounded-3xl p-6 mb-2">
+                        <div className="text-white/60 text-[10px] uppercase tracking-widest font-bold mb-1">Método creado por</div>
+                        <div className="text-white text-2xl font-medium" style={{ fontFamily: 'Georgia, serif' }}>Dra. Claire Weekes</div>
+                        <div className="text-blue-200/50 text-xs mt-1 mb-4">Psiquiatra y pionera del pánico · 1962</div>
+                        <p className="text-blue-100/80 text-sm leading-relaxed">
                             La Dra. Weekes descubrió que el pánico se alimenta de la lucha y la huida. Sus 4 pasos — Afrontar, Aceptar, Flotar y Dejar pasar — rompen ese ciclo de raíz.
                         </p>
                     </div>
                 </div>
 
                 {/* Step Selector */}
-                <div className="flex justify-between gap-2 mb-8 bg-slate-900 p-1.5 rounded-2xl border-2 border-slate-800">
+                <div className="flex justify-between gap-2 mb-8 glass p-2 rounded-3xl">
                     {STEPS.map((s, i) => (
                         <button
                             key={i}
@@ -72,11 +72,11 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
                 </div>
 
                 {/* Active Content */}
-                <div className="bg-slate-900 border-2 border-slate-800 rounded-3xl p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 mb-8">
+                <div className="glass rounded-[2.5rem] p-8 animate-in fade-in slide-in-from-bottom-4 duration-500 shadow-xl">
+                    <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 mb-8 shadow-inner border border-blue-500/10">
                         {STEPS[activeTab].icon}
                     </div>
-                    <h2 className="text-4xl font-medium mb-6" style={{ fontFamily: 'Georgia, serif' }}>{STEPS[activeTab].t}</h2>
+                    <h2 className="text-4xl font-light mb-6 text-white" style={{ fontFamily: 'Georgia, serif' }}>{STEPS[activeTab].t}</h2>
                     <p className="text-blue-100/80 text-base leading-relaxed mb-8">
                         {STEPS[activeTab].desc}
                     </p>

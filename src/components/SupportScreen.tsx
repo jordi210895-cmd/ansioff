@@ -40,13 +40,13 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
                                 <Leaf size={14} /> Fitoterapia y Natural
                             </div>
                             <div className="space-y-3">
-                                <div className="bg-slate-900 border-2 border-slate-800 p-5 rounded-2xl hover:scale-[1.01] transition-all">
-                                    <h4 className="text-white text-sm font-medium mb-1">Valeriana & Pasiflora</h4>
-                                    <p className="text-slate-400 text-xs leading-relaxed">Ayudan a relajar el sistema nervioso central en estados de ansiedad leve o moderada.</p>
+                                <div className="glass p-6 rounded-[2rem] hover:scale-[1.01] transition-transform">
+                                    <h4 className="text-white text-base font-medium mb-2">Valeriana & Pasiflora</h4>
+                                    <p className="text-slate-400 text-sm leading-relaxed">Ayudan a relajar el sistema nervioso central en estados de ansiedad leve o moderada.</p>
                                 </div>
-                                <div className="bg-slate-900 border-2 border-slate-800 p-5 rounded-2xl hover:scale-[1.01] transition-all">
-                                    <h4 className="text-white text-sm font-medium mb-1">Aceite de Lavanda</h4>
-                                    <p className="text-slate-400 text-xs leading-relaxed">La inhalación de esencia de lavanda de grado médico puede reducir picos de cortisol rápidamente.</p>
+                                <div className="glass p-6 rounded-[2rem] hover:scale-[1.01] transition-transform">
+                                    <h4 className="text-white text-base font-medium mb-2">Aceite de Lavanda</h4>
+                                    <p className="text-slate-400 text-sm leading-relaxed">La inhalación de esencia de lavanda de grado médico puede reducir picos de cortisol rápidamente.</p>
                                 </div>
                             </div>
                         </section>
@@ -56,42 +56,47 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
                                 <Pill size={14} /> Orientación Médica
                             </div>
                             <div className="space-y-3">
-                                <div className="bg-slate-900 border-2 border-blue-500/20 p-5 rounded-2xl hover:scale-[1.01] transition-all">
-                                    <h4 className="text-blue-400 text-sm font-medium mb-1">Ansiolíticos (Benzodiacepinas)</h4>
-                                    <p className="text-slate-400 text-xs leading-relaxed mb-3">Efecto rápido. Deben usarse solo bajo prescripción médica estricta por riesgo de dependencia.</p>
-                                    <div className="text-[10px] text-blue-300/40 font-medium italic flex items-center gap-1">
-                                        <Info size={10} /> Consulte siempre con su psiquiatra.
+                                <div className="glass border-blue-500/20 p-6 rounded-[2rem] hover:scale-[1.01] transition-transform">
+                                    <h4 className="text-blue-400 text-base font-medium mb-2">Ansiolíticos (Benzodiacepinas)</h4>
+                                    <p className="text-slate-400 text-sm leading-relaxed mb-4">Efecto rápido. Deben usarse solo bajo prescripción médica estricta por riesgo de dependencia.</p>
+                                    <div className="text-xs text-blue-300/60 font-medium italic flex items-center gap-1.5">
+                                        <Info size={14} /> Consulte siempre con su psiquiatra.
                                     </div>
                                 </div>
-                                <div className="bg-slate-900 border-2 border-blue-500/20 p-5 rounded-2xl hover:scale-[1.01] transition-all">
-                                    <h4 className="text-blue-400 text-sm font-medium mb-1">Antidepresivos (ISRS)</h4>
-                                    <p className="text-slate-400 text-xs leading-relaxed">Tratamiento de fondo para el trastorno de pánico. Tardan de 2 a 4 semanas en hacer efecto completo.</p>
+                                <div className="glass border-blue-500/20 p-6 rounded-[2rem] hover:scale-[1.01] transition-transform">
+                                    <h4 className="text-blue-400 text-base font-medium mb-2">Antidepresivos (ISRS)</h4>
+                                    <p className="text-slate-400 text-sm leading-relaxed">Tratamiento de fondo para el trastorno de pánico. Tardan de 2 a 4 semanas en hacer efecto completo.</p>
                                 </div>
                             </div>
                         </section>
                     </div>
                 ) : (
                     <div className="flex flex-col gap-6 mt-4 animate-in fade-in slide-in-from-right-4 duration-500">
-                        <div className="bg-red-950/20 border border-red-500/20 p-6 rounded-[32px]">
-                            <h3 className="text-red-400 text-xl font-medium mb-3" style={{ fontFamily: 'Georgia, serif' }}>No estás solo/a</h3>
-                            <p className="text-red-200/40 text-sm leading-relaxed mb-8">
+                        <div className="glass bg-red-950/20 border-red-500/30 p-8 rounded-[2.5rem] shadow-xl shadow-red-900/10">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-400">
+                                    <Heart size={20} fill="currentColor" />
+                                </div>
+                                <h3 className="text-red-400 text-2xl font-light" style={{ fontFamily: 'Georgia, serif' }}>No estás solo/a</h3>
+                            </div>
+                            <p className="text-red-200/60 text-sm leading-relaxed mb-8">
                                 Si sientes que no puedes más o estás en una crisis profunda, por favor, contacta con estos servicios gratuitos y anónimos.
                             </p>
 
-                            <div className="space-y-3">
-                                <a href="tel:024" className="flex items-center justify-between p-5 bg-red-600 hover:bg-red-500 rounded-2xl transition-all active:scale-95 shadow-lg shadow-red-600/20 group">
+                            <div className="space-y-4">
+                                <a href="tel:024" className="flex items-center justify-between p-6 bg-red-600 hover:bg-red-500 rounded-3xl transition-all active:scale-95 shadow-lg shadow-red-600/30 group">
                                     <div>
-                                        <div className="text-white font-bold text-lg">Línea 024</div>
-                                        <div className="text-red-100/60 text-[10px] uppercase tracking-wider">Prevención del suicidio</div>
+                                        <div className="text-white font-bold text-xl mb-1">Línea 024</div>
+                                        <div className="text-red-100/80 text-[10px] uppercase tracking-widest font-bold">Prevención del suicidio</div>
                                     </div>
                                     <Phone className="text-white group-hover:scale-110 transition-transform" />
                                 </a>
-                                <a href="tel:717003717" className="flex items-center justify-between p-5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-2xl transition-all active:scale-95 group">
+                                <a href="tel:717003717" className="flex items-center justify-between p-6 glass hover:bg-slate-800 rounded-3xl transition-all active:scale-95 group">
                                     <div>
-                                        <div className="text-white font-bold text-lg">717 003 717</div>
-                                        <div className="text-slate-500 text-[10px] uppercase tracking-wider">Teléfono de la Esperanza</div>
+                                        <div className="text-white font-bold text-xl mb-1">717 003 717</div>
+                                        <div className="text-slate-400 text-[10px] uppercase tracking-widest font-bold">Teléfono de la Esperanza</div>
                                     </div>
-                                    <Heart className="text-red-400 group-hover:scale-110 transition-transform" />
+                                    <Phone className="text-red-400 group-hover:scale-110 transition-transform" />
                                 </a>
                             </div>
                         </div>

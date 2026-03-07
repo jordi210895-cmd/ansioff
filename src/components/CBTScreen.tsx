@@ -137,7 +137,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                                     Escribe ese pensamiento negativo que te está generando ansiedad. Intenta ser muy concreto.
                                 </p>
                                 <textarea
-                                    className="w-full bg-slate-900 border-2 border-slate-800 focus:border-blue-500/50 rounded-3xl p-6 text-white text-base min-h-[160px] outline-none transition-all placeholder:text-slate-600"
+                                    className="w-full bg-slate-900/40 backdrop-blur-sm border border-slate-800/50 focus:border-blue-500/30 rounded-3xl p-6 text-white text-base min-h-[160px] outline-none transition-all placeholder:text-slate-600 shadow-inner"
                                     placeholder="Ej: Siento que me voy a desmayar y nadie me va a ayudar..."
                                     value={thought}
                                     onChange={(e) => setThought(e.target.value)}
@@ -167,7 +167,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                                     {DISTORTIONS.map((d) => (
                                         <button
                                             key={d.t}
-                                            className="w-full p-5 bg-slate-900 border-2 border-slate-800 rounded-2xl text-left hover:border-blue-500/30 transition-all hover:scale-[1.01] group"
+                                            className="w-full p-5 bg-slate-900/40 backdrop-blur-sm border border-slate-800/50 rounded-2xl text-left hover:border-blue-500/30 transition-all hover:translate-y-[-2px] group shadow-sm"
                                             onClick={() => selectDistortion(d.t)}
                                         >
                                             <div className="text-sm font-medium text-white mb-1 group-hover:text-blue-400">{d.t}</div>
@@ -189,7 +189,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                                     ¿Cuántas veces has pensado eso y cuántas se ha cumplido de verdad? Busca pruebas reales de que NO va a pasar.
                                 </p>
                                 <textarea
-                                    className="w-full bg-slate-900/40 border border-slate-800 focus:border-blue-500/50 rounded-3xl p-6 text-white text-base min-h-[160px] outline-none transition-all placeholder:text-slate-600"
+                                    className="w-full bg-slate-900/40 backdrop-blur-sm border border-slate-800/50 focus:border-blue-500/30 rounded-3xl p-6 text-white text-base min-h-[160px] outline-none transition-all placeholder:text-slate-600 shadow-inner"
                                     placeholder="Ej: He sentido esto muchas veces y NUNCA ha ocurrido nada malo. Mi cuerpo es fuerte..."
                                     value={evidence}
                                     onChange={(e) => setEvidence(e.target.value)}
@@ -207,11 +207,11 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
 
                         {step === 3 && (
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <div className="bg-slate-900/40 border border-blue-500/20 p-8 rounded-[40px] mb-8 relative overflow-hidden">
-                                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl"></div>
-                                    <CheckCircle2 className="text-blue-500 mb-6" size={32} />
-                                    <h2 className="text-3xl font-medium mb-6" style={{ fontFamily: 'Georgia, serif' }}>Pensamiento Alternativo</h2>
-                                    <p className="text-blue-100/90 text-base italic leading-relaxed mb-8">
+                                <div className="glass-primary p-8 rounded-[40px] mb-8 relative overflow-hidden text-center">
+                                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+                                    <CheckCircle2 className="text-white mx-auto mb-6" size={32} />
+                                    <h2 className="text-3xl font-medium mb-6 text-white" style={{ fontFamily: 'Georgia, serif' }}>Pensamiento Sano</h2>
+                                    <p className="text-white/90 text-base italic leading-relaxed mb-8">
                                         &quot;{alternative}&quot;
                                     </p>
                                     <div className="h-px bg-slate-800 w-full mb-4"></div>
