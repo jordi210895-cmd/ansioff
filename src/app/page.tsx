@@ -19,6 +19,7 @@ import * as db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
 import AuthScreen from '@/components/AuthScreen';
 import ExposureScreen from '@/components/ExposureScreen';
+import DisclaimerModal from '@/components/DisclaimerModal';
 
 interface Track {
   id?: number;
@@ -201,6 +202,7 @@ export default function App() {
       </main>
 
       <BottomNav activeScreen={curScreen} onNav={handleNav} />
+      <DisclaimerModal />
     </div>
   );
 }
