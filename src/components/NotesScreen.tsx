@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { PenLine, Trash2, Calendar, Loader2, Sparkles, AlertCircle, BrainCircuit } from 'lucide-react';
 import TopBar from './TopBar';
-import { supabase } from '@/lib/supabase';
 
 interface Note {
     id: number;
@@ -33,35 +32,49 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
     const [aiResult, setAiResult] = useState<AIResult | null>(null);
     const [aiError, setAiError] = useState('');
 
-    const loadNotes = async () => {
+    const loadNotes = () => {
         setLoading(true);
-        const { data } = await supabase
-            .from('notes')
-            .select('*')
-            .order('created_at', { ascending: false });
-        if (data) setNotes(data);
+        try {
+            const stored = localStorage.getItem('ansioff_notes');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                setNotes(parsed.sort((a: Note, b: Note) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+            }
+        } catch (e) {
+            console.error('Error loading notes from localStorage', e);
+        }
         setLoading(false);
     };
 
     useEffect(() => { loadNotes(); }, []);
 
-    const handleSave = async () => {
+    const handleSave = () => {
         if (!inputText.trim()) return;
         setSaving(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        await supabase.from('notes').insert({
-            text: inputText.trim(),
-            user_id: user?.id,
-        });
-        setInputText('');
-        setShowEditor(false);
-        await loadNotes();
-        setSaving(false);
+
+        try {
+            const newNote: Note = {
+                id: Date.now(),
+                text: inputText.trim(),
+                created_at: new Date().toISOString()
+            };
+
+            const updatedNotes = [newNote, ...notes];
+            localStorage.setItem('ansioff_notes', JSON.stringify(updatedNotes));
+            setNotes(updatedNotes);
+            setInputText('');
+            setShowEditor(false);
+        } catch (e) {
+            console.error('Error saving note', e);
+        } finally {
+            setSaving(false);
+        }
     };
 
-    const handleDelete = async (id: number) => {
-        await supabase.from('notes').delete().eq('id', id);
-        setNotes(prev => prev.filter(n => n.id !== id));
+    const handleDelete = (id: number) => {
+        const updatedNotes = notes.filter(n => n.id !== id);
+        localStorage.setItem('ansioff_notes', JSON.stringify(updatedNotes));
+        setNotes(updatedNotes);
     };
 
     const fmtDate = (iso: string) => {
