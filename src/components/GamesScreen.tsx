@@ -31,7 +31,7 @@ export default function GamesScreen({ onBack }: GamesScreenProps) {
         return (
             <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
                 <TopBar title="Juegos de Anclaje" onBack={onBack} />
-                <div className="flex-1 overflow-y-auto px-6 pb-24">
+                <div className="flex-1 overflow-y-auto px-8 pb-24">
                     <div className="text-blue-500 text-[10px] uppercase tracking-widest font-bold mt-4 mb-6">Distracción Cognitiva</div>
 
                     <div className="space-y-4">

@@ -122,8 +122,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                     Historial {records.length > 0 && <span className="bg-white/20 text-[10px] px-1.5 py-0.5 rounded-full">{records.length}</span>}
                 </button>
             </div>
-
-            <div className="flex-1 overflow-y-auto px-6 pb-24">
+            <div className="flex-1 overflow-y-auto px-8 pb-24">
 
                 {/* ── FORM VIEW ── */}
                 {view === 'form' && (

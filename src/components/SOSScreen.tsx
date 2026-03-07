@@ -79,7 +79,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
         return (
             <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
                 <TopBar title="Anclaje Rápido" onBack={onBack} />
-                <div className="flex-1 flex flex-col items-center justify-between py-8 px-6">
+                <div className="flex-1 flex flex-col items-center justify-between py-8 px-8">
                     <div className="text-center">
                         <div className="text-[10px] uppercase tracking-[0.2em] text-blue-500 mb-2 font-semibold flex items-center justify-center gap-2">
                             <Shield className="w-3 h-3" /> Guía de Crisis · Paso 1 de 2
@@ -176,7 +176,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
         return (
             <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
                 <TopBar title="Anclaje Mental" onBack={() => setMode('GAMES_DISCLAIMER')} />
-                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                <div className="flex-1 overflow-y-auto p-8 space-y-4">
                     <div className="bg-blue-600 flex items-center gap-3 p-4 rounded-2xl mb-6 shadow-lg shadow-blue-600/20">
                         <Sparkles className="w-5 h-5 text-white" />
                         <p className="text-white/90 text-[13px] leading-tight">Activa tu mente analítica para silenciar la ansiedad.</p>

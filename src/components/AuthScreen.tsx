@@ -46,7 +46,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
     };
 
     return (
-        <div className="fixed inset-0 bg-slate-950 flex flex-col items-center justify-center px-6 overflow-hidden">
+        <div className="fixed inset-0 bg-slate-950 flex flex-col items-center justify-center px-8 overflow-hidden">
             {/* Background breathe circle */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="w-96 h-96 rounded-full bg-blue-500/5 animate-breathe" />
@@ -71,8 +71,8 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                             key={m}
                             onClick={() => { setMode(m); setError(''); setSuccess(''); }}
                             className={`flex-1 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${mode === m
-                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                                    : 'text-slate-500 hover:text-slate-300'
+                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                                : 'text-slate-500 hover:text-slate-300'
                                 }`}
                         >
                             {m === 'login' ? 'Iniciar sesión' : 'Registrarse'}

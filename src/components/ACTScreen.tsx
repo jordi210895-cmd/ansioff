@@ -41,7 +41,7 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
     return (
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
             <TopBar title="Sin Miedo" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto px-6 pb-24">
+            <div className="flex-1 overflow-y-auto px-8 pb-24">
                 <div className="mb-8 mt-4">
                     {/* Claire Weekes Attribution Card */}
                     <div className="glass-primary border border-blue-500/20 rounded-3xl p-6 mb-2">

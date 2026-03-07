@@ -9,7 +9,7 @@ interface HomeScreenProps {
 
 export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
     return (
-        <div className="h-full bg-slate-950 text-white overflow-y-auto overflow-x-hidden flex flex-col pt-4 pb-28 px-4 scrollbar-hide">
+        <div className="flex-1 w-full bg-slate-950 flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide pb-24 px-8 pt-4">
             <style jsx>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -24,7 +24,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         onClick={() => onNav('sc-sos')}
                         className="w-full group relative overflow-hidden rounded-3xl p-px bg-gradient-to-r from-red-500/50 via-blue-500/50 to-red-500/50 shadow-2xl shadow-blue-500/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
-                        <div className="relative bg-slate-950 rounded-[23px] px-6 py-6 flex items-center justify-between overflow-hidden">
+                        <div className="relative bg-slate-950 rounded-[23px] px-8 py-6 flex items-center justify-between overflow-hidden">
                             <div className="flex items-center gap-5 z-10 text-left">
                                 <div className="w-14 h-14 rounded-full bg-red-500/15 flex items-center justify-center text-red-500 ring-4 ring-red-500/10 shrink-0">
                                     <AlertTriangle className="w-7 h-7" strokeWidth={2.5} />

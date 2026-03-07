@@ -112,7 +112,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
     return (
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
             <TopBar title="Diario de Calma" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto px-6 pb-32 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto px-8 pb-32 scrollbar-hide">
                 <div className="mt-6 mb-10">
                     <button
                         onClick={() => setShowEditor(true)}

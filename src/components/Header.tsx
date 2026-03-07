@@ -9,7 +9,7 @@ interface HeaderProps {
 
 export default function Header({ onLogout }: HeaderProps) {
     return (
-        <header className="sticky top-0 z-50 glass px-4 py-4 flex flex-col items-center justify-center gap-1 border-b border-slate-800/50">
+        <header className="sticky top-0 z-50 glass px-8 py-4 flex flex-col items-center justify-center gap-1 border-b border-slate-800/50">
             <div className="flex items-center justify-between w-full max-w-md">
                 <button className="p-2 rounded-full hover:bg-slate-800/50 transition-colors">
                     <Menu className="text-slate-400" size={24} />

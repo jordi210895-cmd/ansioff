@@ -15,7 +15,7 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
             <TopBar title="Apoyo y Recursos" onBack={onBack} />
 
-            <div className="flex px-6 py-4 gap-2">
+            <div className="flex px-8 py-4 gap-2">
                 <button
                     className={`flex-1 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeCat === 'info' ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-600/20' : 'bg-slate-900 text-slate-500 border-2 border-slate-800'
                         }`}
@@ -32,7 +32,7 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
                 </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-6 pb-24">
+            <div className="flex-1 overflow-y-auto px-8 pb-24">
                 {activeCat === 'info' ? (
                     <div className="flex flex-col gap-8 mt-4 animate-in fade-in slide-in-from-left-4 duration-500">
                         <section>

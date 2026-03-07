@@ -39,7 +39,7 @@ export default function ToolsScreen({ onBack, onNav }: ToolsScreenProps) {
     return (
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
             <TopBar title="Todos los Módulos" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto px-6 pb-24">
+            <div className="flex-1 overflow-y-auto px-8 pb-32 pt-6">
                 <div className="mt-2 space-y-3">
                     {tools.map((tool, i) => (
                         <button

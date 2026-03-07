@@ -70,7 +70,7 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
     return (
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
             <TopBar title="Respiración Guiada" onBack={onBack} />
-            <div className="flex-1 flex flex-col items-center justify-between py-8 px-6 overflow-y-auto">
+            <div className="flex-1 flex flex-col items-center justify-between py-8 px-8 overflow-y-auto">
                 <div className="text-center w-full">
                     <h2 className="text-3xl font-medium mb-3 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                         Calma tu sistema nervioso
@@ -84,8 +84,8 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
                                 key={p}
                                 onClick={() => setSelectedPattern(p)}
                                 className={`px-5 py-2.5 rounded-2xl text-xs font-medium transition-all flex items-center gap-2 ${selectedPattern === p
-                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
-                                        : 'bg-slate-900 text-blue-400 border border-slate-800'
+                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
+                                    : 'bg-slate-900 text-blue-400 border border-slate-800'
                                     }`}
                             >
                                 {selectedPattern === p && <Check className="w-3 h-3" />}

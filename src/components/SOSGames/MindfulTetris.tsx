@@ -232,7 +232,7 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
 
     return (
         <div className="flex flex-col items-center h-full bg-slate-950 text-white overflow-hidden" style={{ maxHeight: '100dvh' }}>
-            <div className="w-full flex justify-between items-center p-6 flex-shrink-0">
+            <div className="w-full flex justify-between items-center p-8 flex-shrink-0">
                 <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors">
                     <ArrowLeft size={18} />
                     <span className="text-sm font-medium">Volver</span>
@@ -343,7 +343,7 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
                     {/* Word Overlay */}
                     {calmWord && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-                            <div className="bg-blue-600/20 backdrop-blur-xl px-6 py-3 rounded-full border border-blue-500/30 animate-in zoom-in-90 fade-in duration-500">
+                            <div className="bg-blue-600/20 backdrop-blur-xl px-8 py-3 rounded-full border border-blue-500/30 animate-in zoom-in-90 fade-in duration-500">
                                 <span className="text-white font-medium text-2xl tracking-wide text-center block" style={{ fontFamily: 'Georgia, serif' }}>{calmWord}</span>
                             </div>
                         </div>
@@ -393,4 +393,3 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
         </div>
     );
 }
-
