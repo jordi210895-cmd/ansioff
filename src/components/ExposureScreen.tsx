@@ -38,7 +38,7 @@ export default function ExposureScreen({ onBack }: ExposureScreenProps) {
                     <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-3xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-orange-500/20">
                         <Target size={32} strokeWidth={2.5} />
                     </div>
-                    <h2 className="text-2xl font-light text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>¿Por qué hago <span className="font-bold">exposición</span>?</h2>
+                    <h2 className="text-2xl font-light text-white mb-2 pl-1" style={{ fontFamily: 'Georgia, serif' }}>¿Por qué hago <span className="font-bold">exposición</span>?</h2>
                     <p className="text-sm text-slate-400 leading-relaxed px-4">
                         La exposición da miedo, pero tiene un propósito mayor. Apunta aquí por qué estás dispuesto a enfrentarte a tu ansiedad hoy.
                     </p>
@@ -49,9 +49,9 @@ export default function ExposureScreen({ onBack }: ExposureScreenProps) {
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
                         placeholder="Ej: Lo hago para poder viajar tranquilo a ver a mi familia, para recuperar mi libertad, porque mi vida es más grande que el pánico..."
-                        className="w-full bg-transparent p-5 text-slate-200 placeholder:text-slate-600 outline-none resize-none min-h-[180px] text-base leading-relaxed"
+                        className="w-full bg-transparent p-7 pl-8 text-slate-200 placeholder:text-slate-600 outline-none resize-none min-h-[220px] text-base leading-loose"
                     />
-                    <div className="absolute bottom-4 right-4 text-xs font-bold tracking-widest text-slate-600">
+                    <div className="absolute bottom-6 right-6 text-xs font-bold tracking-widest text-slate-600">
                         TU MOTOR
                     </div>
                 </div>

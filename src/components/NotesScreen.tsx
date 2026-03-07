@@ -132,7 +132,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                             {fmtDate(new Date().toISOString())}
                         </div>
                         <textarea
-                            className="w-full bg-transparent text-white placeholder-slate-600 border-none outline-none resize-none text-lg leading-relaxed mb-6 min-h-[160px]"
+                            className="w-full bg-transparent text-white placeholder-slate-600 border-none outline-none resize-none text-lg leading-loose mb-6 min-h-[160px] pl-1 pr-2"
                             style={{ fontFamily: 'Georgia, serif' }}
                             placeholder="¿Cómo te sientes en este momento? No sientas presión, solo deja fluir tus pensamientos..."
                             value={inputText}
@@ -175,7 +175,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                                             <div className="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
                                                 <Sparkles size={24} />
                                             </div>
-                                            <div className="text-left">
+                                            <div className="text-left pl-1">
                                                 <h3 className="text-white font-medium text-base mb-1" style={{ fontFamily: 'Georgia, serif' }}>Analizar mis patrones</h3>
                                                 <p className="text-slate-400 text-xs">La IA leerá tu diario para encontrar desencadenantes invisibles.</p>
                                             </div>
@@ -184,9 +184,9 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                                 )}
 
                                 {aiLoading && (
-                                    <div className="w-full glass-primary p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-xl animate-pulse">
+                                    <div className="w-full glass-primary py-10 px-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-xl animate-pulse">
                                         <BrainCircuit size={40} className="text-white/80 mb-4 animate-bounce" />
-                                        <h3 className="text-white font-medium text-lg mb-2" style={{ fontFamily: 'Georgia, serif' }}>Analizando tu mente...</h3>
+                                        <h3 className="text-white font-medium text-lg mb-2 pl-1" style={{ fontFamily: 'Georgia, serif' }}>Analizando tu mente...</h3>
                                         <p className="text-blue-100/70 text-sm">Buscando conexiones y patrones emocionales en tus textos.</p>
                                     </div>
                                 )}
@@ -206,10 +206,10 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                                     <div className="w-full glass-primary p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden animate-in fade-in slide-in-from-bottom-4">
                                         <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
                                         <div className="flex items-center gap-3 mb-6">
-                                            <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white">
+                                            <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white shrink-0">
                                                 <Sparkles size={20} />
                                             </div>
-                                            <h3 className="text-2xl font-light text-white" style={{ fontFamily: 'Georgia, serif' }}>Informe Cognitivo</h3>
+                                            <h3 className="text-2xl font-light text-white pl-1" style={{ fontFamily: 'Georgia, serif' }}>Informe Cognitivo</h3>
                                         </div>
 
                                         <div className="space-y-6">
@@ -227,15 +227,15 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                                             </div>
 
                                             <div>
-                                                <div className="text-blue-200/60 text-[10px] uppercase font-bold tracking-widest mb-2">Resumen Emocional</div>
-                                                <p className="text-white/90 text-sm leading-relaxed italic">
+                                                <div className="text-blue-200/60 text-[10px] uppercase font-bold tracking-widest mb-2 pl-1">Resumen Emocional</div>
+                                                <p className="text-white/90 text-sm leading-loose italic pl-1">
                                                     "{aiResult.emotion_summary}"
                                                 </p>
                                             </div>
 
-                                            <div className="bg-white/10 rounded-2xl p-5 border border-white/5">
+                                            <div className="bg-white/10 rounded-2xl p-6 border border-white/5">
                                                 <div className="text-white/60 text-[10px] uppercase font-bold tracking-widest mb-2">Recomendación Clínica</div>
-                                                <p className="text-white text-sm font-medium leading-relaxed">
+                                                <p className="text-white text-sm font-medium leading-loose pl-1 pr-2">
                                                     {aiResult.recommendation}
                                                 </p>
                                             </div>
@@ -266,7 +266,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                                         <Trash2 size={16} />
                                     </button>
                                 </div>
-                                <div className="text-slate-200 text-base leading-relaxed whitespace-pre-wrap italic opacity-90" style={{ fontFamily: 'Georgia, serif' }}>
+                                <div className="text-slate-200 text-base leading-loose whitespace-pre-wrap italic opacity-90 pl-1 pr-2" style={{ fontFamily: 'Georgia, serif' }}>
                                     "{note.text}"
                                 </div>
                             </div>

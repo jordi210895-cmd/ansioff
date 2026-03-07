@@ -132,12 +132,12 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
 
                         {step === 0 && (
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <h2 className="text-3xl font-medium mb-4" style={{ fontFamily: 'Georgia, serif' }}>¿Qué estás pensando ahora?</h2>
-                                <p className="text-blue-300/60 text-sm mb-8 leading-relaxed">
+                                <h2 className="text-3xl font-medium mb-4 pl-1" style={{ fontFamily: 'Georgia, serif' }}>¿Qué estás pensando ahora?</h2>
+                                <p className="text-blue-300/60 text-sm mb-8 leading-relaxed px-1">
                                     Escribe ese pensamiento negativo que te está generando ansiedad. Intenta ser muy concreto.
                                 </p>
                                 <textarea
-                                    className="w-full bg-slate-900/40 backdrop-blur-sm border border-slate-800/50 focus:border-blue-500/30 rounded-3xl p-6 text-white text-base min-h-[160px] outline-none transition-all placeholder:text-slate-600 shadow-inner"
+                                    className="w-full bg-slate-900/40 backdrop-blur-sm border border-slate-800/50 focus:border-blue-500/30 rounded-3xl p-8 pl-9 text-white text-base min-h-[160px] outline-none transition-all placeholder:text-slate-600 shadow-inner leading-loose"
                                     placeholder="Ej: Siento que me voy a desmayar y nadie me va a ayudar..."
                                     value={thought}
                                     onChange={(e) => setThought(e.target.value)}
@@ -155,12 +155,12 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
 
                         {step === 1 && (
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <h2 className="text-3xl font-medium mb-4" style={{ fontFamily: 'Georgia, serif' }}>Cuestiona la lógica</h2>
-                                <div className="bg-blue-500/5 border border-blue-500/10 p-5 rounded-2xl mb-8 flex gap-3">
+                                <h2 className="text-3xl font-medium mb-4 pl-1" style={{ fontFamily: 'Georgia, serif' }}>Cuestiona la lógica</h2>
+                                <div className="bg-blue-500/5 border border-blue-500/10 p-6 rounded-2xl mb-8 flex gap-3">
                                     <Quote className="text-blue-500/30 shrink-0" size={20} />
-                                    <p className="text-blue-100/70 text-sm italic">&quot;{thought}&quot;</p>
+                                    <p className="text-blue-100/70 text-sm italic leading-loose">&quot;{thought}&quot;</p>
                                 </div>
-                                <p className="text-blue-300/60 text-sm mb-6 leading-relaxed">
+                                <p className="text-blue-300/60 text-sm mb-6 leading-relaxed px-1">
                                     ¿Qué error de razonamiento detectas en este pensamiento?
                                 </p>
                                 <div className="grid grid-cols-1 gap-3">
@@ -180,16 +180,16 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
 
                         {step === 2 && (
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <h2 className="text-3xl font-medium mb-4" style={{ fontFamily: 'Georgia, serif' }}>Evidencia en contra</h2>
-                                <div className="bg-blue-500/5 border border-blue-500/10 p-4 rounded-2xl mb-6 flex gap-2 items-center">
+                                <h2 className="text-3xl font-medium mb-4 pl-1" style={{ fontFamily: 'Georgia, serif' }}>Evidencia en contra</h2>
+                                <div className="bg-blue-500/5 border border-blue-500/10 p-5 rounded-2xl mb-6 flex gap-2 items-center">
                                     <span className="text-xs text-blue-400 font-medium">Distorsión detectada:</span>
                                     <span className="text-xs text-white bg-blue-500/20 px-2 py-0.5 rounded-full">{distortion}</span>
                                 </div>
-                                <p className="text-blue-300/60 text-sm mb-8 leading-relaxed">
+                                <p className="text-blue-300/60 text-sm mb-8 leading-relaxed px-1">
                                     ¿Cuántas veces has pensado eso y cuántas se ha cumplido de verdad? Busca pruebas reales de que NO va a pasar.
                                 </p>
                                 <textarea
-                                    className="w-full bg-slate-900/40 backdrop-blur-sm border border-slate-800/50 focus:border-blue-500/30 rounded-3xl p-6 text-white text-base min-h-[160px] outline-none transition-all placeholder:text-slate-600 shadow-inner"
+                                    className="w-full bg-slate-900/40 backdrop-blur-sm border border-slate-800/50 focus:border-blue-500/30 rounded-3xl p-8 pl-9 text-white text-base min-h-[160px] outline-none transition-all placeholder:text-slate-600 shadow-inner leading-loose"
                                     placeholder="Ej: He sentido esto muchas veces y NUNCA ha ocurrido nada malo. Mi cuerpo es fuerte..."
                                     value={evidence}
                                     onChange={(e) => setEvidence(e.target.value)}
@@ -207,11 +207,11 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
 
                         {step === 3 && (
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <div className="glass-primary p-8 rounded-[40px] mb-8 relative overflow-hidden text-center">
+                                <div className="glass-primary p-10 rounded-[40px] mb-8 relative overflow-hidden text-center">
                                     <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
                                     <CheckCircle2 className="text-white mx-auto mb-6" size={32} />
-                                    <h2 className="text-3xl font-medium mb-6 text-white" style={{ fontFamily: 'Georgia, serif' }}>Pensamiento Sano</h2>
-                                    <p className="text-white/90 text-base italic leading-relaxed mb-8">
+                                    <h2 className="text-3xl font-medium mb-6 text-white pl-1" style={{ fontFamily: 'Georgia, serif' }}>Pensamiento Sano</h2>
+                                    <p className="text-white/90 text-base italic leading-loose mb-8 px-2">
                                         &quot;{alternative}&quot;
                                     </p>
                                     <div className="h-px bg-slate-800 w-full mb-4"></div>

@@ -17,7 +17,7 @@ export default function TopBar({ title, onBack, dark }: TopBarProps) {
             >
                 <ArrowLeft size={20} strokeWidth={2.5} />
             </button>
-            <h1 className="text-lg font-medium text-white/90 tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
+            <h1 className="text-lg font-medium text-white/90 pl-1 py-1" style={{ fontFamily: 'Georgia, serif' }}>
                 {title}
             </h1>
         </div>
