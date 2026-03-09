@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body
-        className={`${outfit.variable} ${gildaDisplay.variable} antialiased`}
+        className={`${outfit.variable} ${gildaDisplay.variable} antialiased screen-px`}
       >
         {children}
       </body>
