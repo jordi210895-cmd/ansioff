@@ -96,8 +96,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                             <div className="w-12 h-12 rounded-[14px] bg-indigo-500/15 flex items-center justify-center text-indigo-400 mb-3 group-hover:scale-110 group-hover:bg-indigo-500/25 transition-all duration-300">
                                 <Volume2 size={24} strokeWidth={2.5} />
                             </div>
-                            <h4 className="font-bold text-white text-[15px] mb-1">Audios</h4>
-                            <p className="text-[11px] leading-tight text-slate-400 font-medium truncate w-full px-1">Paisajes sonoros</p>
+                            <h4 className="font-bold text-white text-[15px]">Audios</h4>
                         </button>
 
                         {/* Diary Tool */}
