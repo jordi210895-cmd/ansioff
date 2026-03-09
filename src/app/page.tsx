@@ -16,6 +16,7 @@ import EvaluationScreen from '@/components/EvaluationScreen';
 import StatsScreen from '@/components/StatsScreen';
 import SupportScreen from '@/components/SupportScreen';
 import NightModeScreen from '@/components/NightModeScreen';
+import SettingsScreen from '@/components/SettingsScreen';
 import * as db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
 import ExposureScreen from '@/components/ExposureScreen';
@@ -170,6 +171,8 @@ export default function App() {
         return <SupportScreen onBack={goBack} />;
       case 'sc-night':
         return <NightModeScreen onBack={goBack} />;
+      case 'sc-settings':
+        return <SettingsScreen onBack={goBack} />;
       case 'sc-exposure-why':
         return <ExposureScreen onBack={goBack} />;
       default:
@@ -183,7 +186,7 @@ export default function App() {
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col">
-      {curScreen !== 'sc-home' && <Header onLogout={() => { supabase.auth.signOut(); }} />}
+      {curScreen !== 'sc-home' && <Header onLogout={() => { supabase.auth.signOut(); }} onSettings={() => handleNav('sc-settings')} />}
 
       <main className="flex-1 w-full max-w-md mx-auto relative overflow-x-hidden screen-px">
         {renderScreen()}

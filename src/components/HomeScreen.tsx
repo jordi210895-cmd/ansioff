@@ -10,16 +10,38 @@ interface HomeScreenProps {
 export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
     return (
         <div
-            className="flex-1 w-full bg-slate-950 flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide pb-24 pt-4"
-            style={{ paddingLeft: '1.25rem', paddingRight: '1.25rem' }}
+            className="flex-1 w-full bg-slate-950 flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide pb-24"
         >
             <style jsx>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
 
+            {/* Custom Header for Home Screen */}
+            <header className="sticky top-0 z-50 glass px-8 py-4 flex flex-col items-center justify-center gap-1 border-b border-slate-800/50 mb-4 bg-slate-950/80 backdrop-blur-md">
+                <div className="flex items-center justify-between w-full max-w-md">
+                    <div className="flex items-center">
+                        <button
+                            onClick={() => onNav('sc-settings')}
+                            title="Ajustes y Privacidad"
+                            className="p-2 -ml-2 rounded-full hover:bg-slate-800/50 transition-colors"
+                        >
+                            <Menu className="text-slate-400" size={24} />
+                        </button>
+                    </div>
+                    <div className="text-center absolute left-1/2 -translate-x-1/2">
+                        <h1 className="text-2xl font-bold tracking-tighter text-white">ANSIOFF</h1>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-blue-500 font-bold">Tu Espacio Seguro</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        {/* Hidden bell for future use */}
+                        <div className="w-10"></div>
+                    </div>
+                </div>
+            </header>
+
             {/* Main Content Container */}
-            <div className="w-full flex flex-col gap-8">
+            <div className="w-full flex flex-col gap-8 px-5">
 
                 {/* 1. SOS Button Area */}
                 <section className="mt-2 text-left">
