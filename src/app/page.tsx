@@ -197,7 +197,7 @@ export default function App() {
     <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col">
       {curScreen !== 'sc-home' && <Header onLogout={() => { supabase.auth.signOut().then(() => setIsLoggedIn(false)); }} />}
 
-      <main className="flex-1 w-full max-w-md mx-auto relative overflow-hidden">
+      <main className="flex-1 w-full max-w-md mx-auto relative overflow-x-hidden">
         {renderScreen()}
       </main>
 

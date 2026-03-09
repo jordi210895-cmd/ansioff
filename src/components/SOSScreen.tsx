@@ -125,7 +125,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
         return (
             <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
                 <TopBar title="Técnica 5-4-3-2-1" onBack={() => setMode('BREATHING')} />
-                <div className="flex-1 overflow-y-auto px-6 py-4">
+                <div className="flex-1 overflow-y-auto px-8 py-4">
                     <div className="text-[10px] uppercase tracking-[0.2em] text-blue-500/60 mb-6 font-semibold">
                         Paso 2 de 2 · Sentidos
                     </div>

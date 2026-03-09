@@ -107,7 +107,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
             <TopBar title="Técnicas TCC" onBack={onBack} />
 
             {/* Tab Toggle */}
-            <div className="flex px-6 gap-2 mt-4 mb-2">
+            <div className="flex px-8 gap-2 mt-4 mb-2">
                 <button
                     onClick={() => setView('form')}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${view === 'form' ? 'bg-blue-500 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'}`}
