@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { PenLine, FileText, ChevronRight, Lock, Brain, Sparkles, AlertCircle } from 'lucide-react';
+import { PenLine, FileText, ChevronRight, Lock, Brain, Sparkles, AlertCircle, Calendar, Loader2, BrainCircuit, Trash2 } from 'lucide-react';
 import { addCbtEntry } from '../utils/stats';
 import TopBar from './TopBar';
 
