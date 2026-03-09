@@ -1,6 +1,6 @@
 'use client';
 
-import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, Clock, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, Clock, ChevronRight, AlertTriangle, Menu } from 'lucide-react';
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
