@@ -1,6 +1,7 @@
 'use client';
 
-import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, Clock, ChevronRight, AlertTriangle, Menu } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, Clock, ChevronRight, AlertTriangle, Menu, Moon } from 'lucide-react';
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
@@ -8,6 +9,13 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
+    const [isNightTime, setIsNightTime] = useState(false);
+
+    useEffect(() => {
+        const hour = new Date().getHours();
+        setIsNightTime(hour >= 22 || hour < 6);
+    }, []);
+
     return (
         <div
             className="flex-1 w-full bg-slate-950 flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide pb-24"
@@ -66,6 +74,25 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         </div>
                     </button>
                 </section>
+
+                {/* --- SMART NIGHT TRIGGER (Shows after 22:00) --- */}
+                {isNightTime && (
+                    <section className="animate-in fade-in slide-in-from-bottom-2 duration-700">
+                        <button
+                            onClick={() => onNav('sc-night')}
+                            className="w-full group rounded-3xl p-5 bg-[#131628] border border-indigo-900/50 flex items-center gap-4 transition-all hover:bg-[#1a1e36] hover:border-indigo-500/30 shadow-lg shadow-indigo-900/20 active:scale-[0.98]"
+                        >
+                            <div className="w-12 h-12 bg-indigo-500/20 rounded-full flex items-center justify-center text-indigo-400 shrink-0 group-hover:scale-110 transition-transform">
+                                <Moon size={22} fill="currentColor" className="opacity-80" />
+                            </div>
+                            <div className="text-left flex-1">
+                                <h3 className="font-semibold text-indigo-100 text-[15px] mb-0.5">Es hora de desconectar</h3>
+                                <p className="text-xs text-indigo-300/60 leading-tight">Prepara tu entorno y mente para dormir bien.</p>
+                            </div>
+                            <ChevronRight size={18} className="text-indigo-500/50 group-hover:text-indigo-400 transition-colors" />
+                        </button>
+                    </section>
+                )}
 
                 {/* 2. Featured Breathing Card */}
                 <section>
