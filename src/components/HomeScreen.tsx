@@ -22,7 +22,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
             <div className="w-full flex flex-col gap-8">
 
                 {/* 1. SOS Button Area */}
-                <section className="mt-2">
+                <section className="mt-2 text-left">
                     <button
                         onClick={() => onNav('sc-sos')}
                         className="w-full group relative overflow-hidden rounded-3xl p-px bg-gradient-to-r from-red-500/50 via-blue-500/50 to-red-500/50 shadow-2xl shadow-blue-500/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
