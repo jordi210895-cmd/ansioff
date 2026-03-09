@@ -10,7 +10,7 @@ interface HeaderProps {
 
 export default function Header({ onLogout, onSettings }: HeaderProps) {
     return (
-        <header className="sticky top-0 z-50 glass px-8 py-4 flex flex-col items-center justify-center gap-1 border-b border-slate-800/50">
+        <header className="sticky top-0 z-50 glass px-8 pt-8 pb-6 flex flex-col items-center justify-center gap-1 border-b border-white/5 bg-[#080A12]">
             <div className="flex items-center justify-between w-full max-w-md">
                 <div className="flex items-center">
                     {onSettings ? (
@@ -25,7 +25,7 @@ export default function Header({ onLogout, onSettings }: HeaderProps) {
                         <div className="w-10"></div>
                     )}
                 </div>
-                <div className="text-center absolute left-1/2 -translate-x-1/2">
+                <div className="text-center absolute left-1/2 -translate-x-1/2 flex flex-col gap-1.5">
                     <h1 className="text-2xl font-bold tracking-tighter text-white">ANSIOFF</h1>
                     <p className="text-[10px] uppercase tracking-[0.2em] text-blue-500 font-bold">Tu Espacio Seguro</p>
                 </div>

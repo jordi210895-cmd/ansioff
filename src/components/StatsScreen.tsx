@@ -26,7 +26,7 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
     const progressPercent = Math.min(100, Math.max(0, ((stats.points - level.currentThreshold) / (level.nextThreshold - level.currentThreshold)) * 100));
 
     return (
-        <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
+        <div className="flex flex-col h-full bg-[#080A12] text-white overflow-hidden">
             <TopBar title="Mi Progreso" onBack={onBack} />
             <div className="flex-1 overflow-y-auto screen-px pb-32 pt-6">
 
@@ -71,35 +71,37 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 gap-4">
                     {/* SOS Uses */}
-                    <div className="glass rounded-3xl p-5 flex flex-col hover:bg-white/[0.03] transition-colors relative overflow-hidden group">
-                        <div className="w-10 h-10 rounded-xl bg-red-500/15 text-red-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <div className="glass rounded-3xl p-5 flex flex-col items-start hover:bg-white/[0.03] transition-colors relative overflow-hidden group">
+                        <div className="w-10 h-10 rounded-xl bg-red-500/15 text-red-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                             <Shield size={20} strokeWidth={2.5} />
                         </div>
-                        <div className="text-3xl font-bold text-white mb-1 tracking-tight">{stats.sosUses}</div>
-                        <div className="text-[11px] font-medium text-slate-400 leading-tight">Anclajes de<br />crisis superados</div>
+                        <div className="flex flex-col items-start justify-end flex-1 mt-auto">
+                            <div className="text-4xl font-bold text-white mb-2 tracking-tight leading-none">{stats.sosUses}</div>
+                            <div className="text-xs font-medium text-slate-400 leading-relaxed max-w-[90%]">Anclajes de crisis superados</div>
+                        </div>
                     </div>
 
                     {/* Breathing Mins */}
-                    <div className="glass rounded-3xl p-5 flex flex-col hover:bg-white/[0.03] transition-colors relative overflow-hidden group">
-                        <div className="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <div className="glass rounded-3xl p-5 flex flex-col items-start hover:bg-white/[0.03] transition-colors relative overflow-hidden group">
+                        <div className="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                             <Wind size={20} strokeWidth={2.5} />
                         </div>
-                        <div className="text-3xl font-bold text-white mb-1 tracking-tight">{stats.breathMins}</div>
-                        <div className="text-[11px] font-medium text-slate-400 leading-tight">Minutos de<br />calma y respiro</div>
+                        <div className="flex flex-col items-start justify-end flex-1 mt-auto">
+                            <div className="text-4xl font-bold text-white mb-2 tracking-tight leading-none">{stats.breathMins}</div>
+                            <div className="text-xs font-medium text-slate-400 leading-relaxed max-w-[90%]">Minutos de calma y respiro</div>
+                        </div>
                     </div>
 
                     {/* CBT Entries */}
-                    <div className="glass rounded-3xl p-5 flex flex-col col-span-2 hover:bg-white/[0.03] transition-colors relative overflow-hidden group">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                    <PenLine size={20} strokeWidth={2.5} />
-                                </div>
-                                <div className="text-3xl font-bold text-white mb-1 tracking-tight">{stats.cbtEntries}</div>
-                                <div className="text-[11px] font-medium text-slate-400 leading-tight">Reflexiones y registros cognitivos</div>
-                            </div>
-                            <Award className="text-emerald-500/10 w-24 h-24 absolute -right-4 -bottom-4 rotate-12" />
+                    <div className="glass rounded-3xl p-5 flex flex-col col-span-2 items-start hover:bg-white/[0.03] transition-colors relative overflow-hidden group">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform z-10">
+                            <PenLine size={20} strokeWidth={2.5} />
                         </div>
+                        <div className="flex flex-col items-start justify-end flex-1 mt-auto z-10">
+                            <div className="text-4xl font-bold text-white mb-2 tracking-tight leading-none">{stats.cbtEntries}</div>
+                            <div className="text-xs font-medium text-slate-400 leading-relaxed w-[60%]">Reflexiones y registros cognitivos</div>
+                        </div>
+                        <Award className="text-emerald-500/10 w-32 h-32 absolute right-[-10px] bottom-[-20px] rotate-[-10deg] pointer-events-none" />
                     </div>
                 </div>
 

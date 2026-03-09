@@ -18,7 +18,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
 
     return (
         <div
-            className="flex-1 w-full bg-slate-950 flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide pb-24"
+            className="flex-1 w-full bg-[#080A12] flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide pb-24"
         >
             <style jsx>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
@@ -26,7 +26,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
             `}</style>
 
             {/* Custom Header for Home Screen */}
-            <header className="sticky top-0 z-50 glass px-8 py-4 flex flex-col items-center justify-center gap-1 border-b border-slate-800/50 mb-4 bg-slate-950/80 backdrop-blur-md">
+            <header className="sticky top-0 z-50 glass px-8 pt-8 pb-6 flex flex-col items-center justify-center gap-1 border-b border-white/5 mb-4 bg-[#080A12]/95 backdrop-blur-xl">
                 <div className="flex items-center justify-between w-full max-w-md">
                     <div className="flex items-center">
                         <button
@@ -37,7 +37,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                             <Menu className="text-slate-400" size={24} />
                         </button>
                     </div>
-                    <div className="text-center absolute left-1/2 -translate-x-1/2">
+                    <div className="text-center absolute left-1/2 -translate-x-1/2 flex flex-col gap-1.5">
                         <h1 className="text-2xl font-bold tracking-tighter text-white">ANSIOFF</h1>
                         <p className="text-[10px] uppercase tracking-[0.2em] text-blue-500 font-bold">Tu Espacio Seguro</p>
                     </div>

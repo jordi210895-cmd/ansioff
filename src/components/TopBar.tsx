@@ -10,7 +10,7 @@ interface TopBarProps {
 
 export default function TopBar({ title, onBack, dark }: TopBarProps) {
     return (
-        <div className="flex items-center gap-3 px-8 pt-12 pb-4 bg-slate-950 sticky top-0 z-50 border-b border-white/5">
+        <div className="flex items-center gap-3 px-8 pt-12 pb-6 bg-[#080A12] sticky top-0 z-50 border-b border-white/5">
             <button
                 onClick={onBack}
                 className="w-10 h-10 border-2 border-slate-800 hover:border-blue-500/50 rounded-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 bg-slate-900 text-blue-400"
