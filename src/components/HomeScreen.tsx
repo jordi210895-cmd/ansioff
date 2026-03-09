@@ -9,14 +9,17 @@ interface HomeScreenProps {
 
 export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
     return (
-        <div className="flex-1 w-full bg-slate-950 flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide pb-24 px-8 pt-4">
+        <div
+            className="flex-1 w-full bg-slate-950 flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide pb-24 pt-4"
+            style={{ paddingLeft: '1.25rem', paddingRight: '1.25rem' }}
+        >
             <style jsx>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
 
-            {/* Main Content Container matching max-w-md */}
-            <div className="w-full max-w-md mx-auto flex flex-col gap-8">
+            {/* Main Content Container */}
+            <div className="w-full flex flex-col gap-8">
 
                 {/* 1. SOS Button Area */}
                 <section className="mt-2">
