@@ -15,7 +15,7 @@ export default function NightModeScreen({ onBack }: NightModeScreenProps) {
         <div className="flex flex-col h-full bg-slate-950 text-blue-100/80 overflow-hidden">
             <TopBar title="Rescate Nocturno" onBack={onBack} />
 
-            <div className="flex-1 overflow-y-auto px-8 flex flex-col items-center justify-center text-center pb-24">
+            <div className="flex-1 overflow-y-auto screen-px flex flex-col items-center justify-center text-center pb-24">
 
                 {activeRescue === 'none' && (
                     <div className="animate-in fade-in zoom-in-95 duration-1000">

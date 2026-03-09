@@ -13,11 +13,11 @@ import GamesScreen from '@/components/GamesScreen';
 import ACTScreen from '@/components/ACTScreen';
 import CBTScreen from '@/components/CBTScreen';
 import EvaluationScreen from '@/components/EvaluationScreen';
+import StatsScreen from '@/components/StatsScreen';
 import SupportScreen from '@/components/SupportScreen';
 import NightModeScreen from '@/components/NightModeScreen';
 import * as db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
-import AuthScreen from '@/components/AuthScreen';
 import ExposureScreen from '@/components/ExposureScreen';
 import DisclaimerModal from '@/components/DisclaimerModal';
 
@@ -35,8 +35,6 @@ export default function App() {
   const [curScreen, setCurScreen] = useState('sc-home');
   const [prevScreen, setPrevScreen] = useState('sc-home');
   const [cbtCount, setCbtCount] = useState(0);
-  const [authChecked, setAuthChecked] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [tracks, setTracks] = useState<Track[]>([
     { name: 'Superación Agorafobia', url: '/audio/audio1.m4a', icon: '🧘', duration: '—' },
     { name: 'Calma Profunda', url: '/audio/audio2.m4a', icon: '🌊', duration: '—' },
@@ -45,17 +43,6 @@ export default function App() {
 
   // Load persistence
   useEffect(() => {
-    // 0. Check auth session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsLoggedIn(!!session);
-      setAuthChecked(true);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoggedIn(!!session);
-    });
-
     // 2. Audio Tracks from IndexedDB
     const loadTracks = async () => {
       try {
@@ -104,7 +91,6 @@ export default function App() {
       if (count !== null) setCbtCount(count);
     });
 
-    return () => subscription.unsubscribe();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleNav = (id: string) => {
@@ -178,6 +164,8 @@ export default function App() {
         return <CBTScreen onBack={goBack} />;
       case 'sc-eval':
         return <EvaluationScreen onBack={goBack} />;
+      case 'sc-stats':
+        return <StatsScreen onBack={goBack} />;
       case 'sc-support':
         return <SupportScreen onBack={goBack} />;
       case 'sc-night':
@@ -195,7 +183,7 @@ export default function App() {
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col">
-      {curScreen !== 'sc-home' && <Header onLogout={() => { supabase.auth.signOut().then(() => setIsLoggedIn(false)); }} />}
+      {curScreen !== 'sc-home' && <Header onLogout={() => { supabase.auth.signOut(); }} />}
 
       <main className="flex-1 w-full max-w-md mx-auto relative overflow-x-hidden screen-px">
         {renderScreen()}

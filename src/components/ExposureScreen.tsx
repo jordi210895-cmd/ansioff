@@ -33,7 +33,7 @@ export default function ExposureScreen({ onBack }: ExposureScreenProps) {
     return (
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
             <TopBar title="Mi Propósito" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto px-8 pb-24 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto screen-px pb-24 scrollbar-hide">
                 <div className="mt-6 mb-8 text-center">
                     <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-3xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-orange-500/20">
                         <Target size={32} strokeWidth={2.5} />

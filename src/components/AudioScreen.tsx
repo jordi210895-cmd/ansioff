@@ -107,7 +107,7 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
     return (
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
             <TopBar title="Paisajes Sonoros" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto px-8 pb-48 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto screen-px pb-48 scrollbar-hide">
                 <div className="mt-6 mb-10">
                     <label className="relative group cursor-pointer block">
                         <input type="file" className="hidden" accept="audio/*" multiple onChange={handleFileChange} />

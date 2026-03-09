@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { PenLine, Trash2, Calendar, Loader2, Sparkles, AlertCircle, BrainCircuit } from 'lucide-react';
+import { PenLine, FileText, ChevronRight, Lock, Brain, Sparkles, AlertCircle } from 'lucide-react';
+import { addCbtEntry } from '../utils/stats';
 import TopBar from './TopBar';
 
 interface Note {
@@ -62,6 +63,10 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
             const updatedNotes = [newNote, ...notes];
             localStorage.setItem('ansioff_notes', JSON.stringify(updatedNotes));
             setNotes(updatedNotes);
+
+            // Gamification
+            addCbtEntry();
+
             setInputText('');
             setShowEditor(false);
         } catch (e) {
@@ -112,7 +117,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
     return (
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
             <TopBar title="Diario de Calma" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto px-8 pb-32 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto screen-px pb-32 scrollbar-hide">
                 <div className="mt-6 mb-10">
                     <button
                         onClick={() => setShowEditor(true)}

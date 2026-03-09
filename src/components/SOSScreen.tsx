@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Shield, ArrowRight, Brain, Sparkles } from 'lucide-react';
+import { addSosUse } from '../utils/stats';
 import TopBar from './TopBar';
 import SOSDisclaimer from './SOSGames/SOSDisclaimer';
 import MindfulTetris from './SOSGames/MindfulTetris';
@@ -65,7 +66,9 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
             setGroundStep(s => s + 1);
             setGroundItemsDone([]);
         } else {
-            onFinished();
+            addSosUse(); // Gamification tracking for completing a crisis grounding session
+            onFinished(); // Navigate back to home
+            setMode('GAMES_DISCLAIMER'); // Prep state just in case
         }
     };
 
@@ -79,7 +82,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
         return (
             <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
                 <TopBar title="Anclaje Rápido" onBack={onBack} />
-                <div className="flex-1 flex flex-col items-center justify-between py-8 px-8">
+                <div className="flex-1 flex flex-col items-center justify-between py-8 screen-px">
                     <div className="text-center">
                         <div className="text-[10px] uppercase tracking-[0.2em] text-blue-500 mb-2 font-semibold flex items-center justify-center gap-2">
                             <Shield className="w-3 h-3" /> Guía de Crisis · Paso 1 de 2
@@ -125,7 +128,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
         return (
             <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
                 <TopBar title="Técnica 5-4-3-2-1" onBack={() => setMode('BREATHING')} />
-                <div className="flex-1 overflow-y-auto px-8 py-4">
+                <div className="flex-1 overflow-y-auto screen-px py-4">
                     <div className="text-[10px] uppercase tracking-[0.2em] text-blue-500/60 mb-6 font-semibold">
                         Paso 2 de 2 · Sentidos
                     </div>

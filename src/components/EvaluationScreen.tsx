@@ -64,7 +64,7 @@ export default function EvaluationScreen({ onBack }: EvaluationScreenProps) {
     return (
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
             <TopBar title="Evaluación" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto px-8 pb-24">
+            <div className="flex-1 overflow-y-auto screen-px pb-24">
 
                 {!isFinished ? (
                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 mt-4">

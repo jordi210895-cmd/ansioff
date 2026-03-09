@@ -80,6 +80,13 @@ body {
   padding-right: env(safe-area-inset-right);
 }
 
+/* ── SCREEN SAFE PADDING ── */
+/* This class guarantees lateral padding on all screens.
+   Using explicit CSS to bypass any Tailwind compilation issues. */
+.screen-px {
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
+}
 
 .bt.on .bt-pip {
   display: block;

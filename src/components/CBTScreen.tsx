@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Brain, ArrowRight, CheckCircle2, Quote, Clock, ChevronDown, ChevronUp, Trash2, BookOpen } from 'lucide-react';
 import TopBar from './TopBar';
 import { supabase } from '@/lib/supabase';
+import { addCbtEntry } from '../utils/stats'; // Added this import
 
 interface CBTScreenProps {
     onBack: () => void;
@@ -78,6 +79,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
         });
 
         setSaving(false);
+        addCbtEntry(); // Gamification tracking
         loadHistory();
         next();
     };
@@ -107,7 +109,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
             <TopBar title="Técnicas TCC" onBack={onBack} />
 
             {/* Tab Toggle */}
-            <div className="flex px-8 gap-2 mt-4 mb-2">
+            <div className="flex screen-px gap-2 mt-4 mb-2">
                 <button
                     onClick={() => setView('form')}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${view === 'form' ? 'bg-blue-500 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'}`}
@@ -122,7 +124,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                     Historial {records.length > 0 && <span className="bg-white/20 text-[10px] px-1.5 py-0.5 rounded-full">{records.length}</span>}
                 </button>
             </div>
-            <div className="flex-1 overflow-y-auto px-8 pb-24">
+            <div className="flex-1 overflow-y-auto screen-px pb-24">
 
                 {/* ── FORM VIEW ── */}
                 {view === 'form' && (

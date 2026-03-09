@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Wind, ChevronRight, Check } from 'lucide-react';
+import { addBreathMins } from '../utils/stats';
 import TopBar from './TopBar';
 
 interface BreathingScreenProps {
@@ -33,6 +34,7 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
     const [selectedPattern, setSelectedPattern] = useState<'4-2-6' | '4-6-7'>('4-2-6');
     const [phaseIndex, setPhaseIndex] = useState(0);
     const [counter, setCounter] = useState(PATTERNS['4-2-6'][0].n);
+    const [startTime] = useState<number>(Date.now());
 
     const currentPhases = PATTERNS[selectedPattern];
     const currentPhase = currentPhases[phaseIndex];
@@ -70,7 +72,7 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
     return (
         <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
             <TopBar title="Respiración Guiada" onBack={onBack} />
-            <div className="flex-1 flex flex-col items-center justify-between py-8 px-8 overflow-y-auto">
+            <div className="flex-1 flex flex-col items-center justify-between py-8 screen-px overflow-y-auto">
                 <div className="text-center w-full">
                     <h2 className="text-3xl font-medium mb-3 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                         Calma tu sistema nervioso
@@ -133,7 +135,11 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
                 <div className="w-full mt-12 mb-4">
                     <button
                         className="w-full bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/50 text-white rounded-2xl py-4 font-medium transition-all active:scale-95"
-                        onClick={onBack}
+                        onClick={() => {
+                            const minutes = Math.floor((Date.now() - startTime) / 60000);
+                            if (minutes > 0) addBreathMins(minutes);
+                            onBack();
+                        }}
                     >
                         Finalizar sesión
                     </button>
