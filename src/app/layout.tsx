@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
-import { Outfit, Gilda_Display } from "next/font/google";
+import { DM_Sans, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const dmSans = DM_Sans({
+  variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["300", "400", "500", "700"],
 });
 
-const gildaDisplay = Gilda_Display({
-  variable: "--font-gilda",
+const dmSerif = DM_Serif_Display({
+  variable: "--font-serif",
   subsets: ["latin"],
   weight: ["400"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -34,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body
-        className={`${outfit.variable} ${gildaDisplay.variable} antialiased screen-px`}
+        className={`${dmSans.variable} ${dmSerif.variable} antialiased screen-px font-sans`}
       >
         {children}
       </body>

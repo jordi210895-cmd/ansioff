@@ -2,13 +2,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #256af4;
-  --color-background-light: #f5f6f8;
-  --color-background-dark: #101622;
+  --color-primary: #7ec8e3;
+  --color-background-light: #06101a;
+  --color-background-dark: #06101a;
 }
 
 /* ── MICRO ANIMATIONS ── */
-@keyframes breathe {
+@keyframes breathePulse {
 
   0%,
   100% {
@@ -17,13 +17,25 @@
   }
 
   50% {
-    transform: scale(1.18);
-    opacity: 0.7;
+    transform: scale(1.3);
+    opacity: 0.9;
+  }
+}
+
+@keyframes breatheCore {
+
+  0%,
+  100% {
+    transform: scale(0.85);
+  }
+
+  50% {
+    transform: scale(1.1);
   }
 }
 
 .animate-breathe {
-  animation: breathe 6s ease-in-out infinite;
+  animation: breathePulse 5s ease-in-out infinite;
 }
 
 /* ── UI EFFECTS ── */
@@ -42,17 +54,19 @@
 }
 
 :root {
-  /* Slate 950 background */
-  --bg: #020617;
-  --bg-dark: #0f172a;
+  /* Navy Zen Theme */
+  --bg: #06101a;
+  --navy: #0d1b2a;
+  --surface: #1a2e42;
+  --card: #1e3349;
 
-  /* Blue 500 accent */
-  --blue: #3b82f6;
-  --blue-hover: #60a5fa;
+  --accent: #7ec8e3;
+  --accent2: #4fa3c8;
+  --sos: #e07d6a;
 
   /* Text colors */
-  --txt: #f8fafc;
-  --txt-soft: #94a3b8;
+  --txt: #e8f4f8;
+  --txt-soft: rgba(255, 255, 255, 0.38);
 
   --background: var(--bg);
   --foreground: var(--txt);
@@ -63,7 +77,7 @@
   padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: var(--font-sans), sans-serif;
 }
 
 html,
