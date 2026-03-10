@@ -185,7 +185,7 @@ export default function App() {
   // if (!isLoggedIn) return <AuthScreen onAuth={() => setIsLoggedIn(true)} />;
 
   return (
-    <div className="bg-[#06101a] font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col leading-[1.65] tracking-[0.02em]">
+    <div className="bg-[#03080f] font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col leading-[1.65] tracking-[0.02em]">
       {curScreen !== 'sc-home' && <Header onLogout={() => { supabase.auth.signOut(); }} onSettings={() => handleNav('sc-settings')} />}
 
       <main className="flex-1 w-full max-w-[600px] mx-auto relative overflow-x-hidden">

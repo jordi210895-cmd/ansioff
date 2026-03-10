@@ -3,8 +3,8 @@
 
 @theme {
   --color-primary: #7ec8e3;
-  --color-background-light: #06101a;
-  --color-background-dark: #06101a;
+  --color-background-light: #03080f;
+  --color-background-dark: #03080f;
 }
 
 /* ── MICRO ANIMATIONS ── */
@@ -55,7 +55,7 @@
 
 :root {
   /* Navy Zen Theme */
-  --bg: #06101a;
+  --bg: #03080f;
   --navy: #0d1b2a;
   --surface: #1a2e42;
   --card: #1e3349;
