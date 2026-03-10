@@ -25,7 +25,7 @@ export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
                     <button
                         key={item.id}
                         onClick={() => onNav(item.screen)}
-                        className={`flex-1 flex flex-col items-center gap-[3px] p-[6px_2px] bg-transparent border-none cursor-pointer relative group ${isActive ? 'active' : ''}`}
+                        className={`flex-1 flex flex-col items-center gap-2 p-[8px_4px] bg-transparent border-none cursor-pointer relative group ${isActive ? 'active' : ''}`}
                     >
                         {/* Dot indicator */}
                         <div className={`absolute top-[4px] w-[4px] h-[4px] rounded-full bg-[#89cee4] transition-opacity duration-200 ${isActive ? 'opacity-100' : 'opacity-0'}`}></div>

@@ -41,7 +41,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
             <div className="w-full flex flex-col pb-24 pt-8 z-10 relative">
 
                 {/* Hero / Header Section */}
-                <div className="flex items-start justify-between relative mt-4 px-6 mb-5">
+                <div className="flex items-start justify-between relative mt-4 px-5 mb-5">
                     <div className="flex flex-col">
                         <span className="text-[10px] tracking-[0.18em] uppercase mb-2.5 flex items-center gap-2 text-[rgba(200,225,235,0.35)]">
                             <span className="w-[18px] h-[1px] bg-[#89cee4] opacity-50 block"></span>
@@ -62,7 +62,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                 <section className="text-left mx-5 mb-[22px]">
                     <button
                         onClick={() => onNav('sc-sos')}
-                        className="w-full relative overflow-hidden bg-[rgba(217,124,106,0.09)] border border-[rgba(217,124,106,0.22)] rounded-[22px] p-[15px_18px] flex items-center gap-[14px] transition-all hover:bg-[rgba(217,124,106,0.15)] hover:border-[rgba(217,124,106,0.38)] active:scale-[0.98] text-left"
+                        className="w-full relative overflow-hidden bg-[rgba(217,124,106,0.09)] border border-[rgba(217,124,106,0.22)] rounded-[22px] p-[20px] flex items-center gap-5 transition-all hover:bg-[rgba(217,124,106,0.15)] hover:border-[rgba(217,124,106,0.38)] active:scale-[0.98] text-left"
                     >
                         {/* Left solid border */}
                         <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#d97c6a] rounded-l-[3px]"></div>
@@ -109,14 +109,14 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
 
                 {/* 2. Featured Breathing Card */}
                 <section className="mb-[22px]">
-                    <div className="flex items-baseline justify-between px-6 pb-[10px]">
+                    <div className="flex items-baseline justify-between px-5 pb-[10px]">
                         <h2 className="text-[11px] font-medium text-[rgba(200,225,235,0.35)] tracking-[0.1em] uppercase">Respiración guiada</h2>
                         <button onClick={() => onNav('sc-breath')} className="text-[11px] text-[#89cee4] opacity-75 hover:opacity-100 transition-opacity">
                             Ver todos →
                         </button>
                     </div>
 
-                    <div className="mx-5 relative rounded-[26px] bg-[linear-gradient(145deg,rgba(18,33,50,0.9),rgba(14,29,46,0.95))] border border-[rgba(255,255,255,0.07)] border-t-[rgba(255,255,255,0.10)] p-[22px] flex items-center gap-[20px] overflow-hidden">
+                    <div className="mx-5 relative rounded-[26px] bg-[linear-gradient(145deg,rgba(18,33,50,0.9),rgba(14,29,46,0.95))] border border-[rgba(255,255,255,0.07)] border-t-[rgba(255,255,255,0.10)] p-[24px_22px] flex items-center gap-6 overflow-hidden">
                         {/* Abstract pattern background - contained */}
                         <div className="absolute -right-[30px] -top-[30px] w-[130px] h-[130px] bg-[radial-gradient(circle,rgba(89,174,210,0.09),transparent_70%)] pointer-events-none"></div>
 
@@ -152,15 +152,15 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
 
                 {/* 3. Tools Grid (2x2) */}
                 <section className="mb-[24px]">
-                    <div className="px-6 pb-[10px]">
+                    <div className="px-5 pb-[10px]">
                         <h2 className="text-[11px] font-medium text-[rgba(200,225,235,0.35)] tracking-[0.1em] uppercase">Herramientas</h2>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-[10px] px-5">
+                    <div className="grid grid-cols-2 gap-4 px-5">
                         {/* Audio Tool */}
                         <button
                             onClick={() => onNav('sc-audio')}
-                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[18px_16px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
+                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[20px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
                         >
                             <span className="absolute top-[16px] right-[16px] text-[13px] text-[rgba(200,225,235,0.35)]">↗</span>
                             <div className="absolute -bottom-[20px] -right-[20px] w-[70px] h-[70px] rounded-full bg-[#89cee4] opacity-[0.07] pointer-events-none"></div>
@@ -175,7 +175,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         {/* Diary Tool */}
                         <button
                             onClick={() => onNav('sc-notes')}
-                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[18px_16px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
+                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[20px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
                         >
                             <span className="absolute top-[16px] right-[16px] text-[13px] text-[rgba(200,225,235,0.35)]">↗</span>
                             <div className="absolute -bottom-[20px] -right-[20px] w-[70px] h-[70px] rounded-full bg-[#6bbf8e] opacity-[0.07] pointer-events-none"></div>
@@ -190,7 +190,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         {/* Games Tool */}
                         <button
                             onClick={() => onNav('sc-games')}
-                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[18px_16px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
+                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[20px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
                         >
                             <span className="absolute top-[16px] right-[16px] text-[13px] text-[rgba(200,225,235,0.35)]">↗</span>
                             <div className="absolute -bottom-[20px] -right-[20px] w-[70px] h-[70px] rounded-full bg-[#b09de0] opacity-[0.07] pointer-events-none"></div>
@@ -205,7 +205,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         {/* Modules Tool */}
                         <button
                             onClick={() => onNav('sc-tools')}
-                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[18px_16px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
+                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[20px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
                         >
                             <span className="absolute top-[16px] right-[16px] text-[13px] text-[rgba(200,225,235,0.35)]">↗</span>
                             <div className="absolute -bottom-[20px] -right-[20px] w-[70px] h-[70px] rounded-full bg-[#c9a96e] opacity-[0.07] pointer-events-none"></div>
@@ -223,7 +223,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                 <section className="mb-[24px]">
                     <div className="mx-5 p-[18px_20px] bg-[linear-gradient(135deg,rgba(89,174,210,0.06),rgba(89,174,210,0.02))] border border-[rgba(89,174,210,0.12)] rounded-[20px] relative">
                         <span className="font-serif text-[52px] leading-[0.5] text-[rgba(89,174,210,0.2)] mb-[8px] block">"</span>
-                        <div className="font-serif italic font-light text-[16px] text-[#ddeef5] leading-[1.6]">
+                        <div className="font-serif italic font-light text-[17px] text-[#ddeef5] leading-[1.8]">
                             Tus sentimientos son válidos, pero no son tu destino. Respira y confía en el proceso.
                         </div>
                         <div className="mt-[10px] text-[10px] tracking-[0.12em] uppercase text-[rgba(200,225,235,0.35)]">

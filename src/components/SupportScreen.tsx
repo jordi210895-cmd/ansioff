@@ -108,7 +108,7 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
                             <p className="text-white/70 text-sm leading-relaxed mb-6">
                                 Ante una emergencia médica inmediata o peligro inminente, llama directamente al número de emergencias.
                             </p>
-                            <a href="tel:112" className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-xl font-bold text-sm shadow-lg active:scale-95 transition-all">
+                            <a href="tel:112" className="inline-flex items-center gap-2 bg-white text-blue-600 px-5 py-3 rounded-xl font-bold text-sm shadow-lg active:scale-95 transition-all">
                                 Llamar ahora <ExternalLink size={14} />
                             </a>
                         </div>
