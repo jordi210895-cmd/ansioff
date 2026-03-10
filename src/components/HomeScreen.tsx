@@ -32,7 +32,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
             `}</style>
 
             {/* Global background gradient / Aurora */}
-            <div className="absolute top-0 left-0 right-0 h-[500px] pointer-events-none z-0 overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none z-0 overflow-hidden">
                 <div className="absolute rounded-full blur-[60px] w-[280px] h-[280px] -top-[80px] -right-[60px] bg-[radial-gradient(circle,rgba(89,174,210,0.18)_0%,transparent_70%)]"></div>
                 <div className="absolute rounded-full blur-[60px] w-[220px] h-[220px] top-[120px] -left-[80px] bg-[radial-gradient(circle,rgba(107,191,142,0.10)_0%,transparent_70%)]"></div>
             </div>
