@@ -13,24 +13,27 @@ export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
         { id: 'audio', icon: Volume2, label: 'Sonidos', screen: 'sc-audio' },
         { id: 'notes', icon: BookOpen, label: 'Notas', screen: 'sc-notes' },
         { id: 'breath', icon: Wind, label: 'Respirar', screen: 'sc-breath' },
-        { id: 'tools', icon: GraduationCap, label: 'Módulos', screen: 'sc-tools' },
-        { id: 'stats', icon: Trophy, label: 'Progreso', screen: 'sc-stats' },
+        { id: 'sos', icon: Trophy, label: 'Crisis', screen: 'sc-sos' },
+        { id: 'stats', icon: GraduationCap, label: 'Progreso', screen: 'sc-stats' },
     ];
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 bg-[#0d1b2a]/90 backdrop-blur-xl border-t border-white/5 px-2 pb-6 pt-2 5 flex justify-around items-center z-50">
+        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[rgba(8,15,26,0.88)] backdrop-blur-[24px] saturate-[1.4] border-t border-[rgba(255,255,255,0.06)] flex p-[8px_4px_28px] supports-[padding:max(0px)]:pb-[max(28px,env(safe-area-inset-bottom))]">
             {items.map((item) => {
                 const isActive = activeScreen === item.screen;
                 return (
                     <button
                         key={item.id}
                         onClick={() => onNav(item.screen)}
-                        className={`flex flex-col items-center gap-1 flex-1 py-1.5 transition-colors group ${isActive ? 'active' : ''}`}
+                        className={`flex-1 flex flex-col items-center gap-[3px] p-[6px_2px] bg-transparent border-none cursor-pointer relative group ${isActive ? 'active' : ''}`}
                     >
-                        <div className={`transition-all duration-300 ${isActive ? 'text-[#7ec8e3] drop-shadow-[0_0_6px_rgba(126,200,227,0.8)]' : 'text-white/40 group-hover:text-white/60'}`}>
-                            <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                        {/* Dot indicator */}
+                        <div className={`absolute top-[4px] w-[4px] h-[4px] rounded-full bg-[#89cee4] transition-opacity duration-200 ${isActive ? 'opacity-100' : 'opacity-0'}`}></div>
+
+                        <div className={`w-[32px] h-[32px] rounded-[12px] flex items-center justify-center transition-all duration-200 ${isActive ? 'bg-[rgba(89,174,210,0.15)] scale-[1.05] drop-shadow-[0_0_5px_rgba(89,174,210,0.5)] text-[#89cee4]' : 'text-[rgba(200,225,235,0.35)] group-hover:text-white/60'}`}>
+                            <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} />
                         </div>
-                        <span className={`text-[9px] tracking-[0.04em] transition-colors duration-300 ${isActive ? 'font-medium text-[#7ec8e3]' : 'font-medium text-white/40'}`}>
+                        <span className={`font-['Outfit',sans-serif] text-[9px] tracking-[0.04em] font-normal transition-colors duration-200 ${isActive ? 'text-[#89cee4]' : 'text-[rgba(200,225,235,0.35)]'}`}>
                             {item.label}
                         </span>
                     </button>

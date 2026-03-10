@@ -10,8 +10,8 @@ interface MindfulTetrisProps {
 const COLS = 10;
 const ROWS = 20;
 const CALM_WORDS = ['Respira', 'Acepta', 'Flota', 'Calma', 'Estás a salvo', 'Paz', 'Confía', 'Suelta'];
-// Modern, cohesive blue palette
-const COLORS = ['#3b82f6', '#60a5fa', '#2563eb', '#1d4ed8', '#1e40af'];
+// Modern, cohesive blue palette for Navy Zen
+const COLORS = ['#7ec8e3', '#4fa3c8', '#e07d6a', '#b48cdc', '#78b478'];
 
 const TETROMINOS = {
     I: { shape: [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]], color: COLORS[0] },
@@ -231,18 +231,18 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
     }, [moveSide, moveDown, rotate, hardDrop, isPaused, isGameOver]);
 
     return (
-        <div className="flex flex-col items-center h-full bg-slate-950 text-white overflow-hidden" style={{ maxHeight: '100dvh' }}>
+        <div className="flex flex-col items-center h-full bg-[#06101a] text-white overflow-hidden" style={{ maxHeight: '100dvh' }}>
             <div className="w-full flex justify-between items-center p-8 flex-shrink-0">
-                <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors">
-                    <ArrowLeft size={18} />
-                    <span className="text-sm font-medium">Volver</span>
+                <button onClick={onBack} className="flex items-center gap-2 text-white/40 hover:text-white transition-colors">
+                    <ArrowLeft size={20} />
+                    <span className="text-[14px] font-medium">Volver</span>
                 </button>
                 <div className="flex flex-col items-center">
-                    <span className="text-[10px] tracking-[0.2em] text-blue-500 uppercase font-bold" style={{ fontFamily: 'Georgia, serif' }}>Mindful Tetris</span>
-                    <span className="text-sm font-mono text-white/40">{score.toString().padStart(5, '0')}</span>
+                    <span className="text-[10px] tracking-[0.2em] text-[#7ec8e3] uppercase font-bold">Mindful Tetris</span>
+                    <span className="text-[15px] font-mono text-white/40">{score.toString().padStart(5, '0')}</span>
                 </div>
-                <button onClick={() => setIsPaused(!isPaused)} className="w-10 h-10 rounded-xl bg-slate-900 border-2 border-slate-800 flex items-center justify-center text-slate-400 active:scale-95 transition-all">
-                    {isPaused && !isGameOver ? <Play size={18} /> : <Pause size={18} />}
+                <button onClick={() => setIsPaused(!isPaused)} className="w-11 h-11 rounded-[16px] bg-white/[0.03] border border-white/5 flex items-center justify-center text-white/40 active:scale-95 transition-all">
+                    {isPaused && !isGameOver ? <Play size={20} /> : <Pause size={20} />}
                 </button>
             </div>
 
@@ -250,8 +250,8 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
                 <div className="relative flex gap-4 max-h-full">
                     {/* Information Panel (Desktop) */}
                     <div className="hidden sm:flex flex-col gap-4 absolute -left-20 top-0">
-                        <div className="bg-slate-900 p-3 rounded-2xl border-2 border-slate-800 w-16 shadow-xl">
-                            <div className="text-[7px] uppercase tracking-widest text-blue-500 font-bold mb-3">Next</div>
+                        <div className="bg-white/[0.03] p-3 rounded-2xl border border-white/5 w-16 shadow-xl">
+                            <div className="text-[8px] uppercase tracking-widest text-[#7ec8e3] font-bold mb-3">Next</div>
                             <div className="w-full aspect-square flex items-center justify-center">
                                 {nextPiece && (
                                     <div className="grid gap-[2px]" style={{ gridTemplateColumns: `repeat(${nextPiece.shape[0].length}, 1fr)` }}>
@@ -265,9 +265,9 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
                     </div>
 
                     {/* The Grid Area */}
-                    <div className="relative flex flex-col items-center">
-                        <div className="grid grid-cols-10 gap-[1px] bg-slate-900 border-2 border-slate-800 p-[2px] rounded-xl shadow-2xl relative overflow-hidden">
-                            <div className="absolute inset-0 bg-blue-500/5 pointer-events-none"></div>
+                    <div className="relative flex flex-col items-center mb-[40px]">
+                        <div className="grid grid-cols-10 gap-[1px] bg-white/[0.02] border border-white/5 p-[2px] rounded-xl shadow-2xl relative overflow-hidden">
+                            <div className="absolute inset-0 bg-[#7ec8e3]/5 pointer-events-none"></div>
                             {grid.map((row, y) =>
                                 row.map((cell, x) => {
                                     let activeColor = '';
@@ -281,9 +281,9 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
                                     return (
                                         <div
                                             key={`${y}-${x}`}
-                                            className="rounded-[2px] transition-colors duration-100"
+                                            className="rounded-[2px] transition-colors duration-100 shadow-[inset_0_0_4px_rgba(0,0,0,0.1)]"
                                             style={{
-                                                backgroundColor: activeColor || cell || 'rgba(15,23,42,0.5)',
+                                                backgroundColor: activeColor || cell || 'rgba(26,46,66,0.3)',
                                                 width: cellSize,
                                                 height: cellSize,
                                             }}
@@ -295,29 +295,29 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
 
                         {/* Overlays */}
                         {(isGameOver || isPaused) && (
-                            <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center z-30 rounded-xl p-6 text-center animate-in fade-in duration-500">
+                            <div className="absolute inset-0 bg-[#06101a]/95 backdrop-blur-md flex flex-col items-center justify-center z-30 rounded-xl p-6 text-center animate-in fade-in duration-500">
                                 {isGameOver ? (
                                     <>
-                                        <Sparkles className="text-blue-500 mb-4" size={32} />
-                                        <span className="text-blue-500/60 text-[10px] uppercase tracking-[0.2em] mb-2 font-bold">Sesión Finalizada</span>
-                                        <h3 className="text-3xl font-medium text-white mb-8" style={{ fontFamily: 'Georgia, serif' }}>Paz Interior</h3>
+                                        <Sparkles className="text-[#7ec8e3] mb-4" size={36} />
+                                        <span className="text-[#7ec8e3]/60 text-[11px] uppercase tracking-[0.2em] mb-2 font-bold">Sesión Finalizada</span>
+                                        <h3 className="text-[32px] font-serif text-[#e8f4f8] mb-8">Paz Interior</h3>
                                         <button
                                             onClick={resetGame}
-                                            className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl flex items-center justify-center gap-2 font-bold transition-all active:scale-95 shadow-lg shadow-blue-600/20"
+                                            className="w-full bg-white/10 hover:bg-white/15 text-[#e8f4f8] border border-white/10 py-4 rounded-[20px] flex items-center justify-center gap-2 font-medium transition-all active:scale-95 shadow-lg"
                                         >
-                                            <RotateCcw size={18} />
+                                            <RotateCcw size={20} />
                                             Empezar de nuevo
                                         </button>
                                     </>
                                 ) : (
                                     <>
-                                        <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-500 mb-6">
+                                        <div className="w-16 h-16 bg-[#7ec8e3]/10 rounded-full flex items-center justify-center text-[#7ec8e3] mb-6">
                                             <Pause size={32} />
                                         </div>
-                                        <span className="text-blue-500/60 text-[10px] uppercase tracking-[0.2em] mb-6 font-bold">En Pausa</span>
+                                        <span className="text-[#7ec8e3]/60 text-[11px] uppercase tracking-[0.2em] mb-6 font-bold">En Pausa</span>
                                         <button
                                             onClick={() => setIsPaused(false)}
-                                            className="w-full bg-slate-900 hover:bg-slate-800 text-white py-4 rounded-2xl border border-slate-800 font-bold transition-all"
+                                            className="w-full bg-[#1a2e42]/60 hover:bg-[#1a2e42]/80 text-[#e8f4f8] py-4 rounded-[20px] border border-white/5 font-medium transition-all"
                                         >
                                             Continuar Fluyendo
                                         </button>
@@ -343,8 +343,8 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
                     {/* Word Overlay */}
                     {calmWord && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-                            <div className="bg-blue-600/20 backdrop-blur-xl px-8 py-3 rounded-full border border-blue-500/30 animate-in zoom-in-90 fade-in duration-500">
-                                <span className="text-white font-medium text-2xl tracking-wide text-center block" style={{ fontFamily: 'Georgia, serif' }}>{calmWord}</span>
+                            <div className="bg-[#1a2e42]/60 backdrop-blur-xl px-10 py-5 rounded-[32px] border border-[#7ec8e3]/30 animate-in zoom-in-90 fade-in duration-500 shadow-xl">
+                                <span className="text-[#e8f4f8] font-serif text-[28px] tracking-wide text-center block">{calmWord}</span>
                             </div>
                         </div>
                     )}
@@ -352,32 +352,32 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
             </div>
 
             {/* Controls */}
-            <div className="w-full max-w-[320px] p-8 flex-shrink-0 select-none pb-12">
+            <div className="w-full max-w-[320px] p-6 flex-shrink-0 select-none pb-12 mt-4">
                 <div className="grid grid-cols-3 gap-3">
                     <div />
                     <button
                         onPointerDown={(e) => { e.preventDefault(); rotate(); }}
-                        className="bg-slate-900 aspect-square rounded-2xl flex items-center justify-center border border-slate-800 active:scale-90 active:bg-blue-600/20 transition-all text-slate-400 active:text-blue-500"
+                        className="bg-white/[0.03] aspect-square rounded-[20px] flex items-center justify-center border border-white/5 active:scale-90 active:bg-[#7ec8e3]/10 transition-all text-white/40 active:text-[#7ec8e3]"
                     >
-                        <RotateCcw size={24} />
+                        <RotateCcw size={28} />
                     </button>
                     <div />
 
                     <button
                         onPointerDown={(e) => { e.preventDefault(); moveSide(-1); }}
-                        className="bg-slate-900 aspect-square rounded-2xl flex items-center justify-center border-2 border-slate-800 active:scale-90 active:bg-blue-600/20 transition-all text-slate-400 active:text-blue-500 font-bold text-2xl"
+                        className="bg-white/[0.03] aspect-square rounded-[20px] flex items-center justify-center border border-white/5 active:scale-90 active:bg-[#7ec8e3]/10 transition-all text-white/40 active:text-[#7ec8e3] font-bold text-3xl"
                     >
                         ←
                     </button>
                     <button
                         onPointerDown={(e) => { e.preventDefault(); moveDown(); }}
-                        className="bg-slate-900 aspect-square rounded-2xl flex items-center justify-center border-2 border-slate-800 active:scale-90 active:bg-blue-600/20 transition-all text-slate-400 active:text-blue-500 font-bold text-2xl"
+                        className="bg-white/[0.03] aspect-square rounded-[20px] flex items-center justify-center border border-white/5 active:scale-90 active:bg-[#7ec8e3]/10 transition-all text-white/40 active:text-[#7ec8e3] font-bold text-3xl"
                     >
                         ↓
                     </button>
                     <button
                         onPointerDown={(e) => { e.preventDefault(); moveSide(1); }}
-                        className="bg-slate-900 aspect-square rounded-2xl flex items-center justify-center border-2 border-slate-800 active:scale-90 active:bg-blue-600/20 transition-all text-slate-400 active:text-blue-500 font-bold text-2xl"
+                        className="bg-white/[0.03] aspect-square rounded-[20px] flex items-center justify-center border border-white/5 active:scale-90 active:bg-[#7ec8e3]/10 transition-all text-white/40 active:text-[#7ec8e3] font-bold text-3xl"
                     >
                         →
                     </button>
@@ -385,7 +385,7 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
 
                 <button
                     onPointerDown={(e) => { e.preventDefault(); hardDrop(); }}
-                    className="w-full mt-4 py-3 bg-slate-900 rounded-xl border-2 border-slate-800 text-slate-600 text-[10px] uppercase tracking-[0.2em] font-bold active:bg-blue-600/10 transition-all"
+                    className="w-full mt-4 py-3.5 bg-white/[0.03] rounded-[16px] border border-white/5 text-white/30 text-[11px] uppercase tracking-[0.2em] font-medium active:bg-[#7ec8e3]/10 transition-all"
                 >
                     Drop (Espacio)
                 </button>

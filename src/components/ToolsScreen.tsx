@@ -37,24 +37,24 @@ export default function ToolsScreen({ onBack, onNav }: ToolsScreenProps) {
     ];
 
     return (
-        <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
+        <div className="flex flex-col h-full bg-[#06101a] text-white overflow-hidden">
             <TopBar title="Todos los Módulos" onBack={onBack} />
             <div className="flex-1 overflow-y-auto screen-px pb-32 pt-6">
-                <div className="mt-2 space-y-3">
+                <div className="mt-2 space-y-4">
                     {tools.map((tool, i) => (
                         <button
                             key={i}
-                            className="w-full flex items-center gap-4 p-4 bg-slate-900/40 border border-slate-800/50 rounded-3xl hover:border-blue-500/30 transition-all active:scale-[0.98] group text-left"
+                            className="w-full flex items-center gap-4 p-5 bg-white/[0.03] border border-white/5 rounded-[24px] hover:bg-white/[0.05] hover:border-[#7ec8e3]/30 transition-all active:scale-[0.98] group text-left shadow-sm"
                             onClick={() => onNav(tool.id)}
                         >
-                            <div className={`w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center transition-colors group-hover:bg-slate-700 ${tool.color}`}>
+                            <div className={`w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center transition-colors group-hover:bg-white/10 ${tool.color}`}>
                                 {tool.icon}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h3 className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors uppercase tracking-tight">{tool.name}</h3>
-                                <p className="text-[11px] text-slate-500 truncate">{tool.sub}</p>
+                                <h3 className="text-[17px] font-medium text-[#e8f4f8] group-hover:text-[#7ec8e3] transition-colors tracking-tight font-serif leading-tight mb-1">{tool.name}</h3>
+                                <p className="text-[13px] text-white/40 truncate leading-relaxed">{tool.sub}</p>
                             </div>
-                            <ChevronRight size={18} className="text-slate-700 group-hover:text-blue-500 transition-colors" />
+                            <ChevronRight size={20} className="text-white/20 group-hover:text-[#7ec8e3] transition-colors" />
                         </button>
                     ))}
                 </div>

@@ -20,11 +20,11 @@ const BREATH_PHASES = [
 ];
 
 const GROUNDING_DATA = [
-    { t: '5 cosas que <span className="text-blue-400">ves</span>', s: 'Mira a tu alrededor y nombra 5 cosas que puedes ver ahora mismo.', n: 5, items: ['Una silla o mueble cercano', 'La luz de la habitación', 'Tus propias manos', 'Una ventana o pared', 'El suelo o el techo'] },
-    { t: '4 cosas que <span className="text-blue-400">tocas</span>', s: 'Siente 4 texturas: tu ropa, la silla, el suelo...', n: 4, items: ['Mi ropa sobre la piel', 'La silla o el suelo', 'Mi propio brazo', 'Una superficie cerca'] },
-    { t: '3 sonidos que <span className="text-blue-400">oyes</span>', s: 'Cierra los ojos. ¿Qué 3 sonidos escuchas?', n: 3, items: ['El tráfico o el exterior', 'Mi propia respiración', 'Un sonido interior'] },
-    { t: '2 aromas que <span className="text-blue-400">hueles</span>', s: 'Identifica 2 olores en el ambiente.', n: 2, items: ['El aire de la habitación', 'Mi ropa o colonia'] },
-    { t: '1 sabor que <span className="text-blue-400">sientes</span>', s: 'Presta atención al sabor en tu boca ahora.', n: 1, items: ['El sabor en mi boca ahora'] },
+    { t: '5 cosas que <span className="text-[#e07d6a]">ves</span>', s: 'Mira a tu alrededor y nombra 5 cosas que puedes ver ahora mismo.', n: 5, items: ['Una silla o mueble cercano', 'La luz de la habitación', 'Tus propias manos', 'Una ventana o pared', 'El suelo o el techo'] },
+    { t: '4 cosas que <span className="text-[#e07d6a]">tocas</span>', s: 'Siente 4 texturas: tu ropa, la silla, el suelo...', n: 4, items: ['Mi ropa sobre la piel', 'La silla o el suelo', 'Mi propio brazo', 'Una superficie cerca'] },
+    { t: '3 sonidos que <span className="text-[#e07d6a]">oyes</span>', s: 'Cierra los ojos. ¿Qué 3 sonidos escuchas?', n: 3, items: ['El tráfico o el exterior', 'Mi propia respiración', 'Un sonido interior'] },
+    { t: '2 aromas que <span className="text-[#e07d6a]">hueles</span>', s: 'Identifica 2 olores en el ambiente.', n: 2, items: ['El aire de la habitación', 'Mi ropa o colonia'] },
+    { t: '1 sabor que <span className="text-[#e07d6a]">sientes</span>', s: 'Presta atención al sabor en tu boca ahora.', n: 1, items: ['El sabor en mi boca ahora'] },
 ];
 
 type SOSMode = 'BREATHING' | 'GROUNDING' | 'GAMES_DISCLAIMER' | 'GAMES_MENU' | 'GAME_TETRIS' | 'GAME_SUBTRACTION';
@@ -80,42 +80,42 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
 
     if (mode === 'BREATHING') {
         return (
-            <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
+            <div className="flex flex-col h-full bg-[#06101a] text-white overflow-hidden">
                 <TopBar title="Anclaje Rápido" onBack={onBack} />
                 <div className="flex-1 flex flex-col items-center justify-between py-8 screen-px">
                     <div className="text-center">
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-blue-500 mb-2 font-semibold flex items-center justify-center gap-2">
-                            <Shield className="w-3 h-3" /> Guía de Crisis · Paso 1 de 2
+                        <div className="text-[11px] uppercase tracking-[0.15em] text-[#e07d6a] mb-2 font-medium flex items-center justify-center gap-2">
+                            <Shield className="w-4 h-4" /> Guía de Crisis · Paso 1 de 2
                         </div>
-                        <h1 className="text-4xl font-medium mb-4" style={{ fontFamily: 'Georgia, serif' }}>Sigue el ritmo</h1>
-                        <p className="text-blue-300/60 text-sm max-w-[240px] mx-auto italic">Tu cuerpo sabe cómo encontrar la calma de nuevo.</p>
+                        <h1 className="text-[32px] text-[#e8f4f8] font-serif mb-4 leading-tight">Sigue el ritmo</h1>
+                        <p className="text-[#f0a898]/70 text-[14px] max-w-[240px] mx-auto italic font-serif">Tu cuerpo sabe cómo encontrar la calma de nuevo.</p>
                     </div>
 
-                    <div className="relative flex items-center justify-center w-64 h-64">
+                    <div className="relative flex items-center justify-center w-72 h-72">
                         {/* Outer Glows */}
-                        <div className="absolute inset-0 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-                        <div className="absolute inset-4 bg-blue-600/5 rounded-full blur-2xl"></div>
+                        <div className="absolute inset-0 bg-[#e07d6a]/10 rounded-full blur-3xl animate-pulse"></div>
+                        <div className="absolute inset-4 bg-[#e07d6a]/5 rounded-full blur-2xl"></div>
 
                         {/* The Circle */}
-                        <div className="relative w-48 h-48 rounded-full border border-blue-500/20 flex flex-col items-center justify-center bg-slate-900/40 backdrop-blur-sm shadow-2xl">
-                            <div className="text-2xl font-medium text-white mb-1" style={{ fontFamily: 'Georgia, serif' }}>{BREATH_PHASES[breathPhase].t}</div>
-                            <div className="text-5xl font-light text-blue-400">{counter}</div>
+                        <div className="relative w-56 h-56 rounded-full border border-[#e07d6a]/25 flex flex-col items-center justify-center bg-[#1a2e42]/40 backdrop-blur-md shadow-[0_0_30px_rgba(224,125,106,0.15)]">
+                            <div className="text-[22px] font-serif text-[#e8f4f8] mb-1">{BREATH_PHASES[breathPhase].t}</div>
+                            <div className="text-[56px] font-light text-[#e07d6a] leading-none">{counter}</div>
                         </div>
                     </div>
 
                     <div className="w-full max-w-xs space-y-4">
                         <button
                             onClick={() => setMode('GROUNDING')}
-                            className="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-2xl py-4 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-blue-600/20"
+                            className="w-full bg-[#e07d6a] hover:bg-[#c26a58] text-[#0d1b2a] rounded-[20px] py-4 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-[#e07d6a]/20"
                         >
-                            <span className="font-medium">Continuar al Grounding</span>
-                            <ArrowRight className="w-4 h-4" />
+                            <span className="font-semibold text-[15px]">Continuar al Grounding</span>
+                            <ArrowRight className="w-5 h-5" />
                         </button>
                         <button
                             onClick={() => setMode('GAMES_DISCLAIMER')}
-                            className="w-full py-2 text-blue-400/50 text-xs hover:text-blue-400 transition-colors flex items-center justify-center gap-2"
+                            className="w-full py-2 text-white/30 text-[13px] hover:text-white/60 transition-colors flex items-center justify-center gap-2"
                         >
-                            <Brain className="w-3 h-3" /> Necesito distracción (Juegos)
+                            <Brain className="w-4 h-4" /> Necesito distracción (Juegos)
                         </button>
                     </div>
                 </div>
@@ -126,32 +126,32 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
     if (mode === 'GROUNDING') {
         const g = GROUNDING_DATA[groundStep];
         return (
-            <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
+            <div className="flex flex-col h-full bg-[#06101a] text-white overflow-hidden">
                 <TopBar title="Técnica 5-4-3-2-1" onBack={() => setMode('BREATHING')} />
                 <div className="flex-1 overflow-y-auto screen-px py-4">
-                    <div className="text-[10px] uppercase tracking-[0.2em] text-blue-500/60 mb-6 font-semibold">
+                    <div className="text-[11px] uppercase tracking-[0.15em] text-[#e07d6a]/80 mb-6 font-medium">
                         Paso 2 de 2 · Sentidos
                     </div>
-                    <h2 className="text-4xl font-medium mb-3 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                    <h2 className="text-[32px] font-serif text-[#e8f4f8] mb-3 leading-tight">
                         <span dangerouslySetInnerHTML={{ __html: g.t }} />
                     </h2>
-                    <p className="text-blue-300/50 text-sm mb-8">{g.s}</p>
+                    <p className="text-white/50 text-[14px] mb-8">{g.s}</p>
 
-                    <div className="space-y-px bg-slate-900 rounded-2xl overflow-hidden border-2 border-slate-800">
+                    <div className="space-y-px bg-white/[0.02] rounded-[24px] overflow-hidden border border-white/5">
                         {g.items.map((item, i) => (
                             <button
                                 key={i}
                                 onClick={() => toggleGroundItem(i)}
-                                className={`w-full flex items-center gap-4 p-5 transition-all text-left ${groundItemsDone.includes(i) ? 'bg-blue-600/10' : 'bg-transparent hover:bg-white/[0.02]'
+                                className={`w-full flex items-center gap-4 p-5 transition-all text-left ${groundItemsDone.includes(i) ? 'bg-[#e07d6a]/15' : 'bg-transparent hover:bg-white/[0.04]'
                                     }`}
                             >
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${groundItemsDone.includes(i)
-                                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30'
-                                    : 'border-2 border-slate-700 text-slate-500'
+                                    ? 'bg-[#e07d6a] text-[#0d1b2a] shadow-lg shadow-[#e07d6a]/30'
+                                    : 'border border-white/20 text-white/30'
                                     }`}>
                                     {groundItemsDone.includes(i) ? '✓' : i + 1}
                                 </div>
-                                <div className={`text-base font-medium transition-all ${groundItemsDone.includes(i) ? 'text-white' : 'text-slate-500 italic'
+                                <div className={`text-[15px] font-medium transition-all ${groundItemsDone.includes(i) ? 'text-[#e8f4f8]' : 'text-white/40 italic'
                                     }`}>
                                     {groundItemsDone.includes(i) ? item : 'Identifica algo...'}
                                 </div>
@@ -159,9 +159,9 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                         ))}
                     </div>
                 </div>
-                <div className="p-6 bg-slate-950/80 backdrop-blur-md">
+                <div className="p-6 bg-[#0d1b2a]/95 backdrop-blur-xl border-t border-white/5">
                     <button
-                        className="w-full bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/50 text-white rounded-2xl py-4 font-medium transition-all active:scale-95 shadow-xl"
+                        className="w-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#e07d6a]/50 text-[#e8f4f8] rounded-[20px] py-4 font-medium transition-all active:scale-95 shadow-xl"
                         onClick={handleNextGround}
                     >
                         {groundStep < 4 ? 'Siguiente sentido →' : 'Finalizar sesión'}
@@ -177,30 +177,30 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
 
     if (mode === 'GAMES_MENU') {
         return (
-            <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
+            <div className="flex flex-col h-full bg-[#06101a] text-white overflow-hidden">
                 <TopBar title="Anclaje Mental" onBack={() => setMode('GAMES_DISCLAIMER')} />
-                <div className="flex-1 overflow-y-auto p-8 space-y-4">
-                    <div className="bg-blue-600 flex items-center gap-3 p-4 rounded-2xl mb-6 shadow-lg shadow-blue-600/20">
-                        <Sparkles className="w-5 h-5 text-white" />
-                        <p className="text-white/90 text-[13px] leading-tight">Activa tu mente analítica para silenciar la ansiedad.</p>
+                <div className="flex-1 overflow-y-auto p-8 space-y-5">
+                    <div className="bg-gradient-to-r from-[#1a2e42] to-[#1e3349] border border-[#7ec8e3]/30 flex items-center gap-4 p-5 rounded-[24px] mb-8 shadow-lg">
+                        <Sparkles className="w-6 h-6 text-[#7ec8e3]" />
+                        <p className="text-[#e8f4f8]/90 text-[14px] leading-relaxed">Activa tu mente analítica para silenciar la ansiedad.</p>
                     </div>
 
                     <button
-                        className="w-full bg-slate-900/50 border border-slate-800 hover:border-blue-500/50 p-6 rounded-3xl text-left transition-all active:scale-[0.98]"
+                        className="w-full bg-white/[0.03] border border-white/5 hover:border-[#7ec8e3]/40 hover:bg-white/[0.06] p-6 rounded-[28px] text-left transition-all active:scale-[0.98] group shadow-md"
                         onClick={() => setMode('GAME_TETRIS')}
                     >
-                        <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/40 text-xl">🧩</div>
-                        <h3 className="text-xl font-medium mb-1 text-white" style={{ fontFamily: 'Georgia, serif' }}>Tetris Mindful</h3>
-                        <p className="text-blue-400 text-xs">Anclaje visual y rítmico.</p>
+                        <div className="w-14 h-14 bg-[#7ec8e3] rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-[#7ec8e3]/20 text-[24px] transform group-hover:scale-110 transition-transform">🧩</div>
+                        <h3 className="text-[20px] font-serif mb-1 text-[#e8f4f8]">Tetris Mindful</h3>
+                        <p className="text-white/50 text-[13px]">Anclaje visual y rítmico.</p>
                     </button>
 
                     <button
-                        className="w-full bg-slate-900/50 border border-slate-800 hover:border-blue-500/50 p-6 rounded-3xl text-left transition-all active:scale-[0.98]"
+                        className="w-full bg-white/[0.03] border border-white/5 hover:border-[#b48cdc]/40 hover:bg-white/[0.06] p-6 rounded-[28px] text-left transition-all active:scale-[0.98] group shadow-md"
                         onClick={() => setMode('GAME_SUBTRACTION')}
                     >
-                        <div className="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/40 text-xl">🔢</div>
-                        <h3 className="text-xl font-medium mb-1 text-white" style={{ fontFamily: 'Georgia, serif' }}>Restas en Cascada</h3>
-                        <p className="text-blue-400 text-xs">Activa la corteza prefrontal.</p>
+                        <div className="w-14 h-14 bg-[#b48cdc] rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-[#b48cdc]/20 text-[24px] transform group-hover:scale-110 transition-transform">🔢</div>
+                        <h3 className="text-[20px] font-serif mb-1 text-[#e8f4f8]">Restas en Cascada</h3>
+                        <p className="text-white/50 text-[13px]">Activa la corteza prefrontal.</p>
                     </button>
                 </div>
             </div>

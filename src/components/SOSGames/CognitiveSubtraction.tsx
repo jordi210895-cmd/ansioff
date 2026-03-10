@@ -38,28 +38,28 @@ export default function CognitiveSubtraction({ onBack }: CognitiveSubtractionPro
     };
 
     return (
-        <div className="flex flex-col items-center justify-between p-6 min-h-full bg-slate-950 text-white relative overflow-hidden">
+        <div className="flex flex-col items-center justify-between p-6 min-h-full bg-[#06101a] text-white relative overflow-hidden">
             {/* Background Decorative Element */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-                <div className="w-[80vw] h-[80vw] rounded-full border border-blue-500 animate-[pulse_8s_infinite]"></div>
+            <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+                <div className="w-[80vw] h-[80vw] rounded-full border border-[#b48cdc] animate-[pulse_8s_infinite]"></div>
             </div>
 
             <div className="z-10 w-full">
                 <button
                     onClick={onBack}
-                    className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors py-2"
+                    className="flex items-center gap-2 text-white/40 hover:text-white transition-colors py-2"
                 >
-                    <ArrowLeft size={18} />
-                    <span className="text-sm font-medium">Volver</span>
+                    <ArrowLeft size={20} />
+                    <span className="text-[14px] font-medium">Volver</span>
                 </button>
             </div>
 
             <div className="z-10 text-center animate-in fade-in zoom-in-95 duration-700">
-                <div className="flex items-center justify-center gap-2 text-blue-500 text-[10px] uppercase tracking-[0.2em] font-bold mb-4">
-                    <Hash size={12} /> Anclaje Numérico
+                <div className="flex items-center justify-center gap-2 text-[#b48cdc] text-[11px] uppercase tracking-[0.2em] font-medium mb-4">
+                    <Hash size={14} /> Anclaje Numérico
                 </div>
-                <div className="text-8xl font-light text-white mb-6" style={{ fontFamily: 'Georgia, serif' }}>{currentNumber}</div>
-                <div className="text-2xl text-blue-400 font-medium" style={{ fontFamily: 'Georgia, serif' }}>- 8</div>
+                <div className="text-[80px] font-serif text-[#e8f4f8] mb-4 leading-none">{currentNumber}</div>
+                <div className="text-[28px] text-[#b48cdc] font-serif">- 8</div>
             </div>
 
             <div className={`z-10 w-full max-w-xs flex flex-col gap-4 mb-20 transition-all ${isError ? 'animate-shake' : ''}`}>
@@ -67,7 +67,7 @@ export default function CognitiveSubtraction({ onBack }: CognitiveSubtractionPro
                     <button
                         key={i}
                         onClick={() => handleChoice(opt)}
-                        className="w-full py-5 rounded-2xl bg-slate-900 border-2 border-slate-800 hover:border-blue-500/50 text-white text-2xl font-medium hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-slate-900/50"
+                        className="w-full py-5 rounded-[24px] bg-white/[0.03] hover:bg-white/[0.05] border border-white/5 hover:border-[#b48cdc]/40 text-[#e8f4f8] text-[24px] font-serif hover:scale-[1.02] active:scale-95 transition-all shadow-md"
                     >
                         {opt}
                     </button>
@@ -75,16 +75,16 @@ export default function CognitiveSubtraction({ onBack }: CognitiveSubtractionPro
 
                 <div className="min-h-[20px] mt-4">
                     {isError && (
-                        <p className="text-rose-500 text-center text-xs italic animate-in fade-in duration-300">
-                            Tómate tu tiempo, respira y vuelve a intentarlo
+                        <p className="text-[#e07d6a] text-center text-[13px] italic font-serif animate-in fade-in duration-300">
+                            Tómate tu tiempo, respira y vuelve a intentarlo.
                         </p>
                     )}
                 </div>
             </div>
 
-            <div className="z-10 bg-slate-900 border-2 border-blue-500/20 p-4 rounded-2xl flex gap-3 max-w-xs shadow-2xl shadow-blue-900/20">
-                <Info size={16} className="text-blue-500 shrink-0" />
-                <p className="text-[10px] text-blue-300/40 leading-relaxed italic">
+            <div className="z-10 bg-white/[0.02] border border-[#b48cdc]/20 p-5 rounded-[24px] flex gap-3 max-w-xs shadow-lg">
+                <Info size={18} className="text-[#b48cdc] shrink-0" />
+                <p className="text-[12px] text-[#e8f4f8]/50 leading-relaxed italic pr-1">
                     Esta tarea activa tu corteza prefrontal, reduciendo la actividad de la amígdala (el centro del miedo).
                 </p>
             </div>

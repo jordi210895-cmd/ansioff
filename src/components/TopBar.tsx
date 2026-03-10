@@ -10,14 +10,14 @@ interface TopBarProps {
 
 export default function TopBar({ title, onBack, dark }: TopBarProps) {
     return (
-        <div className="flex items-center gap-3 px-8 pt-12 pb-6 bg-[#080A12] sticky top-0 z-50 border-b border-white/5">
+        <div className="flex items-center gap-[14px] px-[24px] pt-[48px] pb-[20px] bg-[#03080f]/95 backdrop-blur-[24px] sticky top-0 z-50 border-b border-[rgba(255,255,255,0.06)]">
             <button
                 onClick={onBack}
-                className="w-10 h-10 border-2 border-slate-800 hover:border-blue-500/50 rounded-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 bg-slate-900 text-blue-400"
+                className="w-[36px] h-[36px] rounded-[12px] flex items-center justify-center transition-all bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.07)] active:scale-[0.95] text-[#ddeef5]"
             >
-                <ArrowLeft size={20} strokeWidth={2.5} />
+                <ArrowLeft size={18} strokeWidth={2} />
             </button>
-            <h1 className="text-lg font-medium text-white/90 pl-1 py-1" style={{ fontFamily: 'Georgia, serif' }}>
+            <h1 className="text-[20px] font-medium text-[#ddeef5] font-serif leading-none" style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic' }}>
                 {title}
             </h1>
         </div>
