@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
                     <span>Volver a la aplicación</span>
                 </Link>
 
-                <h1 className="text-4xl font-bold text-white mb-8" style={{ fontFamily: 'Georgia, serif' }}>Política de Privacidad</h1>
+                <h1 className="text-4xl font-bold text-white mb-8 font-serif">Política de Privacidad</h1>
 
                 <p className="mb-6 text-sm text-slate-400">Última actualización: 7 de Marzo de 2026</p>
 

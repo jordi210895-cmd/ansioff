@@ -83,7 +83,7 @@ export default function EvaluationScreen({ onBack }: EvaluationScreenProps) {
                             ></div>
                         </div>
 
-                        <h2 className="text-3xl font-medium mb-12 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                        <h2 className="text-3xl font-medium mb-12 leading-tight font-serif">
                             En la última semana, ¿cuánto te ha molestado esto?<br />
                             <span className="text-blue-400 mt-6 block italic">"{QUESTIONS[currentIdx]}"</span>
                         </h2>
@@ -111,7 +111,7 @@ export default function EvaluationScreen({ onBack }: EvaluationScreenProps) {
                             <BarChart3 className="w-10 h-10 text-blue-500" />
                         </div>
                         <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-3">Resultado del Análisis</h2>
-                        <div className={`text-4xl font-medium mb-8 ${getResult().c}`} style={{ fontFamily: 'Georgia, serif' }}>{getResult().t}</div>
+                        <div className={`text-4xl font-medium mb-8 ${getResult().c}`} >{getResult().t}</div>
 
                         <div className="relative inline-block mb-12">
                             <div className="text-7xl font-light text-white">{totalScore}</div>

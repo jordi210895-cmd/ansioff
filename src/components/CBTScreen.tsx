@@ -133,7 +133,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
 
                         {step === 0 && (
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <h2 className="text-3xl font-medium mb-4 pl-1" style={{ fontFamily: 'Georgia, serif' }}>¿Qué estás pensando ahora?</h2>
+                                <h2 className="text-3xl font-medium mb-4 pl-1 font-serif">¿Qué estás pensando ahora?</h2>
                                 <p className="text-blue-300/60 text-sm mb-8 leading-relaxed px-1">
                                     Escribe ese pensamiento negativo que te está generando ansiedad. Intenta ser muy concreto.
                                 </p>
@@ -156,7 +156,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
 
                         {step === 1 && (
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <h2 className="text-3xl font-medium mb-4 pl-1" style={{ fontFamily: 'Georgia, serif' }}>Cuestiona la lógica</h2>
+                                <h2 className="text-3xl font-medium mb-4 pl-1 font-serif">Cuestiona la lógica</h2>
                                 <div className="bg-blue-500/5 border border-blue-500/10 p-6 rounded-2xl mb-8 flex gap-3">
                                     <Quote className="text-blue-500/30 shrink-0" size={20} />
                                     <p className="text-blue-100/70 text-sm italic leading-loose">&quot;{thought}&quot;</p>
@@ -181,7 +181,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
 
                         {step === 2 && (
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <h2 className="text-3xl font-medium mb-4 pl-1" style={{ fontFamily: 'Georgia, serif' }}>Evidencia en contra</h2>
+                                <h2 className="text-3xl font-medium mb-4 pl-1 font-serif">Evidencia en contra</h2>
                                 <div className="bg-blue-500/5 border border-blue-500/10 p-5 rounded-2xl mb-6 flex gap-2 items-center">
                                     <span className="text-xs text-blue-400 font-medium">Distorsión detectada:</span>
                                     <span className="text-xs text-white bg-blue-500/20 px-2 py-0.5 rounded-full">{distortion}</span>
@@ -211,7 +211,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                                 <div className="glass-primary p-10 rounded-[40px] mb-8 relative overflow-hidden text-center">
                                     <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
                                     <CheckCircle2 className="text-white mx-auto mb-6" size={32} />
-                                    <h2 className="text-3xl font-medium mb-6 text-white pl-1" style={{ fontFamily: 'Georgia, serif' }}>Pensamiento Sano</h2>
+                                    <h2 className="text-3xl font-medium mb-6 text-white pl-1 font-serif">Pensamiento Sano</h2>
                                     <p className="text-white/90 text-base italic leading-loose mb-8 px-2">
                                         &quot;{alternative}&quot;
                                     </p>

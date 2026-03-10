@@ -77,7 +77,7 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
                                 <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-400">
                                     <Heart size={20} fill="currentColor" />
                                 </div>
-                                <h3 className="text-red-400 text-2xl font-light pl-1" style={{ fontFamily: 'Georgia, serif' }}>No estás solo/a</h3>
+                                <h3 className="text-red-400 text-2xl font-light pl-1 font-serif">No estás solo/a</h3>
                             </div>
                             <p className="text-red-200/60 text-sm leading-relaxed mb-8">
                                 Si sientes que no puedes más o estás en una crisis profunda, por favor, contacta con estos servicios gratuitos y anónimos.
@@ -104,7 +104,7 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
                         <div className="p-8 bg-blue-600 rounded-[32px] text-white shadow-xl shadow-blue-600/20 relative overflow-hidden group">
                             <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
                             <Activity className="text-white/40 mb-4" size={32} />
-                            <h3 className="text-2xl font-medium mb-2 pl-1" style={{ fontFamily: 'Georgia, serif' }}>Emergencias 112</h3>
+                            <h3 className="text-2xl font-medium mb-2 pl-1 font-serif">Emergencias 112</h3>
                             <p className="text-white/70 text-sm leading-relaxed mb-6">
                                 Ante una emergencia médica inmediata o peligro inminente, llama directamente al número de emergencias.
                             </p>

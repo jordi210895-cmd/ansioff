@@ -46,7 +46,7 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
                     {/* Claire Weekes Attribution Card */}
                     <div className="glass-primary border border-blue-500/20 rounded-3xl p-6 mb-2">
                         <div className="text-white/60 text-[10px] uppercase tracking-widest font-bold mb-1">Método creado por</div>
-                        <div className="text-white text-2xl font-medium pl-1" style={{ fontFamily: 'Georgia, serif' }}>Dra. Claire Weekes</div>
+                        <div className="text-white text-2xl font-medium pl-1 font-serif">Dra. Claire Weekes</div>
                         <div className="text-blue-200/50 text-xs mt-1 mb-4">Psiquiatra y pionera del pánico · 1962</div>
                         <p className="text-blue-100/80 text-sm leading-relaxed">
                             La Dra. Weekes descubrió que el pánico se alimenta de la lucha y la huida. Sus 4 pasos — Afrontar, Aceptar, Flotar y Dejar pasar — rompen ese ciclo de raíz.
@@ -76,7 +76,7 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
                     <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 mb-8 shadow-inner border border-blue-500/10">
                         {STEPS[activeTab].icon}
                     </div>
-                    <h2 className="text-4xl font-light mb-6 text-white pl-1" style={{ fontFamily: 'Georgia, serif' }}>{STEPS[activeTab].t}</h2>
+                    <h2 className="text-4xl font-light mb-6 text-white pl-1 font-serif">{STEPS[activeTab].t}</h2>
                     <p className="text-blue-100/80 text-base leading-relaxed mb-8">
                         {STEPS[activeTab].desc}
                     </p>

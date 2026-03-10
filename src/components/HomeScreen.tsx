@@ -19,7 +19,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
     const greeting = isNightTime ? "Buenas noches" : "Buenos días";
 
     return (
-        <div className="w-full flex flex-col min-h-screen text-white overflow-hidden pb-24 relative" style={{ backgroundColor: '#03080f', fontFamily: "'Outfit', sans-serif" }}>
+        <div className="w-full flex flex-col min-h-screen text-white overflow-hidden pb-24 relative" style={{ backgroundColor: '#03080f' }}>
             <style jsx>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -28,7 +28,6 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                     0%, 100% { transform: scale(1); opacity: 0.3; }
                     50% { transform: scale(1.15); opacity: 0.8; }
                 }
-                .font-serif { font-family: 'Cormorant Garamond', var(--font-serif), serif; }
             `}</style>
 
             {/* Global background gradient / Aurora */}

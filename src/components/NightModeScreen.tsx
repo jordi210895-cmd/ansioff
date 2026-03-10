@@ -61,7 +61,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                             <div className="w-20 h-20 rounded-full bg-indigo-900/30 flex items-center justify-center text-indigo-300 mx-auto mb-4 shadow-[0_0_30px_rgba(99,102,241,0.15)] border border-indigo-500/10">
                                 <Moon size={32} strokeWidth={1.5} />
                             </div>
-                            <h2 className="text-2xl font-medium text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>Buenas noches</h2>
+                            <h2 className="text-2xl font-medium text-white mb-2 font-serif">Buenas noches</h2>
                             <p className="text-indigo-300/50 text-xs max-w-[200px] mx-auto">
                                 Prepara tu cuerpo y mente para un descanso profundo.
                             </p>
@@ -138,7 +138,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                             <Moon size={32} className="relative z-10" />
                         </div>
 
-                        <h2 className="text-2xl font-medium text-white mb-6" style={{ fontFamily: 'Georgia, serif' }}>Preparando el entorno</h2>
+                        <h2 className="text-2xl font-medium text-white mb-6 font-serif">Preparando el entorno</h2>
 
                         <ul className="text-left space-y-4 mb-12 text-sm text-indigo-200/70 max-w-[260px] mx-auto">
                             <li className="flex items-center gap-3">
@@ -175,7 +175,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                         </div>
 
                         <div className="text-[10px] uppercase tracking-[0.3em] text-indigo-500 mb-4 font-bold">Respiración 4 - 2 - 6</div>
-                        <h2 className="text-2xl font-medium text-white mb-4 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                        <h2 className="text-2xl font-medium text-white mb-4 leading-tight font-serif">
                             Inhala suavemente,<br />exhala la tensión.
                         </h2>
 
@@ -190,7 +190,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                 {view === 'routine_unload' && (
                     <div className="animate-in fade-in duration-500 min-h-[70vh] flex flex-col">
                         <div className="text-center mb-8">
-                            <h2 className="text-2xl font-medium text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>Vaciado Mental</h2>
+                            <h2 className="text-2xl font-medium text-white mb-2 font-serif">Vaciado Mental</h2>
                             <p className="text-indigo-200/50 text-xs px-4">
                                 Tu cerebro no necesita recordar esto mientras duermes. Anótalo aquí y mañana nos ocupamos.
                             </p>
@@ -225,7 +225,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                                 <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-6">
                                     <CheckCircle2 size={32} />
                                 </div>
-                                <h3 className="text-xl text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>Guardado en tu caja fuerte.</h3>
+                                <h3 className="text-xl text-white mb-2 font-serif">Guardado en tu caja fuerte.</h3>
                                 <p className="text-indigo-200/40 text-sm">Ya puedes descansar tranquilo.</p>
                             </div>
                         )}
@@ -236,7 +236,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                 {/* --- ORIGINAL PANIC RESCUES --- */}
                 {view === 'panic_menu' && (
                     <div className="animate-in fade-in duration-500 flex flex-col items-center justify-center text-center min-h-[60vh]">
-                        <h2 className="text-2xl font-medium text-white mb-4" style={{ fontFamily: 'Georgia, serif' }}>¿Te has despertado con pánico?</h2>
+                        <h2 className="text-2xl font-medium text-white mb-4 font-serif">¿Te has despertado con pánico?</h2>
                         <p className="text-indigo-300/40 text-sm leading-relaxed mb-10 max-w-xs mx-auto italic">
                             Es natural. Por la noche el miedo parece más grande, pero sigues a salvo hoy. No enciendas luces fuertes.
                         </p>
@@ -263,7 +263,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                         <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 mx-auto mb-8 animate-[bounce_3s_infinite]">
                             <Wind size={32} />
                         </div>
-                        <h2 className="text-3xl font-medium text-white mb-6" style={{ fontFamily: 'Georgia, serif' }}>Mécete suavemente</h2>
+                        <h2 className="text-3xl font-medium text-white mb-6 font-serif">Mécete suavemente</h2>
                         <p className="text-indigo-200/60 text-base leading-relaxed mb-10">
                             Siéntate o quédate en la cama. Balancea tu torso muy despacio de izquierda a derecha.
                             Siente el peso de tu cuerpo apoyado y seguro.

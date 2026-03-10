@@ -33,7 +33,7 @@ export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
                         <div className={`w-[32px] h-[32px] rounded-[12px] flex items-center justify-center transition-all duration-200 ${isActive ? 'bg-[rgba(89,174,210,0.15)] scale-[1.05] drop-shadow-[0_0_5px_rgba(89,174,210,0.5)] text-[#89cee4]' : 'text-[rgba(200,225,235,0.35)] group-hover:text-white/60'}`}>
                             <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} />
                         </div>
-                        <span className={`font-['Outfit',sans-serif] text-[9px] tracking-[0.04em] font-normal transition-colors duration-200 ${isActive ? 'text-[#89cee4]' : 'text-[rgba(200,225,235,0.35)]'}`}>
+                        <span className={`text-[9px] tracking-[0.04em] font-normal transition-colors duration-200 ${isActive ? 'text-[#89cee4]' : 'text-[rgba(200,225,235,0.35)]'}`}>
                             {item.label}
                         </span>
                     </button>

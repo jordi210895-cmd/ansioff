@@ -43,7 +43,7 @@ export default function GamesScreen({ onBack }: GamesScreenProps) {
                             <div className="bg-blue-600/10 w-12 h-12 rounded-2xl flex items-center justify-center text-blue-500 mb-4 group-hover:scale-110 transition-transform">
                                 <Gamepad2 size={24} />
                             </div>
-                            <h3 className="text-xl font-medium mb-1" style={{ fontFamily: 'Georgia, serif' }}>Tetris Mindful</h3>
+                            <h3 className="text-xl font-medium mb-1 font-serif">Tetris Mindful</h3>
                             <p className="text-slate-400 text-xs leading-relaxed max-w-[80%]">
                                 Un juego rítmico y pausado para centrar tu atención visual y motora.
                             </p>
@@ -58,7 +58,7 @@ export default function GamesScreen({ onBack }: GamesScreenProps) {
                             <div className="bg-blue-600/10 w-12 h-12 rounded-2xl flex items-center justify-center text-blue-500 mb-4 group-hover:scale-110 transition-transform">
                                 <Hash size={24} />
                             </div>
-                            <h3 className="text-xl font-medium mb-1" style={{ fontFamily: 'Georgia, serif' }}>Restas en Cascada</h3>
+                            <h3 className="text-xl font-medium mb-1 font-serif">Restas en Cascada</h3>
                             <p className="text-slate-400 text-xs leading-relaxed max-w-[80%]">
                                 Activa tu razonamiento lógico para reducir la intensidad emocional.
                             </p>

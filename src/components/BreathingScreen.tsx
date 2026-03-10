@@ -74,7 +74,7 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
             <TopBar title="Respiración Guiada" onBack={onBack} />
             <div className="flex-1 flex flex-col items-center justify-between py-8 screen-px overflow-y-auto">
                 <div className="text-center w-full">
-                    <h2 className="text-3xl font-medium mb-3 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                    <h2 className="text-3xl font-medium mb-3 leading-tight font-serif">
                         Calma tu sistema nervioso
                     </h2>
                     <p className="text-blue-300/50 text-sm mb-10">Sigue el ritmo del círculo para reducir el cortisol.</p>
@@ -104,7 +104,7 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
                     {/* Breathing Animation Wrapper */}
                     <div className="relative w-56 h-56 rounded-full border border-blue-500/10 flex flex-col items-center justify-center bg-slate-900/30 backdrop-blur-sm shadow-2xl overflow-hidden">
                         <div className="absolute inset-0 bg-blue-500/5 animate-[pulse_4s_ease-in-out_infinite]"></div>
-                        <div className="relative z-10 text-xl font-medium text-white mb-1" style={{ fontFamily: 'Georgia, serif' }}>{currentPhase.t}</div>
+                        <div className="relative z-10 text-xl font-medium text-white mb-1 font-serif">{currentPhase.t}</div>
                         <div className="relative z-10 text-5xl font-light text-blue-400">{counter}</div>
                     </div>
                 </div>
@@ -125,7 +125,7 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
                     <div className="flex justify-between p-4 bg-slate-900/40 rounded-3xl border border-slate-800/50">
                         {currentPhases.slice(0, 3).map((p, i) => (
                             <div key={i} className="text-center px-2">
-                                <div className="text-xl font-medium text-white" style={{ fontFamily: 'Georgia, serif' }}>{p.n}s</div>
+                                <div className="text-xl font-medium text-white font-serif">{p.n}s</div>
                                 <div className="text-[10px] text-blue-400 uppercase tracking-widest">{p.t}</div>
                             </div>
                         ))}

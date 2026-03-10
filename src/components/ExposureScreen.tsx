@@ -38,7 +38,7 @@ export default function ExposureScreen({ onBack }: ExposureScreenProps) {
                     <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-3xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-orange-500/20">
                         <Target size={32} strokeWidth={2.5} />
                     </div>
-                    <h2 className="text-2xl font-light text-white mb-2 pl-1" style={{ fontFamily: 'Georgia, serif' }}>¿Por qué hago <span className="font-bold">exposición</span>?</h2>
+                    <h2 className="text-2xl font-light text-white mb-2 pl-1 font-serif">¿Por qué hago <span className="font-bold">exposición</span>?</h2>
                     <p className="text-sm text-slate-400 leading-relaxed px-4">
                         La exposición da miedo, pero tiene un propósito mayor. Apunta aquí por qué estás dispuesto a enfrentarte a tu ansiedad hoy.
                     </p>
