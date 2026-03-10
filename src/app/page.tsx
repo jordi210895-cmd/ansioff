@@ -92,6 +92,13 @@ export default function App() {
       if (count !== null) setCbtCount(count);
     });
 
+    // 4. Request Persistent Storage to prevent mobile browsers from wiping LocalStorage/IndexedDB
+    if (typeof navigator !== 'undefined' && navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist().then(isPersisted => {
+        if (isPersisted) console.log("Persistent storage granted.");
+      });
+    }
+
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleNav = (id: string) => {
