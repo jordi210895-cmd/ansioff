@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Phone, X } from 'lucide-react';
+import { EmergencyContact, getEmergencyContacts } from '../utils/contacts';
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
@@ -8,6 +10,13 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
+    const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+    const [showContactsModal, setShowContactsModal] = useState(false);
+
+    useEffect(() => {
+        setContacts(getEmergencyContacts());
+    }, []);
+
     return (
         <div className="w-full flex flex-col min-h-screen relative overflow-hidden text-white" style={{ backgroundColor: '#0e1520', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
             <style jsx>{`
@@ -51,13 +60,21 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
 
             <div className="flex-1 w-full flex flex-col z-20 relative pt-12 pb-[120px]">
                 {/* App header */}
-                <div className="text-center pt-[18px] pb-[14px] border-b border-[rgba(255,255,255,0.06)] relative z-20">
-                    <div className="text-[17px] font-bold text-white tracking-[0.08em]">ANSIOFF</div>
-                    <div className="text-[11px] font-medium text-[#4d9ec4] tracking-[0.18em] mt-[3px]">TU ESPACIO SEGURO</div>
+                <div className="flex justify-between items-center px-[30px] pt-[8px] pb-[14px] border-b border-[rgba(255,255,255,0.06)] relative z-20">
+                    <div className="w-[30px]" /> {/* Spacer left */}
+                    <div className="text-center">
+                        <div className="text-[17px] font-bold text-white tracking-[0.08em]">ANSIOFF</div>
+                        <div className="text-[11px] font-medium text-[#4d9ec4] tracking-[0.18em] mt-[3px]">TU ESPACIO SEGURO</div>
+                    </div>
+                    <button onClick={() => onNav('sc-settings')} className="bg-transparent border-none text-[rgba(255,255,255,0.6)] hover:text-white cursor-pointer p-1 flex flex-col gap-[5px]" aria-label="Ajustes">
+                        <span className="block w-[22px] h-[1.5px] bg-current rounded-[2px] transition-colors"></span>
+                        <span className="block w-[22px] h-[1.5px] bg-current rounded-[2px] transition-colors"></span>
+                        <span className="block w-[22px] h-[1.5px] bg-current rounded-[2px] transition-colors"></span>
+                    </button>
                 </div>
 
                 {/* Main content */}
-                <div className="flex-1 flex flex-col items-center justify-center px-[30px] relative mt-[40px] z-20">
+                <div className="flex-1 flex flex-col items-center justify-center px-[30px] relative mt-[20px] z-20">
 
                     {/* Ambient background glow behind everything */}
                     <div className="absolute top-[40%] left-1/2 w-[320px] h-[320px] pointer-events-none -z-10"
@@ -144,11 +161,58 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         </div>
                     </div>
 
-                    <div className="text-[14px] text-[#5a7a94] text-center leading-[1.6] font-normal mt-2">
-                        Guía inmediata para crisis de pánico.<br />Acceso rápido.
-                    </div>
+                    {/* Emergency Contacts Button (Only show if there are contacts) */}
+                    {contacts.length > 0 ? (
+                        <button
+                            onClick={() => setShowContactsModal(true)}
+                            className="bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-full px-6 py-3 mt-4 flex items-center justify-center gap-3 w-full max-w-[280px] hover:bg-[rgba(255,255,255,0.08)] transition-all active:scale-95"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-[#5aadcf]/20 flex items-center justify-center text-[#5aadcf]">
+                                <Phone size={16} />
+                            </div>
+                            <div className="text-left flex-1">
+                                <div className="text-[14px] font-medium text-white">Llamada de Emergencia</div>
+                            </div>
+                        </button>
+                    ) : (
+                        <div className="text-[14px] text-[#5a7a94] text-center leading-[1.6] font-normal mt-2">
+                            Guía inmediata para crisis de pánico.<br />Acceso rápido.
+                        </div>
+                    )}
                 </div>
             </div>
+
+            {/* Contacts Modal Bottom Sheet */}
+            {showContactsModal && (
+                <div className="absolute inset-0 z-50 bg-[#000000bb] backdrop-blur-sm flex flex-col justify-end">
+                    <div className="bg-[#121b29] border-t border-[rgba(255,255,255,0.08)] rounded-t-[32px] p-6 pb-12 animate-in slide-in-from-bottom-full duration-300 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-lg font-medium text-white tracking-[-0.01em]">¿A quién necesitas llamar?</h3>
+                            <button onClick={() => setShowContactsModal(false)} className="w-10 h-10 rounded-full bg-[rgba(255,255,255,0.05)] flex items-center justify-center text-white hover:bg-[rgba(255,255,255,0.1)]">
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col gap-3">
+                            {contacts.map(c => (
+                                <a
+                                    key={c.id}
+                                    href={`tel:${c.phone}`}
+                                    className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-4 rounded-[20px] flex items-center gap-4 hover:bg-[rgba(90,173,207,0.1)] hover:border-[rgba(90,173,207,0.3)] transition-all active:scale-[0.98]"
+                                >
+                                    <div className="w-12 h-12 rounded-full bg-[#5aadcf] flex items-center justify-center text-[#0e1520] shadow-lg shadow-[#5aadcf]/20">
+                                        <Phone size={22} fill="currentColor" />
+                                    </div>
+                                    <div>
+                                        <div className="text-[16px] font-medium text-white shadow-sm">{c.name}</div>
+                                        {c.role && <div className="text-[13px] font-medium text-[#5aadcf] mt-0.5">{c.role}</div>}
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

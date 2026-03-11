@@ -1,10 +1,8 @@
-'use client';
-
-import { useState } from 'react';
-import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert, Bell } from 'lucide-react';
+import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert, Bell, Phone, UserRoundPlus, X } from 'lucide-react';
 import TopBar from './TopBar';
 import { getStats, STATS_KEYS } from '../utils/stats';
 import { exportClinicalDiaryPDF } from '../utils/exportUtils';
+import { EmergencyContact, getEmergencyContacts, addEmergencyContact, removeEmergencyContact } from '../utils/contacts';
 import * as db from '../lib/db';
 
 interface SettingsScreenProps {
@@ -16,7 +14,17 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
     const [isDeleting, setIsDeleting] = useState(false);
     const [pushEnabled, setPushEnabled] = useState(false);
 
+    // Contacts State
+    const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+    const [isAddingContact, setIsAddingContact] = useState(false);
+    const [newContactName, setNewContactName] = useState('');
+    const [newContactRole, setNewContactRole] = useState('');
+    const [newContactPhone, setNewContactPhone] = useState('');
+
     useEffect(() => {
+        // Load initial contacts
+        setContacts(getEmergencyContacts());
+
         // Check if OneSignal is loaded and get subscription status
         const checkPushStatus = async () => {
             if (typeof window !== 'undefined' && (window as any).OneSignal) {
@@ -44,6 +52,26 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
         } else {
             alert("El servicio de notificaciones se está cargando o tu navegador no es compatible.");
         }
+    };
+
+    const handleSaveContact = () => {
+        if (!newContactName || !newContactPhone) return;
+        const newC = addEmergencyContact({
+            name: newContactName,
+            role: newContactRole,
+            phone: newContactPhone
+        });
+        setContacts(prev => [...prev, newC]);
+        // Reset form
+        setNewContactName('');
+        setNewContactRole('');
+        setNewContactPhone('');
+        setIsAddingContact(false);
+    };
+
+    const handleDeleteContact = (id: string) => {
+        removeEmergencyContact(id);
+        setContacts(prev => prev.filter(c => c.id !== id));
     };
 
     const handleDeleteAllData = async () => {
@@ -97,6 +125,97 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
                     </div>
                 </div>
 
+                {/* --- CONTACTOS DE EMERGENCIA --- */}
+                <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[rgba(200,225,235,0.38)] mb-4 px-1 flex justify-between items-center">
+                    <span>Contactos Rápidos</span>
+                    {!isAddingContact && (
+                        <button onClick={() => setIsAddingContact(true)} className="text-[#5aadcf] flex items-center gap-1 hover:text-[#7fcaeb] transition-colors">
+                            <UserRoundPlus size={14} /> Añadir
+                        </button>
+                    )}
+                </div>
+
+                <div className="space-y-3 mb-8">
+                    {contacts.length === 0 && !isAddingContact && (
+                        <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] border-dashed p-6 rounded-2xl text-center">
+                            <p className="font-sans font-light text-[13px] text-[rgba(200,225,235,0.5)] mb-3">
+                                No tienes contactos configurados para el botón de llamada rápida en crisis.
+                            </p>
+                            <button onClick={() => setIsAddingContact(true)} className="text-[#5aadcf] font-sans text-sm font-medium hover:underline">
+                                Añadir mi primer contacto
+                            </button>
+                        </div>
+                    )}
+
+                    {contacts.map(contact => (
+                        <div key={contact.id} className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-4 rounded-2xl flex items-center justify-between shadow-sm">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-[rgba(255,255,255,0.06)] flex items-center justify-center text-[#ddeef5]">
+                                    <Phone size={18} className="stroke-[1.5]" />
+                                </div>
+                                <div>
+                                    <div className="font-sans font-medium text-[15px] text-[#ddeef5]">{contact.name}</div>
+                                    <div className="font-sans text-[12px] text-[#5aadcf] mt-0.5">{contact.role || contact.phone}</div>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => handleDeleteContact(contact.id)}
+                                className="w-8 h-8 rounded-full bg-[rgba(255,59,59,0.1)] flex items-center justify-center text-[#ff7070] hover:bg-[#ff7070] hover:text-white transition-colors"
+                            >
+                                <X size={16} />
+                            </button>
+                        </div>
+                    ))}
+
+                    {isAddingContact && (
+                        <div className="bg-[#0e1d2e] border border-[rgba(255,255,255,0.1)] p-5 rounded-2xl animate-in fade-in slide-in-from-top-2">
+                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-4">Nuevo Contacto</h3>
+
+                            <div className="space-y-3">
+                                <input
+                                    type="text"
+                                    placeholder="Nombre (Ej: Papá)"
+                                    className="w-full bg-[#03080f] border border-[rgba(255,255,255,0.1)] rounded-xl px-4 py-3 text-sm text-white placeholder-[rgba(255,255,255,0.3)] outline-none focus:border-[#5aadcf]"
+                                    value={newContactName}
+                                    onChange={e => setNewContactName(e.target.value)}
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Rol Clínico / Etiqueta (Ej: Psicólogo) - Opcional"
+                                    className="w-full bg-[#03080f] border border-[rgba(255,255,255,0.1)] rounded-xl px-4 py-3 text-sm text-white placeholder-[rgba(255,255,255,0.3)] outline-none focus:border-[#5aadcf]"
+                                    value={newContactRole}
+                                    onChange={e => setNewContactRole(e.target.value)}
+                                />
+                                <input
+                                    type="tel"
+                                    placeholder="Número de teléfono (+34...)"
+                                    className="w-full bg-[#03080f] border border-[rgba(255,255,255,0.1)] rounded-xl px-4 py-3 text-sm text-white placeholder-[rgba(255,255,255,0.3)] outline-none focus:border-[#5aadcf]"
+                                    value={newContactPhone}
+                                    onChange={e => setNewContactPhone(e.target.value)}
+                                />
+
+                                <div className="flex gap-2 pt-2">
+                                    <button
+                                        onClick={() => setIsAddingContact(false)}
+                                        className="flex-1 py-3 rounded-xl bg-[rgba(255,255,255,0.05)] text-white text-sm font-medium hover:bg-[rgba(255,255,255,0.1)] transition-colors"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        onClick={handleSaveContact}
+                                        disabled={!newContactName || !newContactPhone}
+                                        className="flex-1 py-3 rounded-xl bg-[#5aadcf] text-[#03080f] text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#7fcaeb] transition-colors"
+                                    >
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+
+                {/* --- GESTIÓN DE DATOS --- */}
                 <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[rgba(200,225,235,0.38)] mb-4 px-1">Gestión de Datos</div>
 
                 <div className="space-y-3 mb-8">
