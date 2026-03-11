@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, DM_Serif_Display } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -38,6 +39,24 @@ export default function RootLayout({
         className={`${dmSans.variable} ${dmSerif.variable} antialiased screen-px font-sans`}
       >
         {children}
+        <Script
+          src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+          strategy="afterInteractive"
+        />
+        <Script id="onesignal-init" strategy="afterInteractive">
+          {`
+            window.OneSignalDeferred = window.OneSignalDeferred || [];
+            OneSignalDeferred.push(async function(OneSignal) {
+              await OneSignal.init({
+                appId: "SU_APP_ID_AQUI",
+                safari_web_id: "web.onesignal.auto.SU_SAFARI_ID",
+                notifyButton: {
+                  enable: false,
+                },
+              });
+            });
+          `}
+        </Script>
       </body>
     </html>
   );

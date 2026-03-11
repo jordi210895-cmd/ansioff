@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert } from 'lucide-react';
+import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert, Bell } from 'lucide-react';
 import TopBar from './TopBar';
 import { getStats, STATS_KEYS } from '../utils/stats';
 import { exportClinicalDiaryPDF } from '../utils/exportUtils';
@@ -14,10 +14,37 @@ interface SettingsScreenProps {
 export default function SettingsScreen({ onBack }: SettingsScreenProps) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [pushEnabled, setPushEnabled] = useState(false);
+
+    useEffect(() => {
+        // Check if OneSignal is loaded and get subscription status
+        const checkPushStatus = async () => {
+            if (typeof window !== 'undefined' && (window as any).OneSignal) {
+                const OneSignal = (window as any).OneSignal;
+                if (OneSignal.Notifications) {
+                    const hasPerms = await OneSignal.Notifications.permission;
+                    setPushEnabled(hasPerms === 'granted');
+                }
+            }
+        };
+        // Small delay to ensure OneSignal script is loaded
+        setTimeout(checkPushStatus, 1500);
+    }, []);
 
     // Calculate what we have stored
     const stats = getStats();
     const hasData = stats.points > 0 || stats.sosUses > 0 || stats.breathMins > 0 || stats.cbtEntries > 0;
+
+    const handleEnablePush = async () => {
+        if (typeof window !== 'undefined' && (window as any).OneSignal) {
+            const OneSignal = (window as any).OneSignal;
+            await OneSignal.Slidedown.promptPush();
+            const hasPerms = await OneSignal.Notifications.permission;
+            setPushEnabled(hasPerms === 'granted');
+        } else {
+            alert("El servicio de notificaciones se está cargando o tu navegador no es compatible.");
+        }
+    };
 
     const handleDeleteAllData = async () => {
         setIsDeleting(true);
@@ -86,6 +113,25 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
                             </p>
                         </div>
                     </div>
+
+                    {/* Enable Push Notifications */}
+                    <button
+                        onClick={handleEnablePush}
+                        className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center gap-4 border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.06)] hover:border-[#c9a96e]/30 transition-all duration-200 hover:-translate-y-0.5 group shadow-sm"
+                    >
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors border ${pushEnabled ? 'bg-[#c9a96e]/10 border-[#c9a96e]/20 text-[#c9a96e]' : 'bg-[rgba(255,255,255,0.06)] border-[rgba(255,255,255,0.1)] text-[#ddeef5]'}`}>
+                            <Bell size={20} className="stroke-[1.5]" />
+                        </div>
+                        <div className="flex-1 text-left">
+                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] group-hover:text-[#c9a96e] mb-1 transition-colors">
+                                {pushEnabled ? 'Notificaciones Activadas' : 'Habilitar Notificaciones'}
+                            </h3>
+                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.5)]">
+                                {pushEnabled ? 'Recibirás consejos push' : 'Recibe recordatorios zen en tu dispositivo'}
+                            </p>
+                        </div>
+                        <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)] group-hover:text-[#c9a96e] transition-colors" />
+                    </button>
 
                     {/* Export Data */}
                     <button
