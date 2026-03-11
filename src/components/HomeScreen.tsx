@@ -19,217 +19,184 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
     const greeting = isNightTime ? "Buenas noches" : "Buenos días";
 
     return (
-        <div className="w-full flex flex-col min-h-screen text-white overflow-hidden pb-24 relative" style={{ backgroundColor: '#03080f' }}>
+        <div className="w-full flex flex-col min-h-screen text-[#e8eaf0] overflow-hidden pb-10 relative" style={{ backgroundColor: '#0b0d14' }}>
             <style jsx>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-                .animate-breathe { animation: breathe 8s infinite ease-in-out; }
-                @keyframes breathe {
-                    0%, 100% { transform: scale(1); opacity: 0.3; }
+                
+                @keyframes fadeUp {
+                    from { opacity: 0; transform: translateY(14px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
+                @keyframes sosPulse {
+                    0%, 100% { opacity: 0.6; }
+                    50% { opacity: 1; }
+                }
+
+                @keyframes pingRing {
+                    0% { transform: scale(1); opacity: 0.6; }
+                    70% { transform: scale(1.25); opacity: 0; }
+                    100% { transform: scale(1.25); opacity: 0; }
+                }
+
+                @keyframes breathRing {
+                    0%, 100% { transform: scale(1); opacity: 0.4; }
                     50% { transform: scale(1.15); opacity: 0.8; }
+                }
+
+                @keyframes breathOrb {
+                    0%, 100% { transform: scale(0.85); }
+                    50% { transform: scale(1.1); }
+                }
+
+                .animate-fade-up {
+                    animation: fadeUp 0.5s ease both;
                 }
             `}</style>
 
-            {/* Global background gradient / Aurora */}
-            <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none z-0 overflow-hidden">
-                <div className="absolute rounded-full blur-[60px] w-[280px] h-[280px] -top-[80px] -right-[60px] bg-[radial-gradient(circle,rgba(89,174,210,0.18)_0%,transparent_70%)]"></div>
-                <div className="absolute rounded-full blur-[60px] w-[220px] h-[220px] top-[120px] -left-[80px] bg-[radial-gradient(circle,rgba(107,191,142,0.10)_0%,transparent_70%)]"></div>
-            </div>
+            {/* Ambient background glow */}
+            <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[340px] h-[340px] bg-[radial-gradient(circle,rgba(126,184,212,0.07)_0%,transparent_70%)] pointer-events-none z-0"></div>
 
-            {/* Main Content Container matching previous configured padding */}
-            <div className="w-full flex flex-col pb-24 pt-8 z-10 relative">
+            <div className="flex-1 w-full flex flex-col z-10 relative scrollbar-hide">
 
-                {/* Hero / Header Section */}
-                <div className="flex items-start justify-between relative mt-4 px-5 mb-5">
-                    <div className="flex flex-col">
-                        <span className="text-[10px] tracking-[0.18em] uppercase mb-2.5 flex items-center gap-2 text-[rgba(200,225,235,0.35)]">
-                            <span className="w-[18px] h-[1px] bg-[#89cee4] opacity-50 block"></span>
-                            Tu espacio seguro
-                        </span>
-                        <h1 className="text-[36px] font-serif font-light text-[#ddeef5] leading-[1.1] mb-2">
-                            {greeting},<br />
-                            <em className="text-[#89cee4] italic font-light">Jordi</em>
-                        </h1>
-                        <p className="text-[12px] text-[rgba(200,225,235,0.35)] font-light mt-2 tracking-[0.03em]">Calma · Respira · Vive</p>
+                {/* Top bar */}
+                <div className="pt-[52px] px-6">
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <div className="text-[10px] font-medium tracking-[0.18em] text-[#5a6080] uppercase mb-1">Tu espacio seguro</div>
+                            <div className="font-serif text-[40px] leading-[1.05] tracking-[-0.02em] text-[#e8eaf0]">
+                                {greeting},<br /><em className="italic text-[#7eb8d4] font-light">Jordi</em>
+                            </div>
+                            <div className="text-[12px] text-[#5a6080] mt-1.5 tracking-[0.04em]">Calma · Respira · Vive</div>
+                        </div>
+                        <button onClick={() => onNav('sc-settings')} className="bg-transparent border-none text-[#5a6080] cursor-pointer p-1 mt-1 flex flex-col gap-[5px]" aria-label="Menú">
+                            <span className="block w-[22px] h-[1.5px] bg-[#5a6080] rounded-[2px]"></span>
+                            <span className="block w-[22px] h-[1.5px] bg-[#5a6080] rounded-[2px]"></span>
+                            <span className="block w-[22px] h-[1.5px] bg-[#5a6080] rounded-[2px]"></span>
+                        </button>
                     </div>
-                    <button onClick={() => onNav('sc-settings')} className="p-3 -mr-3 rounded-full hover:bg-white/5 transition-colors mt-2">
-                        <Menu className="text-[rgba(200,225,235,0.35)]" size={24} />
+                </div>
+
+                {/* SOS */}
+                <div className="pt-[22px] px-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+                    <button
+                        onClick={() => onNav('sc-sos')}
+                        className="w-full bg-[linear-gradient(135deg,#1a0808_0%,#200c0c_100%)] border-[1.5px] border-[rgba(255,59,59,0.35)] rounded-[20px] p-[20px_22px] flex items-center gap-[18px] cursor-pointer relative overflow-hidden transition-all duration-150 hover:-translate-y-[2px] hover:shadow-[0_0_60px_rgba(255,59,59,0.22),inset_0_1px_0_rgba(255,255,255,0.04)] active:scale-[0.98] shadow-[0_0_40px_rgba(255,59,59,0.12),inset_0_1px_0_rgba(255,255,255,0.04)]"
+                    >
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(255,59,59,0.1)_0%,transparent_60%)]" style={{ animation: 'sosPulse 2.5s ease-in-out infinite' }}></div>
+
+                        <div className="bg-[#ff3b3b] text-white text-[15px] font-[800] tracking-[0.05em] w-[54px] h-[54px] rounded-[14px] flex items-center justify-center shrink-0 relative shadow-[0_0_20px_rgba(255,59,59,0.5)] z-10">
+                            SOS
+                            <div className="absolute -inset-[6px] border-[1.5px] border-[rgba(255,59,59,0.4)] rounded-[20px]" style={{ animation: 'pingRing 2s ease-in-out infinite' }}></div>
+                        </div>
+
+                        <div className="flex-1 text-left z-10">
+                            <div className="text-[17px] font-semibold text-[#ff7070] mb-[3px]">Necesito ayuda ahora</div>
+                            <div className="text-[12px] text-[rgba(255,112,112,0.6)] font-normal">Asistencia de crisis inmediata</div>
+                        </div>
+                        <div className="text-[rgba(255,112,112,0.5)] text-[20px] transition-transform duration-200 z-10 group-hover:translate-x-[3px]">›</div>
                     </button>
                 </div>
 
-                {/* 1. SOS Button Area (Soft Terracotta) */}
-                <section className="text-left mx-5 mb-[22px]">
-                    <button
-                        onClick={() => onNav('sc-sos')}
-                        className="w-full relative overflow-hidden bg-[rgba(217,124,106,0.09)] border border-[rgba(217,124,106,0.22)] rounded-[22px] p-[20px] flex items-center gap-5 transition-all hover:bg-[rgba(217,124,106,0.15)] hover:border-[rgba(217,124,106,0.38)] active:scale-[0.98] text-left"
-                    >
-                        {/* Left solid border */}
-                        <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#d97c6a] rounded-l-[3px]"></div>
-
-                        <div className="w-[40px] h-[40px] rounded-full bg-[radial-gradient(circle_at_35%_35%,rgba(217,124,106,0.6),rgba(200,90,80,0.3))] shadow-[0_0_20px_rgba(217,124,106,0.25)] flex items-center justify-center text-[18px] shrink-0">
-                            🆘
-                        </div>
-
-                        <div className="flex flex-col flex-1">
-                            <span className="text-[13px] font-medium text-[#f0a898]">Necesito ayuda ahora</span>
-                            <span className="text-[10.5px] text-[rgba(200,225,235,0.35)] mt-[1px]">Asistencia de crisis inmediata</span>
-                        </div>
-
-                        <div className="w-[28px] h-[28px] rounded-full bg-[rgba(217,124,106,0.15)] flex items-center justify-center text-[#f0a898] shrink-0">
-                            <ChevronRight size={14} />
-                        </div>
-                    </button>
-                </section>
-
                 {/* --- SMART NIGHT TRIGGER --- */}
                 {isNightTime && (
-                    <section className="animate-in fade-in slide-in-from-bottom-2 duration-700 text-left">
+                    <div className="pt-[14px] px-6 animate-fade-up" style={{ animationDelay: '0.15s' }}>
                         <button
                             onClick={() => onNav('sc-night')}
-                            className="w-full relative overflow-hidden bg-gradient-to-br from-indigo-500/20 to-indigo-500/10 border border-indigo-500/30 rounded-[20px] p-5 flex items-center gap-4 transition-all active:scale-[0.98] text-left"
+                            className="w-full relative overflow-hidden bg-[linear-gradient(135deg,rgba(79,70,229,0.15)_0%,rgba(79,70,229,0.05)_100%)] border border-[rgba(79,70,229,0.3)] rounded-[20px] p-[20px_22px] flex items-center gap-[18px] transition-all hover:bg-[rgba(79,70,229,0.2)] active:scale-[0.98] text-left"
                         >
-                            <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-indigo-500 rounded-l-[3px]"></div>
-
-                            <div className="w-[44px] h-[44px] rounded-full bg-indigo-500/20 flex items-center justify-center text-[22px] shrink-0">
+                            <div className="w-[44px] h-[44px] rounded-[14px] bg-[rgba(79,70,229,0.2)] flex items-center justify-center text-[22px] shrink-0">
                                 🌙
                             </div>
 
                             <div className="flex flex-col flex-1">
-                                <span className="text-[16px] font-medium text-indigo-300">Es hora de desconectar</span>
-                                <span className="text-[13px] text-white/40 mt-[2px]">Prepara tu mente para dormir bien</span>
+                                <span className="text-[16px] font-semibold text-indigo-300 mb-[3px]">Es hora de desconectar</span>
+                                <span className="text-[12px] text-[rgba(165,180,252,0.6)] mt-[1px]">Prepara tu mente para dormir bien</span>
                             </div>
 
-                            <div className="w-[32px] h-[32px] rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-300 shrink-0">
-                                <ChevronRight size={18} />
-                            </div>
+                            <div className="text-indigo-400 text-[20px] transition-transform duration-200 z-10">›</div>
                         </button>
-                    </section>
+                    </div>
                 )}
 
-                {/* 2. Featured Breathing Card */}
-                <section className="mb-[22px]">
-                    <div className="flex items-baseline justify-between px-5 pb-[10px]">
-                        <h2 className="text-[11px] font-medium text-[rgba(200,225,235,0.35)] tracking-[0.1em] uppercase">Respiración guiada</h2>
-                        <button onClick={() => onNav('sc-breath')} className="text-[11px] text-[#89cee4] opacity-75 hover:opacity-100 transition-opacity">
-                            Ver todos →
-                        </button>
+                {/* Respiración guiada */}
+                <div className="pt-[26px] px-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+                    <div className="flex justify-between items-center mb-[14px]">
+                        <div className="text-[10px] font-semibold tracking-[0.15em] text-[#5a6080] uppercase">Respiración Guiada</div>
+                        <div className="text-[11px] text-[#7eb8d4] font-medium cursor-pointer opacity-80" onClick={() => onNav('sc-breath')}>Ver todos →</div>
                     </div>
 
-                    <div className="mx-5 relative rounded-[26px] bg-[linear-gradient(145deg,rgba(18,33,50,0.9),rgba(14,29,46,0.95))] border border-[rgba(255,255,255,0.07)] border-t-[rgba(255,255,255,0.10)] p-[24px_22px] flex items-center gap-6 overflow-hidden">
-                        {/* Abstract pattern background - contained */}
-                        <div className="absolute -right-[30px] -top-[30px] w-[130px] h-[130px] bg-[radial-gradient(circle,rgba(89,174,210,0.09),transparent_70%)] pointer-events-none"></div>
-
-                        {/* Animated rings */}
-                        <div className="w-[80px] h-[80px] shrink-0 relative flex items-center justify-center">
-                            <div className="absolute inset-0 rounded-full border border-[rgba(89,174,210,0.2)] animate-breathe"></div>
-                            <div className="absolute inset-0 rounded-full border border-[rgba(89,174,210,0.35)] animate-breathe" style={{ animationDelay: '1s', transform: 'scale(0.75)' }}></div>
-                            <div className="w-[26px] h-[26px] rounded-full bg-[radial-gradient(circle_at_35%_30%,rgba(160,220,240,0.95),rgba(89,174,210,0.7))] shadow-[0_0_12px_rgba(89,174,210,0.6),0_0_30px_rgba(89,174,210,0.25)] relative z-10 animate-pulse"></div>
+                    <div className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[18px_20px] flex items-center gap-[18px] cursor-pointer transition-all duration-200 hover:bg-[#181c2a] hover:border-[rgba(126,184,212,0.2)]" onClick={() => onNav('sc-breath')}>
+                        <div className="relative w-[56px] h-[56px] shrink-0">
+                            <div className="absolute inset-0 rounded-full border border-[rgba(126,184,212,0.2)]" style={{ animation: 'breathRing 4s ease-in-out infinite' }}></div>
+                            <div className="absolute -inset-[8px] rounded-full border border-[rgba(126,184,212,0.2)]" style={{ animation: 'breathRing 4s ease-in-out infinite', animationDelay: '1.3s' }}></div>
+                            <div className="absolute inset-[10px] rounded-full bg-[radial-gradient(circle_at_40%_35%,rgba(180,220,240,0.9),rgba(100,170,210,0.6))] shadow-[0_0_16px_rgba(126,184,212,0.4)]" style={{ animation: 'breathOrb 4s ease-in-out infinite' }}></div>
                         </div>
 
-                        <div className="flex flex-col flex-1 relative z-10 min-w-0">
-                            <div className="flex gap-[5px] mb-[8px]">
-                                <span className="text-[11px] font-medium bg-[rgba(89,174,210,0.12)] border border-[rgba(89,174,210,0.2)] text-[#89cee4] rounded-[6px] px-[7px] py-[2px]">4</span>
-                                <span className="text-[11px] font-medium bg-[rgba(89,174,210,0.12)] border border-[rgba(89,174,210,0.2)] text-[#89cee4] rounded-[6px] px-[7px] py-[2px]">2</span>
-                                <span className="text-[11px] font-medium bg-[rgba(89,174,210,0.12)] border border-[rgba(89,174,210,0.2)] text-[#89cee4] rounded-[6px] px-[7px] py-[2px]">6</span>
+                        <div className="flex-1">
+                            <div className="flex gap-[6px] mb-[6px]">
+                                <div className="bg-[#181c2a] border border-[rgba(255,255,255,0.06)] w-[22px] h-[22px] rounded-[6px] text-[11px] font-semibold text-[#7eb8d4] flex items-center justify-center">4</div>
+                                <div className="bg-[#181c2a] border border-[rgba(255,255,255,0.06)] w-[22px] h-[22px] rounded-[6px] text-[11px] font-semibold text-[#7eb8d4] flex items-center justify-center">2</div>
+                                <div className="bg-[#181c2a] border border-[rgba(255,255,255,0.06)] w-[22px] h-[22px] rounded-[6px] text-[11px] font-semibold text-[#7eb8d4] flex items-center justify-center">6</div>
                             </div>
-                            <h3 className="text-[15px] font-medium text-[#ddeef5] leading-[1.3] mb-[12px]">
-                                Alivio del estrés profundo
-                            </h3>
-
-                            <div className="flex items-center justify-between">
-                                <span className="text-[11px] text-[rgba(200,225,235,0.35)]">⏱ 5 min</span>
-                                <button
-                                    onClick={() => onNav('sc-breath')}
-                                    className="bg-[linear-gradient(135deg,#5aadcf,#89cee4)] text-[#080f1a] text-[11px] font-semibold px-[16px] py-[8px] rounded-[30px] shadow-[0_4px_18px_rgba(89,174,210,0.3)] hover:scale-[1.04] transition-all tracking-[0.05em]"
-                                >
-                                    ▶ Comenzar
-                                </button>
-                            </div>
+                            <div className="text-[15px] font-semibold text-[#e8eaf0] mb-[4px]">Alivio del estrés profundo</div>
+                            <div className="text-[11px] text-[#5a6080]">⏱ 5 min</div>
                         </div>
-                    </div>
-                </section>
 
-                {/* 3. Tools Grid (2x2) */}
-                <section className="mb-[24px]">
-                    <div className="px-5 pb-[10px]">
-                        <h2 className="text-[11px] font-medium text-[rgba(200,225,235,0.35)] tracking-[0.1em] uppercase">Herramientas</h2>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4 px-5">
-                        {/* Audio Tool */}
-                        <button
-                            onClick={() => onNav('sc-audio')}
-                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[20px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
-                        >
-                            <span className="absolute top-[16px] right-[16px] text-[13px] text-[rgba(200,225,235,0.35)]">↗</span>
-                            <div className="absolute -bottom-[20px] -right-[20px] w-[70px] h-[70px] rounded-full bg-[#89cee4] opacity-[0.07] pointer-events-none"></div>
-
-                            <div className="w-[40px] h-[40px] rounded-[14px] bg-[rgba(89,174,210,0.15)] flex items-center justify-center text-[20px] mb-[12px]">
-                                🎵
-                            </div>
-                            <h4 className="font-medium text-[#ddeef5] text-[14px] mb-[3px]">Audios</h4>
-                            <p className="text-[11px] leading-[1.4] text-[rgba(200,225,235,0.35)] max-w-[90%]">Sonidos y meditaciones guiadas</p>
-                        </button>
-
-                        {/* Diary Tool */}
-                        <button
-                            onClick={() => onNav('sc-notes')}
-                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[20px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
-                        >
-                            <span className="absolute top-[16px] right-[16px] text-[13px] text-[rgba(200,225,235,0.35)]">↗</span>
-                            <div className="absolute -bottom-[20px] -right-[20px] w-[70px] h-[70px] rounded-full bg-[#6bbf8e] opacity-[0.07] pointer-events-none"></div>
-
-                            <div className="w-[40px] h-[40px] rounded-[14px] bg-[rgba(107,191,142,0.15)] flex items-center justify-center text-[20px] mb-[12px]">
-                                📓
-                            </div>
-                            <h4 className="font-medium text-[#ddeef5] text-[14px] mb-[3px]">Diario</h4>
-                            <p className="text-[11px] leading-[1.4] text-[rgba(200,225,235,0.35)] max-w-[90%]">Reflexión diaria consciente</p>
-                        </button>
-
-                        {/* Games Tool */}
-                        <button
-                            onClick={() => onNav('sc-games')}
-                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[20px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
-                        >
-                            <span className="absolute top-[16px] right-[16px] text-[13px] text-[rgba(200,225,235,0.35)]">↗</span>
-                            <div className="absolute -bottom-[20px] -right-[20px] w-[70px] h-[70px] rounded-full bg-[#b09de0] opacity-[0.07] pointer-events-none"></div>
-
-                            <div className="w-[40px] h-[40px] rounded-[14px] bg-[rgba(176,157,224,0.15)] flex items-center justify-center text-[20px] mb-[12px]">
-                                🧩
-                            </div>
-                            <h4 className="font-medium text-[#ddeef5] text-[14px] mb-[3px]">Juegos</h4>
-                            <p className="text-[11px] leading-[1.4] text-[rgba(200,225,235,0.35)] max-w-[90%]">Distracción sana y terapéutica</p>
-                        </button>
-
-                        {/* Modules Tool */}
-                        <button
-                            onClick={() => onNav('sc-tools')}
-                            className="bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] flex flex-col p-[20px] rounded-[22px] hover:-translate-y-[2px] transition-all relative overflow-hidden text-left"
-                        >
-                            <span className="absolute top-[16px] right-[16px] text-[13px] text-[rgba(200,225,235,0.35)]">↗</span>
-                            <div className="absolute -bottom-[20px] -right-[20px] w-[70px] h-[70px] rounded-full bg-[#c9a96e] opacity-[0.07] pointer-events-none"></div>
-
-                            <div className="w-[40px] h-[40px] rounded-[14px] bg-[rgba(201,169,110,0.15)] flex items-center justify-center text-[20px] mb-[12px]">
-                                📚
-                            </div>
-                            <h4 className="font-medium text-[#ddeef5] text-[14px] mb-[3px]">Módulos</h4>
-                            <p className="text-[11px] leading-[1.4] text-[rgba(200,225,235,0.35)] max-w-[90%]">TCC · ACT · Weekes</p>
+                        <button className="bg-[#7eb8d4] text-[#0b0d14] text-[12px] font-bold py-[8px] px-[14px] rounded-[20px] border-none cursor-pointer whitespace-nowrap transition-all duration-200 hover:scale-[1.04] hover:shadow-[0_0_16px_rgba(126,184,212,0.4)]">
+                            ▶ Comenzar
                         </button>
                     </div>
-                </section>
+                </div>
 
-                {/* 4. Quote Border Left */}
-                <section className="mb-[24px]">
-                    <div className="mx-5 p-[18px_20px] bg-[linear-gradient(135deg,rgba(89,174,210,0.06),rgba(89,174,210,0.02))] border border-[rgba(89,174,210,0.12)] rounded-[20px] relative">
-                        <span className="font-serif text-[52px] leading-[0.5] text-[rgba(89,174,210,0.2)] mb-[8px] block">"</span>
-                        <div className="font-serif italic font-light text-[17px] text-[#ddeef5] leading-[1.8]">
+                {/* Herramientas */}
+                <div className="pt-[26px] px-6 animate-fade-up" style={{ animationDelay: '0.3s' }}>
+                    <div className="flex justify-between items-center mb-[14px]">
+                        <div className="text-[10px] font-semibold tracking-[0.15em] text-[#5a6080] uppercase">Herramientas</div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-[10px]">
+                        <button onClick={() => onNav('sc-audio')} className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[18px] cursor-pointer relative transition-all duration-200 overflow-hidden min-h-[110px] flex flex-col justify-end text-left hover:bg-[#181c2a] hover:border-[rgba(255,255,255,0.1)] hover:-translate-y-[2px]">
+                            <div className="w-[38px] h-[38px] rounded-[12px] flex items-center justify-center text-[18px] mb-[10px] bg-[rgba(126,184,212,0.12)]">🎵</div>
+                            <div className="absolute top-[14px] right-[14px] text-[14px] text-[#5a6080] opacity-50">↗</div>
+                            <div className="text-[14px] font-semibold text-[#e8eaf0] mb-[3px]">Audios</div>
+                            <div className="text-[11px] text-[#5a6080] leading-[1.4]">Sonidos y meditaciones guiadas</div>
+                        </button>
+
+                        <button onClick={() => onNav('sc-notes')} className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[18px] cursor-pointer relative transition-all duration-200 overflow-hidden min-h-[110px] flex flex-col justify-end text-left hover:bg-[#181c2a] hover:border-[rgba(255,255,255,0.1)] hover:-translate-y-[2px]">
+                            <div className="w-[38px] h-[38px] rounded-[12px] flex items-center justify-center text-[18px] mb-[10px] bg-[rgba(160,200,140,0.12)]">📓</div>
+                            <div className="absolute top-[14px] right-[14px] text-[14px] text-[#5a6080] opacity-50">↗</div>
+                            <div className="text-[14px] font-semibold text-[#e8eaf0] mb-[3px]">Diario</div>
+                            <div className="text-[11px] text-[#5a6080] leading-[1.4]">Reflexión diaria consciente</div>
+                        </button>
+
+                        <button onClick={() => onNav('sc-games')} className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[18px] cursor-pointer relative transition-all duration-200 overflow-hidden min-h-[110px] flex flex-col justify-end text-left hover:bg-[#181c2a] hover:border-[rgba(255,255,255,0.1)] hover:-translate-y-[2px]">
+                            <div className="w-[38px] h-[38px] rounded-[12px] flex items-center justify-center text-[18px] mb-[10px] bg-[rgba(220,180,100,0.12)]">🧩</div>
+                            <div className="absolute top-[14px] right-[14px] text-[14px] text-[#5a6080] opacity-50">↗</div>
+                            <div className="text-[14px] font-semibold text-[#e8eaf0] mb-[3px]">Juegos</div>
+                            <div className="text-[11px] text-[#5a6080] leading-[1.4]">Distracción sana y terapéutica</div>
+                        </button>
+
+                        <button onClick={() => onNav('sc-tools')} className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[18px] cursor-pointer relative transition-all duration-200 overflow-hidden min-h-[110px] flex flex-col justify-end text-left hover:bg-[#181c2a] hover:border-[rgba(255,255,255,0.1)] hover:-translate-y-[2px]">
+                            <div className="w-[38px] h-[38px] rounded-[12px] flex items-center justify-center text-[18px] mb-[10px] bg-[rgba(180,140,220,0.12)]">📚</div>
+                            <div className="absolute top-[14px] right-[14px] text-[14px] text-[#5a6080] opacity-50">↗</div>
+                            <div className="text-[14px] font-semibold text-[#e8eaf0] mb-[3px]">Módulos</div>
+                            <div className="text-[11px] text-[#5a6080] leading-[1.4]">TCC · ACT · Weekes</div>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Reflexión del día */}
+                <div className="pt-[26px] px-6 pb-6 animate-fade-up" style={{ animationDelay: '0.4s' }}>
+                    <div className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[22px_22px_20px] relative overflow-hidden">
+                        <div className="absolute top-[-10px] left-[12px] font-serif text-[100px] text-[rgba(126,184,212,0.06)] leading-[1] pointer-events-none">"</div>
+                        <div className="font-serif italic text-[17px] leading-[1.6] text-[rgba(232,234,240,0.9)] mb-[14px] relative z-10">
                             Tus sentimientos son válidos, pero no son tu destino. Respira y confía en el proceso.
                         </div>
-                        <div className="mt-[10px] text-[10px] tracking-[0.12em] uppercase text-[rgba(200,225,235,0.35)]">
-                            — ANSIOFF · Reflexión de hoy
-                        </div>
+                        <div className="text-[10px] tracking-[0.14em] text-[#5a6080] uppercase font-medium">ANSIOFF · Reflexión de hoy</div>
                     </div>
-                </section>
+                </div>
 
             </div>
         </div>
