@@ -46,69 +46,69 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
     };
 
     return (
-        <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden relative">
+        <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden relative">
             <TopBar title="Ajustes y Privacidad" onBack={onBack} />
 
-            <div className="flex-1 overflow-y-auto screen-px pb-32 pt-6">
+            <div className="flex-1 overflow-y-auto px-5 pb-32 pt-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
 
                 {/* Privacy Guarantee Header */}
-                <div className="glass-primary p-6 rounded-3xl mb-8 relative overflow-hidden border border-blue-500/30">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl rounded-full"></div>
+                <div className="bg-[#0e1d2e] p-6 rounded-2xl mb-8 relative overflow-hidden border border-[rgba(255,255,255,0.07)] shadow-sm">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#5aadcf]/5 blur-3xl rounded-full"></div>
 
-                    <div className="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center mb-4 ring-1 ring-blue-500/50">
-                        <Shield size={24} strokeWidth={2.5} />
+                    <div className="w-12 h-12 bg-[#5aadcf]/10 text-[#5aadcf] rounded-2xl flex items-center justify-center mb-4 ring-1 ring-[#5aadcf]/20">
+                        <Shield size={24} className="stroke-[1.5]" />
                     </div>
 
-                    <h2 className="text-xl font-bold text-white mb-2 tracking-tight">Privacidad desde el Diseño</h2>
-                    <p className="text-blue-100/70 text-sm leading-relaxed mb-4">
+                    <h2 className="text-2xl font-light text-[#ddeef5] mb-2 font-serif italic">Privacidad desde el Diseño</h2>
+                    <p className="font-sans font-light text-[rgba(200,225,235,0.8)] text-sm leading-relaxed mb-4">
                         Ansioff procesa tu información sensible (diarios, audios y progreso) directamente en tu dispositivo. Tu progreso se guarda localmente para garantizar la máxima confidencialidad.
                     </p>
 
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 text-blue-400 rounded-lg text-xs font-semibold border border-blue-500/20">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#5aadcf]/10 text-[#5aadcf] rounded-xl text-xs font-sans font-semibold border border-[#5aadcf]/20">
                         <ShieldAlert size={14} /> 100% Anónimo y Local
                     </div>
                 </div>
 
-                <div className="text-xs uppercase tracking-widest font-bold text-slate-500 mb-4 px-1">Gestión de Datos</div>
+                <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[rgba(200,225,235,0.38)] mb-4 px-1">Gestión de Datos</div>
 
                 <div className="space-y-3 mb-8">
                     {/* Data Usage Info */}
-                    <div className="glass p-4 rounded-3xl flex items-start gap-4 border border-slate-800/50">
-                        <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                            <Info size={20} />
+                    <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-5 rounded-2xl flex items-start gap-4 shadow-sm">
+                        <div className="w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex items-center justify-center text-[rgba(200,225,235,0.6)] shrink-0">
+                            <Info size={20} className="stroke-[1.5]" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-semibold text-white mb-1">¿Qué datos guardamos?</h3>
-                            <p className="text-[12px] text-slate-400 leading-relaxed">
+                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">¿Qué datos guardamos?</h3>
+                            <p className="font-sans font-light text-[12px] text-[rgba(200,225,235,0.8)] leading-relaxed">
                                 Actualmente guardamos en el almacenamiento local de tu navegador:
-                                <span className="text-white"> {stats.points} puntos de progreso</span> y tus audios personalizados.
+                                <span className="font-medium text-[#5aadcf]"> {stats.points} puntos de progreso</span> y tus audios personalizados.
                             </p>
                         </div>
                     </div>
 
                     {/* Export Data */}
-                    <button className="w-full glass p-4 rounded-3xl flex items-center gap-4 hover:bg-slate-800/50 transition-colors border border-slate-800/50 group target:opacity-50 opacity-50 cursor-not-allowed">
-                        <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-white transition-colors">
-                            <Download size={20} />
+                    <button className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center gap-4 border border-[rgba(255,255,255,0.07)] target:opacity-50 opacity-50 cursor-not-allowed shadow-sm">
+                        <div className="w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex items-center justify-center text-[rgba(200,225,235,0.38)] transition-colors">
+                            <Download size={20} className="stroke-[1.5]" />
                         </div>
                         <div className="flex-1 text-left">
-                            <h3 className="text-sm font-semibold text-white">Exportar mi diario y datos</h3>
-                            <p className="text-[11px] text-slate-500">Próximamente</p>
+                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">Exportar mi diario y datos</h3>
+                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.38)]">Próximamente</p>
                         </div>
-                        <ChevronRight size={18} className="text-slate-600" />
+                        <ChevronRight size={18} className="text-[rgba(200,225,235,0.38)]" />
                     </button>
 
                     {/* Delete Account / Data */}
                     <button
                         onClick={() => hasData ? setShowDeleteConfirm(true) : null}
-                        className={`w-full p-4 rounded-3xl flex items-center gap-4 transition-all border ${hasData ? 'glass hover:bg-red-500/10 hover:border-red-500/30 border-slate-800/50 group' : 'bg-slate-900 border-slate-800 opacity-50 cursor-not-allowed'}`}
+                        className={`w-full p-5 rounded-2xl flex items-center gap-4 transition-transform duration-200 border shadow-sm ${hasData ? 'bg-[rgba(255,255,255,0.04)] border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.06)] hover:border-[#d97c6a]/30 hover:-translate-y-0.5 group' : 'bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.04)] opacity-50 cursor-not-allowed'}`}
                     >
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${hasData ? 'bg-red-500/10 text-red-500 group-hover:bg-red-500 group-hover:text-white' : 'bg-slate-800 text-slate-500'}`}>
-                            <Trash2 size={20} />
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors border ${hasData ? 'bg-[#d97c6a]/10 text-[#d97c6a] border-[#d97c6a]/20 group-hover:bg-[#d97c6a] group-hover:text-[#03080f]' : 'bg-[rgba(255,255,255,0.04)] border-[rgba(255,255,255,0.07)] text-[rgba(200,225,235,0.38)]'}`}>
+                            <Trash2 size={20} className={hasData ? 'stroke-current' : 'stroke-[1.5]'} />
                         </div>
                         <div className="flex-1 text-left">
-                            <h3 className={`text-sm font-semibold ${hasData ? 'text-white group-hover:text-red-400' : 'text-slate-500'}`}>Borrar todos mis datos</h3>
-                            <p className="text-[11px] text-slate-500">Elimina progreso, audios locales y configuración de este dispositivo</p>
+                            <h3 className={`font-sans font-medium text-sm mb-1 ${hasData ? 'text-[#ddeef5] group-hover:text-[#d97c6a]' : 'text-[rgba(200,225,235,0.38)]'}`}>Borrar todos mis datos</h3>
+                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.38)]">Elimina progreso, audios locales y configuración de este dispositivo</p>
                         </div>
                     </button>
                 </div>
@@ -117,27 +117,27 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
 
             {/* MODAL DE CONFIRMACIÓN DE BORRADO */}
             {showDeleteConfirm && (
-                <div className="absolute inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm flex items-end justify-center sm:items-center p-4 pb-8">
-                    <div className="bg-slate-900 border border-red-500/20 rounded-[2rem] p-6 w-full max-w-sm shadow-2xl shadow-red-900/20 animate-in slide-in-from-bottom-10 fade-in duration-300">
+                <div className="absolute inset-0 z-[100] bg-[#03080f]/90 backdrop-blur-md flex items-end justify-center sm:items-center p-5 pb-8 animate-in fade-in duration-300">
+                    <div className="bg-[#0e1d2e] border border-[#d97c6a]/30 rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-in slide-in-from-bottom-10 fade-in duration-300 relative overflow-hidden">
 
-                        <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center text-red-500 mx-auto mb-6 ring-8 ring-red-500/5">
-                            <AlertTriangle size={32} strokeWidth={2} />
+                        <div className="w-16 h-16 bg-[#d97c6a]/10 border border-[#d97c6a]/20 rounded-full flex items-center justify-center text-[#d97c6a] mx-auto mb-6 shadow-inner relative z-10">
+                            <AlertTriangle size={32} className="stroke-[1.5]" />
                         </div>
 
-                        <h3 className="text-xl font-bold text-white text-center mb-3">¿Estás seguro/a?</h3>
-                        <p className="text-slate-400 text-sm text-center mb-8 px-2 leading-relaxed">
-                            Esta acción <strong className="text-white">eliminará para siempre</strong> todo tu progreso, puntos acumulados ({stats.points} pts) y los audios que hayas subido a tu biblioteca local. No se puede deshacer.
+                        <h3 className="text-3xl font-light text-[#ddeef5] text-center mb-4 font-serif italic relative z-10">¿Estás seguro/a?</h3>
+                        <p className="font-sans font-light text-[rgba(200,225,235,0.8)] text-sm text-center mb-8 px-2 leading-relaxed relative z-10">
+                            Esta acción <strong className="text-[#d97c6a] font-medium">eliminará para siempre</strong> todo tu progreso, puntos acumulados ({stats.points} pts) y los audios que hayas subido a tu biblioteca local. No se puede deshacer.
                         </p>
 
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-3 relative z-10">
                             <button
                                 onClick={handleDeleteAllData}
                                 disabled={isDeleting}
-                                className="w-full py-4 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-wait"
+                                className="w-full py-4 rounded-full bg-[#d97c6a] hover:bg-[#c66c5c] text-[#03080f] font-sans font-semibold text-xs tracking-wider transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-wait shadow-sm"
                             >
                                 {isDeleting ? (
                                     <>
-                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        <div className="w-4 h-4 border-2 border-[#03080f]/30 border-t-[#03080f] rounded-full animate-spin"></div>
                                         Borrando datos...
                                     </>
                                 ) : (
@@ -147,11 +147,13 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
                             <button
                                 onClick={() => !isDeleting && setShowDeleteConfirm(false)}
                                 disabled={isDeleting}
-                                className="w-full py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition-colors disabled:opacity-50"
+                                className="w-full py-4 rounded-full bg-transparent border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.04)] text-[#ddeef5] font-sans font-semibold text-xs tracking-wider transition-colors disabled:opacity-50 shadow-sm"
                             >
                                 Cancelar
                             </button>
                         </div>
+
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#d97c6a]/5 blur-3xl rounded-full pointer-events-none z-0"></div>
                     </div>
                 </div>
             )}

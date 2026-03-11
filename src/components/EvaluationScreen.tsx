@@ -62,30 +62,30 @@ export default function EvaluationScreen({ onBack }: EvaluationScreenProps) {
     };
 
     return (
-        <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
+        <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
             <TopBar title="Evaluación" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto screen-px pb-24">
+            <div className="flex-1 overflow-y-auto px-5 pb-24">
 
                 {!isFinished ? (
-                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 mt-4">
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 mt-6">
                         <div className="flex justify-between items-center mb-6">
                             <div className="flex items-center gap-2">
-                                <ClipboardCheck size={14} className="text-blue-500" />
-                                <span className="text-[10px] font-bold text-blue-500 tracking-widest uppercase">Test de Síntomas</span>
+                                <ClipboardCheck size={14} className="text-[#5aadcf]" />
+                                <span className="font-sans font-bold text-[10px] text-[#5aadcf] tracking-widest uppercase">Test de Síntomas</span>
                             </div>
-                            <span className="text-[10px] text-slate-500 font-medium">{currentIdx + 1} / {QUESTIONS.length}</span>
+                            <span className="font-sans font-medium text-[10px] text-[rgba(200,225,235,0.38)]">{currentIdx + 1} / {QUESTIONS.length}</span>
                         </div>
 
-                        <div className="h-1.5 bg-slate-900 rounded-full mb-12 overflow-hidden border-2 border-slate-800">
+                        <div className="h-1.5 bg-[rgba(255,255,255,0.04)] rounded-full mb-10 overflow-hidden border border-[rgba(255,255,255,0.07)]">
                             <div
-                                className="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all duration-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+                                className="h-full bg-[#5aadcf] transition-all duration-300 shadow-[0_0_10px_rgba(90,173,207,0.5)]"
                                 style={{ width: `${((currentIdx + 1) / QUESTIONS.length) * 100}%` }}
                             ></div>
                         </div>
 
-                        <h2 className="text-3xl font-medium mb-12 leading-tight font-serif">
+                        <h2 className="text-2xl font-light mb-10 leading-relaxed font-serif text-[#ddeef5]">
                             En la última semana, ¿cuánto te ha molestado esto?<br />
-                            <span className="text-blue-400 mt-6 block italic">"{QUESTIONS[currentIdx]}"</span>
+                            <span className="text-[#5aadcf] mt-6 block italic">"{QUESTIONS[currentIdx]}"</span>
                         </h2>
 
                         <div className="grid grid-cols-1 gap-3">
@@ -98,42 +98,42 @@ export default function EvaluationScreen({ onBack }: EvaluationScreenProps) {
                                 <button
                                     key={opt.s}
                                     onClick={() => handleAnswer(opt.s)}
-                                    className="w-full p-5 bg-slate-900 border-2 border-slate-800 rounded-2xl text-left text-slate-300 text-sm font-medium hover:border-blue-500/50 transition-all hover:scale-[1.02] active:scale-[0.98] group shadow-lg shadow-slate-900/50"
+                                    className="w-full p-5 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.15)] rounded-2xl text-left text-[rgba(200,225,235,0.8)] font-sans font-medium text-[15px] transition-transform duration-200 hover:-translate-y-0.5 group shadow-sm"
                                 >
-                                    <span className="group-hover:text-white transition-colors">{opt.l}</span>
+                                    <span className="group-hover:text-[#ddeef5] transition-colors">{opt.l}</span>
                                 </button>
                             ))}
                         </div>
                     </div>
                 ) : (
-                    <div className="animate-in fade-in zoom-in-95 duration-700 text-center py-12">
-                        <div className="w-24 h-24 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-500/5">
-                            <BarChart3 className="w-10 h-10 text-blue-500" />
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 text-center py-10">
+                        <div className="w-20 h-20 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm">
+                            <BarChart3 className="w-8 h-8 text-[#5aadcf]" />
                         </div>
-                        <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-3">Resultado del Análisis</h2>
-                        <div className={`text-4xl font-medium mb-8 ${getResult().c}`} >{getResult().t}</div>
+                        <h2 className="font-sans font-bold text-[10px] text-[rgba(200,225,235,0.38)] uppercase tracking-widest mb-2">Resultado del Análisis</h2>
+                        <div className={`text-3xl font-light font-serif italic mb-8 ${getResult().c}`} >{getResult().t}</div>
 
-                        <div className="relative inline-block mb-12">
-                            <div className="text-7xl font-light text-white">{totalScore}</div>
-                            <div className="absolute -right-8 bottom-2 text-xs text-slate-500 font-bold uppercase tracking-widest">Puntos</div>
+                        <div className="relative inline-block mb-10">
+                            <div className="text-6xl font-light text-[#ddeef5]">{totalScore}</div>
+                            <div className="absolute -right-8 bottom-2 font-sans font-bold text-[9px] text-[rgba(200,225,235,0.38)] uppercase tracking-widest">Puntos</div>
                         </div>
 
-                        <div className={`${getResult().bg} ${getResult().border} border-2 p-8 rounded-[40px] mb-12 relative overflow-hidden text-left shadow-2xl`}>
+                        <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-8 rounded-2xl mb-10 relative overflow-hidden text-left shadow-sm">
                             <CheckCircle2 className={`${getResult().c} mb-4`} size={24} />
-                            <p className="text-slate-200 text-base leading-relaxed">
+                            <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed">
                                 {getResult().d}
                             </p>
                         </div>
 
                         <div className="flex flex-col gap-4">
                             <button
-                                className="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-2xl py-4 font-bold transition-all active:scale-95 shadow-lg shadow-blue-600/20"
+                                className="w-full bg-[#5aadcf] hover:bg-[#89cee4] text-[#03080f] font-sans font-semibold text-xs tracking-wider rounded-full py-4 transition-colors shadow-lg"
                                 onClick={onBack}
                             >
                                 Volver a Módulos
                             </button>
                             <button
-                                className="flex items-center justify-center gap-2 text-slate-500 text-xs hover:text-white transition-colors py-2"
+                                className="flex items-center justify-center gap-2 font-sans font-semibold text-xs tracking-wider text-[rgba(200,225,235,0.38)] hover:text-[#ddeef5] transition-colors py-2"
                                 onClick={() => { setIsFinished(false); setCurrentIdx(0); setTotalScore(0); }}
                             >
                                 <RotateCcw size={14} /> Repetir test

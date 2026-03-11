@@ -80,40 +80,40 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
 
     if (mode === 'BREATHING') {
         return (
-            <div className="flex flex-col h-full bg-[#06101a] text-white overflow-hidden">
+            <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
                 <TopBar title="Anclaje Rápido" onBack={onBack} />
-                <div className="flex-1 flex flex-col items-center justify-between py-8 screen-px">
+                <div className="flex-1 flex flex-col items-center justify-between py-8 px-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
                     <div className="text-center">
-                        <div className="text-[11px] uppercase tracking-[0.15em] text-[#e07d6a] mb-2 font-medium flex items-center justify-center gap-2">
+                        <div className="text-[10px] uppercase tracking-widest text-[#d97c6a] mb-2 font-medium flex items-center justify-center gap-2">
                             <Shield className="w-4 h-4" /> Guía de Crisis · Paso 1 de 2
                         </div>
-                        <h1 className="text-[32px] text-[#e8f4f8] font-serif mb-4 leading-tight">Sigue el ritmo</h1>
-                        <p className="text-[#f0a898]/70 text-[14px] max-w-[240px] mx-auto italic font-serif">Tu cuerpo sabe cómo encontrar la calma de nuevo.</p>
+                        <h1 className="text-3xl text-[#ddeef5] font-serif mb-4 leading-tight italic">Sigue el ritmo</h1>
+                        <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] max-w-[240px] mx-auto italic">Tu cuerpo sabe cómo encontrar la calma de nuevo.</p>
                     </div>
 
-                    <div className="relative flex items-center justify-center w-72 h-72">
+                    <div className="relative flex items-center justify-center w-72 h-72 my-8">
                         {/* Outer Glows */}
-                        <div className="absolute inset-0 bg-[#e07d6a]/10 rounded-full blur-3xl animate-pulse"></div>
-                        <div className="absolute inset-4 bg-[#e07d6a]/5 rounded-full blur-2xl"></div>
+                        <div className="absolute inset-0 bg-[#d97c6a]/10 rounded-full blur-3xl animate-pulse"></div>
+                        <div className="absolute inset-4 bg-[#d97c6a]/5 rounded-full blur-2xl"></div>
 
                         {/* The Circle */}
-                        <div className="relative w-56 h-56 rounded-full border border-[#e07d6a]/25 flex flex-col items-center justify-center bg-[#1a2e42]/40 backdrop-blur-md shadow-[0_0_30px_rgba(224,125,106,0.15)]">
-                            <div className="text-[22px] font-serif text-[#e8f4f8] mb-1">{BREATH_PHASES[breathPhase].t}</div>
-                            <div className="text-[56px] font-light text-[#e07d6a] leading-none">{counter}</div>
+                        <div className="relative w-56 h-56 rounded-full border border-[#d97c6a]/25 flex flex-col items-center justify-center bg-[rgba(255,255,255,0.04)] backdrop-blur-md shadow-[0_0_30px_rgba(217,124,106,0.15)]">
+                            <div className="text-2xl font-light font-serif text-[#ddeef5] mb-1 italic">{BREATH_PHASES[breathPhase].t}</div>
+                            <div className="text-[56px] font-light text-[#d97c6a] leading-none mb-4">{counter}</div>
                         </div>
                     </div>
 
                     <div className="w-full max-w-xs space-y-4">
                         <button
                             onClick={() => setMode('GROUNDING')}
-                            className="w-full bg-[#e07d6a] hover:bg-[#c26a58] text-[#0d1b2a] rounded-[20px] py-4 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-[#e07d6a]/20"
+                            className="w-full bg-[#d97c6a] hover:bg-[#e08c7c] text-[#03080f] font-semibold text-xs tracking-wider rounded-full py-4 flex items-center justify-center gap-2 transition-colors shadow-lg shadow-[#d97c6a]/20"
                         >
-                            <span className="font-semibold text-[15px]">Continuar al Grounding</span>
-                            <ArrowRight className="w-5 h-5" />
+                            <span>Continuar al Grounding</span>
+                            <ArrowRight className="w-4 h-4" />
                         </button>
                         <button
                             onClick={() => setMode('GAMES_DISCLAIMER')}
-                            className="w-full py-2 text-white/30 text-[13px] hover:text-white/60 transition-colors flex items-center justify-center gap-2"
+                            className="w-full py-2 bg-transparent text-[rgba(200,225,235,0.38)] hover:text-[#ddeef5] text-xs font-semibold tracking-wider transition-colors flex items-center justify-center gap-2"
                         >
                             <Brain className="w-4 h-4" /> Necesito distracción (Juegos)
                         </button>
@@ -126,42 +126,37 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
     if (mode === 'GROUNDING') {
         const g = GROUNDING_DATA[groundStep];
         return (
-            <div className="flex flex-col h-full bg-[#06101a] text-white overflow-hidden">
+            <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
                 <TopBar title="Técnica 5-4-3-2-1" onBack={() => setMode('BREATHING')} />
-                <div className="flex-1 overflow-y-auto screen-px py-4">
-                    <div className="text-[11px] uppercase tracking-[0.15em] text-[#e07d6a]/80 mb-6 font-medium">
+                <div className="flex-1 overflow-y-auto px-5 py-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="text-[10px] uppercase tracking-widest text-[#d97c6a] mb-6 font-medium">
                         Paso 2 de 2 · Sentidos
                     </div>
-                    <h2 className="text-[32px] font-serif text-[#e8f4f8] mb-3 leading-tight">
-                        <span dangerouslySetInnerHTML={{ __html: g.t }} />
+                    <h2 className="text-3xl font-serif text-[#ddeef5] mb-3 leading-tight italic">
+                        <span dangerouslySetInnerHTML={{ __html: g.t.replace('#e07d6a', '#d97c6a') }} />
                     </h2>
-                    <p className="text-white/50 text-[14px] mb-8">{g.s}</p>
+                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] mb-8">{g.s}</p>
 
-                    <div className="space-y-px bg-white/[0.02] rounded-[24px] overflow-hidden border border-white/5">
+                    <div className="space-y-2">
                         {g.items.map((item, i) => (
                             <button
                                 key={i}
                                 onClick={() => toggleGroundItem(i)}
-                                className={`w-full flex items-center gap-4 p-5 transition-all text-left ${groundItemsDone.includes(i) ? 'bg-[#e07d6a]/15' : 'bg-transparent hover:bg-white/[0.04]'
-                                    }`}
+                                className={`w-full flex items-center gap-4 p-5 rounded-2xl transition-transform duration-200 hover:-translate-y-0.5 text-left border ${groundItemsDone.includes(i) ? 'bg-[#d97c6a]/15 border-[#d97c6a]/30' : 'bg-[rgba(255,255,255,0.04)] border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.06)]'}`}
                             >
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${groundItemsDone.includes(i)
-                                    ? 'bg-[#e07d6a] text-[#0d1b2a] shadow-lg shadow-[#e07d6a]/30'
-                                    : 'border border-white/20 text-white/30'
-                                    }`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${groundItemsDone.includes(i) ? 'bg-[#d97c6a] text-[#03080f]' : 'bg-[rgba(255,255,255,0.05)] text-[rgba(200,225,235,0.38)]'}`}>
                                     {groundItemsDone.includes(i) ? '✓' : i + 1}
                                 </div>
-                                <div className={`text-[15px] font-medium transition-all ${groundItemsDone.includes(i) ? 'text-[#e8f4f8]' : 'text-white/40 italic'
-                                    }`}>
+                                <div className={`font-sans font-medium text-[15px] transition-colors ${groundItemsDone.includes(i) ? 'text-[#ddeef5]' : 'text-[rgba(200,225,235,0.38)] italic font-light'}`}>
                                     {groundItemsDone.includes(i) ? item : 'Identifica algo...'}
                                 </div>
                             </button>
                         ))}
                     </div>
                 </div>
-                <div className="p-6 bg-[#0d1b2a]/95 backdrop-blur-xl border-t border-white/5">
+                <div className="p-5 bg-[#03080f]/95 backdrop-blur-3xl border-t border-[rgba(255,255,255,0.06)]">
                     <button
-                        className="w-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#e07d6a]/50 text-[#e8f4f8] rounded-[20px] py-4 font-medium transition-all active:scale-95 shadow-xl"
+                        className="w-full bg-[#5aadcf] hover:bg-[#89cee4] text-[#03080f] font-semibold text-xs tracking-wider rounded-full py-4 transition-colors shadow-lg"
                         onClick={handleNextGround}
                     >
                         {groundStep < 4 ? 'Siguiente sentido →' : 'Finalizar sesión'}
@@ -177,30 +172,30 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
 
     if (mode === 'GAMES_MENU') {
         return (
-            <div className="flex flex-col h-full bg-[#06101a] text-white overflow-hidden">
+            <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
                 <TopBar title="Anclaje Mental" onBack={() => setMode('GAMES_DISCLAIMER')} />
-                <div className="flex-1 overflow-y-auto p-8 space-y-5">
-                    <div className="bg-gradient-to-r from-[#1a2e42] to-[#1e3349] border border-[#7ec8e3]/30 flex items-center gap-4 p-5 rounded-[24px] mb-8 shadow-lg">
-                        <Sparkles className="w-6 h-6 text-[#7ec8e3]" />
-                        <p className="text-[#e8f4f8]/90 text-[14px] leading-relaxed">Activa tu mente analítica para silenciar la ansiedad.</p>
+                <div className="flex-1 overflow-y-auto px-5 py-6 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="bg-[#0e1d2e] border border-[rgba(255,255,255,0.07)] flex items-center gap-4 p-5 rounded-2xl mb-6">
+                        <Sparkles className="w-6 h-6 text-[#c9a96e]" />
+                        <p className="font-sans font-light text-sm text-[#ddeef5] leading-relaxed">Activa tu mente analítica para silenciar la ansiedad.</p>
                     </div>
 
                     <button
-                        className="w-full bg-white/[0.03] border border-white/5 hover:border-[#7ec8e3]/40 hover:bg-white/[0.06] p-6 rounded-[28px] text-left transition-all active:scale-[0.98] group shadow-md"
+                        className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.15)] p-5 rounded-2xl text-left transition-transform duration-200 hover:-translate-y-0.5 group"
                         onClick={() => setMode('GAME_TETRIS')}
                     >
-                        <div className="w-14 h-14 bg-[#7ec8e3] rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-[#7ec8e3]/20 text-[24px] transform group-hover:scale-110 transition-transform">🧩</div>
-                        <h3 className="text-[20px] font-serif mb-1 text-[#e8f4f8]">Tetris Mindful</h3>
-                        <p className="text-white/50 text-[13px]">Anclaje visual y rítmico.</p>
+                        <div className="w-14 h-14 bg-[#5aadcf]/20 rounded-full flex items-center justify-center mb-4 text-[24px]">🧩</div>
+                        <h3 className="text-xl font-serif text-[#ddeef5] italic mb-1">Tetris Mindful</h3>
+                        <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)]">Anclaje visual y rítmico.</p>
                     </button>
 
                     <button
-                        className="w-full bg-white/[0.03] border border-white/5 hover:border-[#b48cdc]/40 hover:bg-white/[0.06] p-6 rounded-[28px] text-left transition-all active:scale-[0.98] group shadow-md"
+                        className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.15)] p-5 rounded-2xl text-left transition-transform duration-200 hover:-translate-y-0.5 group"
                         onClick={() => setMode('GAME_SUBTRACTION')}
                     >
-                        <div className="w-14 h-14 bg-[#b48cdc] rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-[#b48cdc]/20 text-[24px] transform group-hover:scale-110 transition-transform">🔢</div>
-                        <h3 className="text-[20px] font-serif mb-1 text-[#e8f4f8]">Restas en Cascada</h3>
-                        <p className="text-white/50 text-[13px]">Activa la corteza prefrontal.</p>
+                        <div className="w-14 h-14 bg-[#c9a96e]/20 rounded-full flex items-center justify-center mb-4 text-[24px]">🔢</div>
+                        <h3 className="text-xl font-serif text-[#ddeef5] italic mb-1">Restas en Cascada</h3>
+                        <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)]">Activa la corteza prefrontal.</p>
                     </button>
                 </div>
             </div>

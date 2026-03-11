@@ -39,55 +39,55 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
     const [activeTab, setActiveTab] = useState(0);
 
     return (
-        <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
+        <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
             <TopBar title="Sin Miedo" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto px-8 pb-24">
-                <div className="mb-8 mt-4">
+            <div className="flex-1 overflow-y-auto px-5 pb-24 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="mb-6 mt-4">
                     {/* Claire Weekes Attribution Card */}
-                    <div className="glass-primary border border-blue-500/20 rounded-3xl p-6 mb-2">
-                        <div className="text-white/60 text-[10px] uppercase tracking-widest font-bold mb-1">Método creado por</div>
-                        <div className="text-white text-2xl font-medium pl-1 font-serif">Dra. Claire Weekes</div>
-                        <div className="text-blue-200/50 text-xs mt-1 mb-4">Psiquiatra y pionera del pánico · 1962</div>
-                        <p className="text-blue-100/80 text-sm leading-relaxed">
+                    <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-2xl p-5 mb-2 shadow-sm">
+                        <div className="text-[rgba(200,225,235,0.38)] text-[10px] uppercase tracking-widest font-bold mb-1">Método creado por</div>
+                        <div className="text-[#ddeef5] text-2xl font-light font-serif italic mb-1">Dra. Claire Weekes</div>
+                        <div className="text-[#5aadcf]/70 text-[11px] mb-4">Psiquiatra y pionera del pánico · 1962</div>
+                        <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] leading-relaxed">
                             La Dra. Weekes descubrió que el pánico se alimenta de la lucha y la huida. Sus 4 pasos — Afrontar, Aceptar, Flotar y Dejar pasar — rompen ese ciclo de raíz.
                         </p>
                     </div>
                 </div>
 
                 {/* Step Selector */}
-                <div className="flex justify-between gap-2 mb-8 glass p-2 rounded-3xl">
+                <div className="flex justify-between gap-2 mb-6 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-2 rounded-2xl">
                     {STEPS.map((s, i) => (
                         <button
                             key={i}
                             onClick={() => setActiveTab(i)}
-                            className={`flex-1 flex flex-col items-center justify-center py-3 rounded-xl transition-all ${activeTab === i
-                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 scale-105'
-                                : 'text-slate-500 hover:text-slate-300'
+                            className={`flex-1 flex flex-col items-center justify-center py-3 rounded-xl transition-colors ${activeTab === i
+                                ? 'bg-[#5aadcf] text-[#03080f] shadow-lg shadow-[#5aadcf]/20'
+                                : 'text-[rgba(200,225,235,0.38)] hover:text-[#ddeef5] hover:bg-[rgba(255,255,255,0.05)]'
                                 }`}
                         >
                             <div className="mb-1">{s.icon}</div>
-                            <div className={`text-[8px] uppercase font-bold tracking-widest ${activeTab === i ? 'text-white' : 'text-slate-600'}`}>Paso {i + 1}</div>
+                            <div className={`text-[9px] uppercase font-bold tracking-widest ${activeTab === i ? 'text-[#03080f]' : 'text-[rgba(200,225,235,0.38)]'}`}>Paso {i + 1}</div>
                         </button>
                     ))}
                 </div>
 
                 {/* Active Content */}
-                <div className="glass rounded-[2.5rem] p-8 animate-in fade-in slide-in-from-bottom-4 duration-500 shadow-xl">
-                    <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 mb-8 shadow-inner border border-blue-500/10">
+                <div className="bg-[#0e1d2e] border border-[rgba(255,255,255,0.07)] rounded-2xl p-6 shadow-sm">
+                    <div className="w-14 h-14 bg-[#5aadcf]/20 rounded-full flex items-center justify-center text-[#5aadcf] mb-6">
                         {STEPS[activeTab].icon}
                     </div>
-                    <h2 className="text-4xl font-light mb-6 text-white pl-1 font-serif">{STEPS[activeTab].t}</h2>
-                    <p className="text-blue-100/80 text-base leading-relaxed mb-8">
+                    <h2 className="text-3xl font-light mb-4 text-[#ddeef5] font-serif italic">{STEPS[activeTab].t}</h2>
+                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] leading-relaxed mb-6">
                         {STEPS[activeTab].desc}
                     </p>
-                    <div className="p-5 bg-blue-500/5 rounded-2xl border border-blue-500/10">
-                        <p className="text-blue-300/50 text-xs leading-relaxed italic">
+                    <div className="p-4 bg-[rgba(255,255,255,0.04)] rounded-2xl border border-[rgba(255,255,255,0.07)]">
+                        <p className="font-sans font-light text-[13px] text-[#5aadcf] leading-relaxed italic">
                             "{STEPS[activeTab].long}"
                         </p>
                     </div>
                 </div>
 
-                <div className="mt-8 text-center text-slate-600 text-[10px] uppercase tracking-[0.2em]">
+                <div className="mt-8 text-center text-[rgba(200,225,235,0.38)] text-[10px] uppercase tracking-widest">
                     Toca los pasos de arriba para explorar cada uno
                 </div>
             </div>

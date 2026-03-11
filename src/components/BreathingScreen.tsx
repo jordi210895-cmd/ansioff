@@ -70,14 +70,14 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
     }, [selectedPattern]);
 
     return (
-        <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
+        <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
             <TopBar title="Respiración Guiada" onBack={onBack} />
-            <div className="flex-1 flex flex-col items-center justify-between py-8 screen-px overflow-y-auto">
+            <div className="flex-1 flex flex-col items-center justify-between py-8 px-5 overflow-y-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="text-center w-full">
-                    <h2 className="text-3xl font-medium mb-3 leading-tight font-serif">
+                    <h2 className="text-3xl font-light mb-3 leading-tight font-serif italic text-[#ddeef5]">
                         Calma tu sistema nervioso
                     </h2>
-                    <p className="text-blue-300/50 text-sm mb-10">Sigue el ritmo del círculo para reducir el cortisol.</p>
+                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] mb-10">Sigue el ritmo del círculo para reducir el cortisol.</p>
 
                     {/* Pattern Selector */}
                     <div className="flex justify-center gap-3 mb-12">
@@ -85,9 +85,9 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
                             <button
                                 key={p}
                                 onClick={() => setSelectedPattern(p)}
-                                className={`px-5 py-2.5 rounded-2xl text-xs font-medium transition-all flex items-center gap-2 ${selectedPattern === p
-                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
-                                    : 'bg-slate-900 text-blue-400 border border-slate-800'
+                                className={`px-5 py-2.5 rounded-full text-xs tracking-wider font-semibold transition-colors flex items-center gap-2 ${selectedPattern === p
+                                    ? 'bg-[#5aadcf] text-[#03080f]'
+                                    : 'bg-transparent text-slate-300 border border-white/10 hover:bg-[rgba(255,255,255,0.05)]'
                                     }`}
                             >
                                 {selectedPattern === p && <Check className="w-3 h-3" />}
@@ -99,13 +99,13 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
 
                 <div className="relative flex items-center justify-center w-64 h-64">
                     {/* Outer Glows */}
-                    <div className="absolute inset-0 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute inset-0 bg-[#5aadcf]/10 rounded-full blur-3xl animate-pulse"></div>
 
                     {/* Breathing Animation Wrapper */}
-                    <div className="relative w-56 h-56 rounded-full border border-blue-500/10 flex flex-col items-center justify-center bg-slate-900/30 backdrop-blur-sm shadow-2xl overflow-hidden">
-                        <div className="absolute inset-0 bg-blue-500/5 animate-[pulse_4s_ease-in-out_infinite]"></div>
-                        <div className="relative z-10 text-xl font-medium text-white mb-1 font-serif">{currentPhase.t}</div>
-                        <div className="relative z-10 text-5xl font-light text-blue-400">{counter}</div>
+                    <div className="relative w-56 h-56 rounded-full border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center bg-[rgba(255,255,255,0.04)] backdrop-blur-sm shadow-2xl overflow-hidden">
+                        <div className="absolute inset-0 bg-[#5aadcf]/5 animate-[pulse_4s_ease-in-out_infinite]"></div>
+                        <div className="relative z-10 text-xl font-light text-[#ddeef5] mb-1 font-serif italic">{currentPhase.t}</div>
+                        <div className="relative z-10 text-5xl font-light text-[#5aadcf]">{counter}</div>
                     </div>
                 </div>
 
@@ -115,18 +115,18 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
                         {currentPhases.map((_, i) => (
                             <div
                                 key={i}
-                                className={`h-1 rounded-full transition-all duration-500 ${i === phaseIndex ? 'w-8 bg-blue-500 shadow-sm shadow-blue-500/50' : 'w-4 bg-slate-800'
+                                className={`h-1 rounded-full transition-all duration-500 ${i === phaseIndex ? 'w-8 bg-[#5aadcf] shadow-sm shadow-[#5aadcf]/50' : 'w-4 bg-[rgba(255,255,255,0.1)]'
                                     }`}
                             ></div>
                         ))}
                     </div>
 
                     {/* Pattern Description */}
-                    <div className="flex justify-between p-4 bg-slate-900/40 rounded-3xl border border-slate-800/50">
+                    <div className="flex justify-between p-4 bg-[rgba(255,255,255,0.04)] rounded-2xl border border-[rgba(255,255,255,0.07)]">
                         {currentPhases.slice(0, 3).map((p, i) => (
                             <div key={i} className="text-center px-2">
-                                <div className="text-xl font-medium text-white font-serif">{p.n}s</div>
-                                <div className="text-[10px] text-blue-400 uppercase tracking-widest">{p.t}</div>
+                                <div className="text-xl font-light text-[#ddeef5] font-serif">{p.n}s</div>
+                                <div className="text-[10px] text-[rgba(200,225,235,0.38)] uppercase tracking-widest font-medium mt-1">{p.t}</div>
                             </div>
                         ))}
                     </div>
@@ -134,7 +134,7 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
 
                 <div className="w-full mt-12 mb-4">
                     <button
-                        className="w-full bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/50 text-white rounded-2xl py-4 font-medium transition-all active:scale-95"
+                        className="w-full bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.07)] text-[#ddeef5] rounded-2xl py-4 font-sans font-semibold text-xs tracking-wider transition-all duration-200 active:scale-95"
                         onClick={() => {
                             const minutes = Math.floor((Date.now() - startTime) / 60000);
                             if (minutes > 0) addBreathMins(minutes);

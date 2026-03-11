@@ -26,82 +26,80 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
     const progressPercent = Math.min(100, Math.max(0, ((stats.points - level.currentThreshold) / (level.nextThreshold - level.currentThreshold)) * 100));
 
     return (
-        <div className="flex flex-col h-full bg-[#06101a] text-white overflow-hidden">
+        <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
             <TopBar title="Mi Progreso" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto screen-px pb-32 pt-6">
+            <div className="flex-1 overflow-y-auto px-5 pb-32 pt-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
 
                 {/* Main Level Card */}
-                <div className="bg-gradient-to-br from-[#1a2e42] to-[#1e3349] border border-white/5 rounded-[32px] p-8 text-center relative overflow-hidden mb-8 shadow-2xl">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#7ec8e3]/10 blur-3xl rounded-full"></div>
-                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#4fa3c8]/10 blur-3xl rounded-full"></div>
+                <div className="bg-[#0e1d2e] border border-[rgba(255,255,255,0.07)] rounded-2xl p-8 text-center relative overflow-hidden mb-8 shadow-sm">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#5aadcf]/5 blur-3xl rounded-full"></div>
+                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#5aadcf]/5 blur-3xl rounded-full"></div>
 
                     <div className="relative z-10 flex flex-col items-center">
-                        <div className="w-20 h-20 bg-[#7ec8e3] rounded-2xl flex items-center justify-center text-[#0d1b2a] mb-5 shadow-lg shadow-[#7ec8e3]/20 transform rotate-3">
-                            <Trophy size={40} strokeWidth={2.5} className="-rotate-3" />
+                        <div className="w-20 h-20 bg-[#c9a96e]/10 border border-[#c9a96e]/20 rounded-full flex items-center justify-center text-[#c9a96e] mb-5 shadow-inner">
+                            <Trophy size={36} strokeWidth={2} />
                         </div>
 
-                        <div className="text-[11px] uppercase tracking-[0.15em] font-medium text-[#7ec8e3] mb-2">Nivel Actual</div>
-                        <h2 className="text-[28px] text-[#e8f4f8] mb-2 font-serif">
+                        <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[#5aadcf] mb-2">Nivel Actual</div>
+                        <h2 className="text-3xl text-[#ddeef5] mb-2 font-serif italic font-light">
                             {level.title}
                         </h2>
-                        <p className="text-white/60 text-[14px] leading-relaxed mb-8 max-w-[280px]">
+                        <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed mb-8 max-w-[280px]">
                             {level.subtitle}
                         </p>
 
                         {/* Progress Bar */}
                         <div className="w-full">
                             <div className="flex justify-between items-end mb-2 px-1">
-                                <span className="text-[24px] font-bold tracking-tight text-[#e8f4f8]">{stats.points} <span className="text-[13px] text-[#7ec8e3] font-medium">pts</span></span>
-                                <span className="text-[12px] font-medium text-white/40">Objetivo: {level.nextThreshold}</span>
+                                <span className="text-2xl font-light font-serif text-[#ddeef5]">{stats.points} <span className="font-sans font-medium text-xs text-[rgba(200,225,235,0.38)]">pts</span></span>
+                                <span className="font-sans font-medium text-[11px] text-[rgba(200,225,235,0.38)]">Objetivo: {level.nextThreshold}</span>
                             </div>
-                            <div className="h-2.5 w-full bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/10">
+                            <div className="h-2 w-full bg-[rgba(255,255,255,0.04)] rounded-full overflow-hidden border border-[rgba(255,255,255,0.07)] relative">
                                 <div
-                                    className="h-full bg-[#7ec8e3] rounded-full transition-all duration-1000 ease-out relative"
+                                    className="absolute top-0 bottom-0 left-0 bg-[#5aadcf] rounded-full transition-all duration-1000 ease-out"
                                     style={{ width: `${progressPercent}%` }}
-                                >
-                                    <div className="absolute right-0 top-0 bottom-0 w-4 bg-white/30 blur-[2px] rounded-full"></div>
-                                </div>
+                                ></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="text-[13px] uppercase tracking-[0.1em] text-white/40 mb-4 px-2">Tus Logros</div>
+                <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[rgba(200,225,235,0.38)] mb-4 px-2">Tus Logros</div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-2 gap-3">
                     {/* SOS Uses */}
-                    <div className="bg-white/[0.03] border border-white/5 rounded-[24px] p-5 flex flex-col items-start hover:bg-white/[0.06] transition-colors relative overflow-hidden group shadow-md">
-                        <div className="w-11 h-11 rounded-xl bg-[#e07d6a]/15 text-[#e07d6a] flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                            <Shield size={22} strokeWidth={2} />
+                    <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-2xl p-5 flex flex-col items-start hover:bg-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.15)] transition-transform duration-200 hover:-translate-y-0.5 relative overflow-hidden group shadow-sm w-full">
+                        <div className="w-10 h-10 rounded-full bg-[#d97c6a]/10 border border-[#d97c6a]/20 text-[#d97c6a] flex items-center justify-center mb-5 group-hover:bg-[#d97c6a]/20 transition-colors">
+                            <Shield size={20} className="stroke-[1.5]" />
                         </div>
-                        <div className="flex flex-col items-start justify-end flex-1 mt-auto">
-                            <div className="text-[32px] font-light text-[#e8f4f8] mb-1 tracking-tight leading-none font-serif">{stats.sosUses}</div>
-                            <div className="text-[12px] font-medium text-white/40 leading-[1.4] max-w-[90%]">Anclajes de crisis superados</div>
+                        <div className="flex flex-col items-start justify-end flex-1 mt-auto w-full">
+                            <div className="text-3xl font-light text-[#ddeef5] mb-1 font-serif">{stats.sosUses}</div>
+                            <div className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.38)] leading-snug w-full">Anclajes de crisis superados</div>
                         </div>
                     </div>
 
                     {/* Breathing Mins */}
-                    <div className="bg-white/[0.03] border border-white/5 rounded-[24px] p-5 flex flex-col items-start hover:bg-white/[0.06] transition-colors relative overflow-hidden group shadow-md">
-                        <div className="w-11 h-11 rounded-xl bg-[#7ec8e3]/15 text-[#7ec8e3] flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                            <Wind size={22} strokeWidth={2} />
+                    <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-2xl p-5 flex flex-col items-start hover:bg-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.15)] transition-transform duration-200 hover:-translate-y-0.5 relative overflow-hidden group shadow-sm w-full">
+                        <div className="w-10 h-10 rounded-full bg-[#5aadcf]/10 border border-[#5aadcf]/20 text-[#5aadcf] flex items-center justify-center mb-5 group-hover:bg-[#5aadcf]/20 transition-colors">
+                            <Wind size={20} className="stroke-[1.5]" />
                         </div>
-                        <div className="flex flex-col items-start justify-end flex-1 mt-auto">
-                            <div className="text-[32px] font-light text-[#e8f4f8] mb-1 tracking-tight leading-none font-serif">{stats.breathMins}</div>
-                            <div className="text-[12px] font-medium text-white/40 leading-[1.4] max-w-[90%]">Minutos de calma y respiro</div>
+                        <div className="flex flex-col items-start justify-end flex-1 mt-auto w-full">
+                            <div className="text-3xl font-light text-[#ddeef5] mb-1 font-serif">{stats.breathMins}</div>
+                            <div className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.38)] leading-snug w-full">Minutos de calma y respiro</div>
                         </div>
                     </div>
 
                     {/* CBT Entries */}
-                    <div className="bg-white/[0.03] border border-white/5 rounded-[24px] p-6 flex flex-col col-span-2 items-start hover:bg-white/[0.06] transition-colors relative overflow-hidden group shadow-md mt-2">
-                        <div className="w-12 h-12 rounded-xl bg-[#78b478]/15 text-[#78b478] flex items-center justify-center mb-5 group-hover:scale-110 transition-transform z-10">
-                            <PenLine size={24} strokeWidth={2} />
+                    <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-2xl p-6 flex flex-col col-span-2 items-start hover:bg-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.15)] transition-transform duration-200 hover:-translate-y-0.5 relative overflow-hidden group shadow-sm mt-1 w-full">
+                        <div className="w-10 h-10 rounded-full bg-[#6bbf8e]/10 border border-[#6bbf8e]/20 text-[#6bbf8e] flex items-center justify-center mb-5 group-hover:bg-[#6bbf8e]/20 transition-colors z-10">
+                            <PenLine size={20} className="stroke-[1.5]" />
                         </div>
-                        <div className="flex flex-col items-start justify-end flex-1 mt-auto z-10">
-                            <div className="text-[36px] font-light text-[#e8f4f8] mb-1 tracking-tight leading-none font-serif">{stats.cbtEntries}</div>
-                            <div className="text-[14px] text-white/40 leading-[1.4] w-[60%]">Reflexiones y registros cognitivos</div>
+                        <div className="flex flex-col items-start justify-end flex-1 mt-auto z-10 w-full">
+                            <div className="text-4xl font-light text-[#ddeef5] mb-2 font-serif">{stats.cbtEntries}</div>
+                            <div className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] leading-snug w-[75%]">Reflexiones y registros cognitivos</div>
                         </div>
-                        <Award className="text-[#78b478]/5 w-40 h-40 absolute right-[-20px] bottom-[-30px] rotate-[-10deg] pointer-events-none" />
+                        <Award className="text-[rgba(255,255,255,0.03)] w-32 h-32 absolute right-[-10px] bottom-[-20px] pointer-events-none stroke-1" />
                     </div>
                 </div>
 
