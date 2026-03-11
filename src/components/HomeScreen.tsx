@@ -35,8 +35,8 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                 }
 
                 @keyframes ambientPulse {
-                    0%, 100% { opacity: 0.7; transform: translate(-50%, -55%) scale(1); }
-                    50% { opacity: 1; transform: translate(-50%, -55%) scale(1.08); }
+                    0%, 100% { opacity: 0.7; transform: translate(-50%, -60%) scale(1); }
+                    50% { opacity: 1; transform: translate(-50%, -60%) scale(1.08); }
                 }
 
                 @keyframes sosGlow {
@@ -81,9 +81,10 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                 <div className="flex-1 flex flex-col items-center justify-center px-[30px] relative mt-[20px] z-20">
 
                     {/* Ambient background glow behind everything */}
-                    <div className="absolute top-[40%] left-1/2 w-[320px] h-[320px] pointer-events-none -z-10"
+                    <div className="absolute top-1/2 left-1/2 w-[800px] h-[800px] pointer-events-none -z-10"
                         style={{
-                            background: 'radial-gradient(circle, rgba(180,30,30,0.18) 0%, transparent 65%)',
+                            transform: 'translate(-50%, -60%)',
+                            background: 'radial-gradient(circle, rgba(180,30,30,0.18) 0%, rgba(180,30,30,0) 65%)',
                             animation: reduceAnimations ? 'none' : 'ambientPulse 3s ease-in-out infinite'
                         }}>
                     </div>
@@ -98,17 +99,17 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         onClick={() => onNav('sc-sos')}
                     >
                         {/* Outermost glow layer */}
-                        <div className="absolute -inset-[30px] rounded-full group-active:opacity-100 opacity-60 transition-opacity"
+                        <div className="absolute -inset-[80px] rounded-full group-active:opacity-100 opacity-60 transition-opacity"
                             style={{
-                                background: 'radial-gradient(circle, rgba(220,50,50,0.22) 0%, transparent 70%)',
+                                background: 'radial-gradient(circle, rgba(220,50,50,0.22) 0%, rgba(220,50,50,0) 70%)',
                                 animation: reduceAnimations ? 'none' : 'sosGlow 2.5s ease-in-out infinite'
                             }}>
                         </div>
 
                         {/* Mid glow ring */}
-                        <div className="absolute -inset-[10px] rounded-full"
+                        <div className="absolute -inset-[30px] rounded-full"
                             style={{
-                                background: 'radial-gradient(circle, rgba(200,40,40,0.35) 0%, rgba(160,20,20,0.1) 55%, transparent 70%)',
+                                background: 'radial-gradient(circle, rgba(200,40,40,0.35) 0%, rgba(160,20,20,0.1) 40%, rgba(160,20,20,0) 70%)',
                                 animation: reduceAnimations ? 'none' : 'sosGlow 2.5s ease-in-out infinite',
                                 animationDelay: '0.3s'
                             }}>
@@ -117,7 +118,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         {/* Main circle */}
                         <div className="absolute inset-0 rounded-full transition-transform duration-200 group-active:scale-[0.95]"
                             style={{
-                                background: 'radial-gradient(circle at 40% 30%, #e84040, #c42020 45%, #991010 100%)',
+                                background: 'radial-gradient(circle at 40% 30%, #e84040 0%, #c42020 45%, #991010 100%)',
                                 animation: reduceAnimations ? 'none' : 'sosPulse 2.5s ease-in-out infinite'
                             }}>
                         </div>
