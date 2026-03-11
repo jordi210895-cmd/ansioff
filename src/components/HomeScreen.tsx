@@ -22,7 +22,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
     }, []);
 
     return (
-        <div className="w-full flex flex-col min-h-screen relative overflow-hidden text-white" style={{ backgroundColor: '#0e1520', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+        <div className="w-full flex flex-col min-h-screen relative overflow-hidden text-white" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
             <style jsx>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
