@@ -34,7 +34,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
     const [breathPhase, setBreathPhase] = useState(0);
     const [counter, setCounter] = useState(BREATH_PHASES[0].n);
     const [groundStep, setGroundStep] = useState(0);
-    const [groundItemsDone, setGroundItemsDone] = useState<number[]>([]);
+    const [groundTexts, setGroundTexts] = useState<string[]>([]);
 
     useEffect(() => {
         if (mode !== 'BREATHING') return;
@@ -64,7 +64,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
     const handleNextGround = () => {
         if (groundStep < 4) {
             setGroundStep(s => s + 1);
-            setGroundItemsDone([]);
+            setGroundTexts([]);
         } else {
             addSosUse(); // Gamification tracking for completing a crisis grounding session
             onFinished(); // Navigate back to home
@@ -72,10 +72,12 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
         }
     };
 
-    const toggleGroundItem = (idx: number) => {
-        setGroundItemsDone(prev =>
-            prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
-        );
+    const handleGroundTextChange = (idx: number, val: string) => {
+        setGroundTexts(prev => {
+            const next = [...prev];
+            next[idx] = val;
+            return next;
+        });
     };
 
     if (mode === 'BREATHING') {
@@ -137,20 +139,20 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                     </h2>
                     <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] mb-8">{g.s}</p>
 
-                    <div className="space-y-2">
-                        {g.items.map((item, i) => (
-                            <button
-                                key={i}
-                                onClick={() => toggleGroundItem(i)}
-                                className={`w-full flex items-center gap-4 p-5 rounded-2xl transition-transform duration-200 hover:-translate-y-0.5 text-left border ${groundItemsDone.includes(i) ? 'bg-[#d97c6a]/15 border-[#d97c6a]/30' : 'bg-[rgba(255,255,255,0.04)] border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.06)]'}`}
-                            >
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${groundItemsDone.includes(i) ? 'bg-[#d97c6a] text-[#03080f]' : 'bg-[rgba(255,255,255,0.05)] text-[rgba(200,225,235,0.38)]'}`}>
-                                    {groundItemsDone.includes(i) ? '✓' : i + 1}
+                    <div className="space-y-3">
+                        {Array.from({ length: g.n }).map((_, i) => (
+                            <div key={i} className="flex items-center gap-3">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${groundTexts[i]?.trim() ? 'bg-[#d97c6a] text-[#03080f]' : 'bg-[rgba(255,255,255,0.05)] text-[rgba(200,225,235,0.38)]'}`}>
+                                    {groundTexts[i]?.trim() ? '✓' : i + 1}
                                 </div>
-                                <div className={`font-sans font-medium text-[15px] transition-colors ${groundItemsDone.includes(i) ? 'text-[#ddeef5]' : 'text-[rgba(200,225,235,0.38)] italic font-light'}`}>
-                                    {groundItemsDone.includes(i) ? item : 'Identifica algo...'}
-                                </div>
-                            </button>
+                                <input
+                                    type="text"
+                                    value={groundTexts[i] || ''}
+                                    onChange={(e) => handleGroundTextChange(i, e.target.value)}
+                                    placeholder={g.items[i] ? `Ej: ${g.items[i]}` : 'Escribe...'}
+                                    className="flex-1 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-2xl px-4 py-4 text-[#ddeef5] placeholder-[rgba(200,225,235,0.3)] focus:outline-none focus:border-[#d97c6a]/50 focus:bg-[#d97c6a]/5 transition-all text-sm font-light font-sans shadow-sm"
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>
