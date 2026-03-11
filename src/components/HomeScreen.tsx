@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, Clock, ChevronRight, AlertTriangle, Menu, Moon } from 'lucide-react';
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
@@ -9,195 +8,146 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
-    const [isNightTime, setIsNightTime] = useState(false);
-
-    useEffect(() => {
-        const hour = new Date().getHours();
-        setIsNightTime(hour >= 22 || hour < 6);
-    }, []);
-
-    const greeting = isNightTime ? "Buenas noches" : "Buenos días";
-
     return (
-        <div className="w-full flex flex-col min-h-screen text-[#e8eaf0] overflow-hidden pb-10 relative" style={{ backgroundColor: '#0b0d14' }}>
+        <div className="w-full flex flex-col min-h-screen relative overflow-hidden text-white" style={{ backgroundColor: '#0e1520', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
             <style jsx>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-                
-                @keyframes fadeUp {
-                    from { opacity: 0; transform: translateY(14px); }
-                    to { opacity: 1; transform: translateY(0); }
+
+                .noise-overlay {
+                    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+                    opacity: 0.025;
+                    pointer-events: none;
+                    z-index: 10;
+                }
+
+                @keyframes ambientPulse {
+                    0%, 100% { opacity: 0.7; transform: translate(-50%, -55%) scale(1); }
+                    50% { opacity: 1; transform: translate(-50%, -55%) scale(1.08); }
+                }
+
+                @keyframes sosGlow {
+                    0%, 100% { opacity: 0.6; transform: scale(1); }
+                    50% { opacity: 1; transform: scale(1.08); }
                 }
 
                 @keyframes sosPulse {
-                    0%, 100% { opacity: 0.6; }
-                    50% { opacity: 1; }
+                    0%, 100% { box-shadow: 0 0 0 3px rgba(220,60,60,0.3), 0 0 30px rgba(200,30,30,0.6), 0 6px 30px rgba(0,0,0,0.5), inset 0 2px 8px rgba(255,120,120,0.25), inset 0 -4px 12px rgba(80,0,0,0.4); }
+                    50% { box-shadow: 0 0 0 6px rgba(220,60,60,0.2), 0 0 55px rgba(200,30,30,0.8), 0 6px 30px rgba(0,0,0,0.5), inset 0 2px 8px rgba(255,120,120,0.25), inset 0 -4px 12px rgba(80,0,0,0.4); }
                 }
 
-                @keyframes pingRing {
-                    0% { transform: scale(1); opacity: 0.6; }
-                    70% { transform: scale(1.25); opacity: 0; }
-                    100% { transform: scale(1.25); opacity: 0; }
-                }
-
-                @keyframes breathRing {
-                    0%, 100% { transform: scale(1); opacity: 0.4; }
-                    50% { transform: scale(1.15); opacity: 0.8; }
-                }
-
-                @keyframes breathOrb {
-                    0%, 100% { transform: scale(0.85); }
-                    50% { transform: scale(1.1); }
-                }
-
-                .animate-fade-up {
-                    animation: fadeUp 0.5s ease both;
+                .quick-circle::before {
+                    content: '';
+                    position: absolute;
+                    top: 0; left: 0; right: 0;
+                    height: 50%;
+                    background: linear-gradient(to bottom, rgba(255,255,255,0.05), transparent);
+                    border-radius: 50% 50% 0 0;
                 }
             `}</style>
 
-            {/* Ambient background glow */}
-            <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[340px] h-[340px] bg-[radial-gradient(circle,rgba(126,184,212,0.07)_0%,transparent_70%)] pointer-events-none z-0"></div>
+            {/* Texture overlay */}
+            <div className="absolute inset-0 noise-overlay"></div>
 
-            <div className="flex-1 w-full flex flex-col z-10 relative scrollbar-hide">
-
-                {/* Top bar */}
-                <div className="pt-[52px] px-6">
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <div className="text-[10px] font-medium tracking-[0.18em] text-[#5a6080] uppercase mb-1">Tu espacio seguro</div>
-                            <div className="font-serif text-[40px] leading-[1.05] tracking-[-0.02em] text-[#e8eaf0]">
-                                {greeting},<br /><em className="italic text-[#7eb8d4] font-light">Jordi</em>
-                            </div>
-                            <div className="text-[12px] text-[#5a6080] mt-1.5 tracking-[0.04em]">Calma · Respira · Vive</div>
-                        </div>
-                        <button onClick={() => onNav('sc-settings')} className="bg-transparent border-none text-[#5a6080] cursor-pointer p-1 mt-1 flex flex-col gap-[5px]" aria-label="Menú">
-                            <span className="block w-[22px] h-[1.5px] bg-[#5a6080] rounded-[2px]"></span>
-                            <span className="block w-[22px] h-[1.5px] bg-[#5a6080] rounded-[2px]"></span>
-                            <span className="block w-[22px] h-[1.5px] bg-[#5a6080] rounded-[2px]"></span>
-                        </button>
-                    </div>
+            <div className="flex-1 w-full flex flex-col z-20 relative pt-12 pb-[120px]">
+                {/* App header */}
+                <div className="text-center pt-[18px] pb-[14px] border-b border-[rgba(255,255,255,0.06)] relative z-20">
+                    <div className="text-[17px] font-bold text-white tracking-[0.08em]">ANSIOFF</div>
+                    <div className="text-[11px] font-medium text-[#4d9ec4] tracking-[0.18em] mt-[3px]">TU ESPACIO SEGURO</div>
                 </div>
 
-                {/* SOS */}
-                <div className="pt-[22px] px-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
-                    <button
+                {/* Main content */}
+                <div className="flex-1 flex flex-col items-center justify-center px-[30px] relative mt-[40px] z-20">
+
+                    {/* Ambient background glow behind everything */}
+                    <div className="absolute top-[40%] left-1/2 w-[320px] h-[320px] pointer-events-none -z-10"
+                        style={{
+                            background: 'radial-gradient(circle, rgba(180,30,30,0.18) 0%, transparent 65%)',
+                            animation: 'ambientPulse 3s ease-in-out infinite'
+                        }}>
+                    </div>
+
+                    <div className="text-[32px] font-light text-white text-center leading-[1.25] mb-[36px] tracking-[-0.01em]">
+                        ¿Necesitas ayuda<br />ahora?
+                    </div>
+
+                    {/* SOS Button */}
+                    <div
+                        className="relative w-[168px] h-[168px] flex items-center justify-center mb-[44px] cursor-pointer group active:scale-[0.97] transition-transform duration-200"
                         onClick={() => onNav('sc-sos')}
-                        className="w-full bg-[linear-gradient(135deg,#1a0808_0%,#200c0c_100%)] border-[1.5px] border-[rgba(255,59,59,0.35)] rounded-[20px] p-[20px_22px] flex items-center gap-[18px] cursor-pointer relative overflow-hidden transition-all duration-150 hover:-translate-y-[2px] hover:shadow-[0_0_60px_rgba(255,59,59,0.22),inset_0_1px_0_rgba(255,255,255,0.04)] active:scale-[0.98] shadow-[0_0_40px_rgba(255,59,59,0.12),inset_0_1px_0_rgba(255,255,255,0.04)]"
                     >
-                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(255,59,59,0.1)_0%,transparent_60%)]" style={{ animation: 'sosPulse 2.5s ease-in-out infinite' }}></div>
-
-                        <div className="bg-[#ff3b3b] text-white text-[15px] font-[800] tracking-[0.05em] w-[54px] h-[54px] rounded-[14px] flex items-center justify-center shrink-0 relative shadow-[0_0_20px_rgba(255,59,59,0.5)] z-10">
-                            SOS
-                            <div className="absolute -inset-[6px] border-[1.5px] border-[rgba(255,59,59,0.4)] rounded-[20px]" style={{ animation: 'pingRing 2s ease-in-out infinite' }}></div>
+                        {/* Outermost glow layer */}
+                        <div className="absolute -inset-[30px] rounded-full group-active:opacity-100 opacity-60 transition-opacity"
+                            style={{
+                                background: 'radial-gradient(circle, rgba(220,50,50,0.22) 0%, transparent 70%)',
+                                animation: 'sosGlow 2.5s ease-in-out infinite'
+                            }}>
                         </div>
 
-                        <div className="flex-1 text-left z-10">
-                            <div className="text-[17px] font-semibold text-[#ff7070] mb-[3px]">Necesito ayuda ahora</div>
-                            <div className="text-[12px] text-[rgba(255,112,112,0.6)] font-normal">Asistencia de crisis inmediata</div>
+                        {/* Mid glow ring */}
+                        <div className="absolute -inset-[10px] rounded-full"
+                            style={{
+                                background: 'radial-gradient(circle, rgba(200,40,40,0.35) 0%, rgba(160,20,20,0.1) 55%, transparent 70%)',
+                                animation: 'sosGlow 2.5s ease-in-out infinite',
+                                animationDelay: '0.3s'
+                            }}>
                         </div>
-                        <div className="text-[rgba(255,112,112,0.5)] text-[20px] transition-transform duration-200 z-10 group-hover:translate-x-[3px]">›</div>
-                    </button>
-                </div>
 
-                {/* --- SMART NIGHT TRIGGER --- */}
-                {isNightTime && (
-                    <div className="pt-[14px] px-6 animate-fade-up" style={{ animationDelay: '0.15s' }}>
-                        <button
-                            onClick={() => onNav('sc-night')}
-                            className="w-full relative overflow-hidden bg-[linear-gradient(135deg,rgba(79,70,229,0.15)_0%,rgba(79,70,229,0.05)_100%)] border border-[rgba(79,70,229,0.3)] rounded-[20px] p-[20px_22px] flex items-center gap-[18px] transition-all hover:bg-[rgba(79,70,229,0.2)] active:scale-[0.98] text-left"
-                        >
-                            <div className="w-[44px] h-[44px] rounded-[14px] bg-[rgba(79,70,229,0.2)] flex items-center justify-center text-[22px] shrink-0">
-                                🌙
+                        {/* Main circle */}
+                        <div className="absolute inset-0 rounded-full transition-transform duration-200 group-active:scale-[0.95]"
+                            style={{
+                                background: 'radial-gradient(circle at 40% 30%, #e84040, #c42020 45%, #991010 100%)',
+                                animation: 'sosPulse 2.5s ease-in-out infinite'
+                            }}>
+                        </div>
+
+                        {/* SOS label */}
+                        <div className="relative z-10 flex flex-col items-center gap-[6px] pointer-events-none">
+                            <span className="text-[34px] font-[800] text-white tracking-[0.06em] leading-none" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>SOS</span>
+                            <span className="text-[22px] leading-none">🛟</span>
+                            <span className="text-[11px] font-medium text-[rgba(255,255,255,0.7)] tracking-[0.03em] text-center mt-[2px]">Guía de anclaje rápido</span>
+                        </div>
+                    </div>
+
+                    {/* Quick access */}
+                    <div className="flex gap-[22px] mb-[28px] justify-center w-full">
+                        <div className="flex flex-col items-center gap-[10px] cursor-pointer group" onClick={() => onNav('sc-breath')}>
+                            <div className="quick-circle w-[70px] h-[70px] rounded-full flex items-center justify-center relative overflow-hidden transition-all duration-200 group-hover:border-[rgba(77,158,196,0.5)] group-active:scale-[0.93] border border-[rgba(77,158,196,0.2)]"
+                                style={{ background: 'radial-gradient(circle at 40% 35%, #1e2d3e, #141e2c)', boxShadow: '0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)' }}>
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7eb8d4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 6c0 0-2-2-5-1S3 9 3 12s1 5 4 6c1.5.5 3 .2 4-.5" /><path d="M12 6c0 0 2-2 5-1s4 4 4 7-1 5-4 6c-1.5.5-3 .2-4-.5" /><path d="M12 6v12" /></svg>
                             </div>
+                            <div className="text-[12px] text-[#c8d8e8] font-normal tracking-[0.01em]">Respiración</div>
+                        </div>
 
-                            <div className="flex flex-col flex-1">
-                                <span className="text-[16px] font-semibold text-indigo-300 mb-[3px]">Es hora de desconectar</span>
-                                <span className="text-[12px] text-[rgba(165,180,252,0.6)] mt-[1px]">Prepara tu mente para dormir bien</span>
+                        <div className="flex flex-col items-center gap-[10px] cursor-pointer group" onClick={() => onNav('sc-audio')}>
+                            <div className="quick-circle w-[70px] h-[70px] rounded-full flex items-center justify-center relative overflow-hidden transition-all duration-200 group-hover:border-[rgba(77,158,196,0.5)] group-active:scale-[0.93] border border-[rgba(77,158,196,0.2)]"
+                                style={{ background: 'radial-gradient(circle at 40% 35%, #1e2d3e, #141e2c)', boxShadow: '0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)' }}>
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7eb8d4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 14h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H3v-6z" /><path d="M21 14h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2v-6z" /><path d="M5 14V9a7 7 0 0 1 14 0v5" /></svg>
                             </div>
-
-                            <div className="text-indigo-400 text-[20px] transition-transform duration-200 z-10">›</div>
-                        </button>
-                    </div>
-                )}
-
-                {/* Respiración guiada */}
-                <div className="pt-[26px] px-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-                    <div className="flex justify-between items-center mb-[14px]">
-                        <div className="text-[10px] font-semibold tracking-[0.15em] text-[#5a6080] uppercase">Respiración Guiada</div>
-                        <div className="text-[11px] text-[#7eb8d4] font-medium cursor-pointer opacity-80" onClick={() => onNav('sc-breath')}>Ver todos →</div>
-                    </div>
-
-                    <div className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[18px_20px] flex items-center gap-[18px] cursor-pointer transition-all duration-200 hover:bg-[#181c2a] hover:border-[rgba(126,184,212,0.2)]" onClick={() => onNav('sc-breath')}>
-                        <div className="relative w-[56px] h-[56px] shrink-0">
-                            <div className="absolute inset-0 rounded-full border border-[rgba(126,184,212,0.2)]" style={{ animation: 'breathRing 4s ease-in-out infinite' }}></div>
-                            <div className="absolute -inset-[8px] rounded-full border border-[rgba(126,184,212,0.2)]" style={{ animation: 'breathRing 4s ease-in-out infinite', animationDelay: '1.3s' }}></div>
-                            <div className="absolute inset-[10px] rounded-full bg-[radial-gradient(circle_at_40%_35%,rgba(180,220,240,0.9),rgba(100,170,210,0.6))] shadow-[0_0_16px_rgba(126,184,212,0.4)]" style={{ animation: 'breathOrb 4s ease-in-out infinite' }}></div>
+                            <div className="text-[12px] text-[#c8d8e8] font-normal tracking-[0.01em]">Sonidos</div>
                         </div>
 
-                        <div className="flex-1">
-                            <div className="flex gap-[6px] mb-[6px]">
-                                <div className="bg-[#181c2a] border border-[rgba(255,255,255,0.06)] w-[22px] h-[22px] rounded-[6px] text-[11px] font-semibold text-[#7eb8d4] flex items-center justify-center">4</div>
-                                <div className="bg-[#181c2a] border border-[rgba(255,255,255,0.06)] w-[22px] h-[22px] rounded-[6px] text-[11px] font-semibold text-[#7eb8d4] flex items-center justify-center">2</div>
-                                <div className="bg-[#181c2a] border border-[rgba(255,255,255,0.06)] w-[22px] h-[22px] rounded-[6px] text-[11px] font-semibold text-[#7eb8d4] flex items-center justify-center">6</div>
+                        <div className="flex flex-col items-center gap-[10px] cursor-pointer group" onClick={() => onNav('sc-notes')}>
+                            <div className="quick-circle w-[70px] h-[70px] rounded-full flex items-center justify-center relative overflow-hidden transition-all duration-200 group-hover:border-[rgba(77,158,196,0.5)] group-active:scale-[0.93] border border-[rgba(77,158,196,0.2)]"
+                                style={{ background: 'radial-gradient(circle at 40% 35%, #1e2d3e, #141e2c)', boxShadow: '0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)' }}>
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7eb8d4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /><line x1="8" y1="17" x2="13" y2="17" /></svg>
                             </div>
-                            <div className="text-[15px] font-semibold text-[#e8eaf0] mb-[4px]">Alivio del estrés profundo</div>
-                            <div className="text-[11px] text-[#5a6080]">⏱ 5 min</div>
+                            <div className="text-[12px] text-[#c8d8e8] font-normal tracking-[0.01em]">Notas</div>
                         </div>
 
-                        <button className="bg-[#7eb8d4] text-[#0b0d14] text-[12px] font-bold py-[8px] px-[14px] rounded-[20px] border-none cursor-pointer whitespace-nowrap transition-all duration-200 hover:scale-[1.04] hover:shadow-[0_0_16px_rgba(126,184,212,0.4)]">
-                            ▶ Comenzar
-                        </button>
-                    </div>
-                </div>
-
-                {/* Herramientas */}
-                <div className="pt-[26px] px-6 animate-fade-up" style={{ animationDelay: '0.3s' }}>
-                    <div className="flex justify-between items-center mb-[14px]">
-                        <div className="text-[10px] font-semibold tracking-[0.15em] text-[#5a6080] uppercase">Herramientas</div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-[10px]">
-                        <button onClick={() => onNav('sc-audio')} className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[18px] cursor-pointer relative transition-all duration-200 overflow-hidden min-h-[110px] flex flex-col justify-end text-left hover:bg-[#181c2a] hover:border-[rgba(255,255,255,0.1)] hover:-translate-y-[2px]">
-                            <div className="w-[38px] h-[38px] rounded-[12px] flex items-center justify-center text-[18px] mb-[10px] bg-[rgba(126,184,212,0.12)]">🎵</div>
-                            <div className="absolute top-[14px] right-[14px] text-[14px] text-[#5a6080] opacity-50">↗</div>
-                            <div className="text-[14px] font-semibold text-[#e8eaf0] mb-[3px]">Audios</div>
-                            <div className="text-[11px] text-[#5a6080] leading-[1.4]">Sonidos y meditaciones guiadas</div>
-                        </button>
-
-                        <button onClick={() => onNav('sc-notes')} className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[18px] cursor-pointer relative transition-all duration-200 overflow-hidden min-h-[110px] flex flex-col justify-end text-left hover:bg-[#181c2a] hover:border-[rgba(255,255,255,0.1)] hover:-translate-y-[2px]">
-                            <div className="w-[38px] h-[38px] rounded-[12px] flex items-center justify-center text-[18px] mb-[10px] bg-[rgba(160,200,140,0.12)]">📓</div>
-                            <div className="absolute top-[14px] right-[14px] text-[14px] text-[#5a6080] opacity-50">↗</div>
-                            <div className="text-[14px] font-semibold text-[#e8eaf0] mb-[3px]">Diario</div>
-                            <div className="text-[11px] text-[#5a6080] leading-[1.4]">Reflexión diaria consciente</div>
-                        </button>
-
-                        <button onClick={() => onNav('sc-games')} className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[18px] cursor-pointer relative transition-all duration-200 overflow-hidden min-h-[110px] flex flex-col justify-end text-left hover:bg-[#181c2a] hover:border-[rgba(255,255,255,0.1)] hover:-translate-y-[2px]">
-                            <div className="w-[38px] h-[38px] rounded-[12px] flex items-center justify-center text-[18px] mb-[10px] bg-[rgba(220,180,100,0.12)]">🧩</div>
-                            <div className="absolute top-[14px] right-[14px] text-[14px] text-[#5a6080] opacity-50">↗</div>
-                            <div className="text-[14px] font-semibold text-[#e8eaf0] mb-[3px]">Juegos</div>
-                            <div className="text-[11px] text-[#5a6080] leading-[1.4]">Distracción sana y terapéutica</div>
-                        </button>
-
-                        <button onClick={() => onNav('sc-tools')} className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[18px] cursor-pointer relative transition-all duration-200 overflow-hidden min-h-[110px] flex flex-col justify-end text-left hover:bg-[#181c2a] hover:border-[rgba(255,255,255,0.1)] hover:-translate-y-[2px]">
-                            <div className="w-[38px] h-[38px] rounded-[12px] flex items-center justify-center text-[18px] mb-[10px] bg-[rgba(180,140,220,0.12)]">📚</div>
-                            <div className="absolute top-[14px] right-[14px] text-[14px] text-[#5a6080] opacity-50">↗</div>
-                            <div className="text-[14px] font-semibold text-[#e8eaf0] mb-[3px]">Módulos</div>
-                            <div className="text-[11px] text-[#5a6080] leading-[1.4]">TCC · ACT · Weekes</div>
-                        </button>
-                    </div>
-                </div>
-
-                {/* Reflexión del día */}
-                <div className="pt-[26px] px-6 pb-6 animate-fade-up" style={{ animationDelay: '0.4s' }}>
-                    <div className="bg-[#131620] border border-[rgba(255,255,255,0.06)] rounded-[18px] p-[22px_22px_20px] relative overflow-hidden">
-                        <div className="absolute top-[-10px] left-[12px] font-serif text-[100px] text-[rgba(126,184,212,0.06)] leading-[1] pointer-events-none">"</div>
-                        <div className="font-serif italic text-[17px] leading-[1.6] text-[rgba(232,234,240,0.9)] mb-[14px] relative z-10">
-                            Tus sentimientos son válidos, pero no son tu destino. Respira y confía en el proceso.
+                        <div className="flex flex-col items-center gap-[10px] cursor-pointer group" onClick={() => onNav('sc-games')}>
+                            <div className="quick-circle w-[70px] h-[70px] rounded-full flex items-center justify-center relative overflow-hidden transition-all duration-200 group-hover:border-[rgba(77,158,196,0.5)] group-active:scale-[0.93] border border-[rgba(77,158,196,0.2)]"
+                                style={{ background: 'radial-gradient(circle at 40% 35%, #1e2d3e, #141e2c)', boxShadow: '0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)' }}>
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7eb8d4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.979.979 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18-.894-.527-.967 1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.23 8.69a.979.979 0 0 1 .837-.276c.47.07.802.48.968.925a2.501 2.501 0 1 0 3.214-3.214c-.446-.166-.855-.497-.925-.968a.979.979 0 0 1 .276-.837l1.61-1.61a2.402 2.402 0 0 1 1.705-.707 2.402 2.402 0 0 1 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02z" /></svg>
+                            </div>
+                            <div className="text-[12px] text-[#c8d8e8] font-normal tracking-[0.01em]">Juegos</div>
                         </div>
-                        <div className="text-[10px] tracking-[0.14em] text-[#5a6080] uppercase font-medium">ANSIOFF · Reflexión de hoy</div>
+                    </div>
+
+                    <div className="text-[14px] text-[#5a7a94] text-center leading-[1.6] font-normal mt-2">
+                        Guía inmediata para crisis de pánico.<br />Acceso rápido.
                     </div>
                 </div>
-
             </div>
         </div>
     );
