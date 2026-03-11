@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Wind, ChevronRight, Check } from 'lucide-react';
 import { addBreathMins } from '../utils/stats';
+import { getNeuroSettings } from '../utils/neuroux';
 import TopBar from './TopBar';
 
 interface BreathingScreenProps {
@@ -35,9 +36,17 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
     const [phaseIndex, setPhaseIndex] = useState(0);
     const [counter, setCounter] = useState(PATTERNS['4-2-6'][0].n);
     const [startTime] = useState<number>(Date.now());
+    const [animationSpeed, setAnimationSpeed] = useState('4s'); // Pulso por defecto
 
     const currentPhases = PATTERNS[selectedPattern];
     const currentPhase = currentPhases[phaseIndex];
+
+    useEffect(() => {
+        const settings = getNeuroSettings();
+        if (settings.breathingSpeed === 'slow') setAnimationSpeed('6s');
+        else if (settings.breathingSpeed === 'fast') setAnimationSpeed('2.5s');
+        else setAnimationSpeed('4s');
+    }, []);
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -99,11 +108,21 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
 
                 <div className="relative flex items-center justify-center w-64 h-64">
                     {/* Outer Glows */}
-                    <div className="absolute inset-0 bg-[#5aadcf]/10 rounded-full blur-3xl animate-pulse"></div>
+                    <div
+                        className="absolute inset-0 bg-[#5aadcf]/10 rounded-full blur-3xl"
+                        style={{
+                            animation: `pulse ${animationSpeed} ease-in-out infinite`
+                        }}
+                    ></div>
 
                     {/* Breathing Animation Wrapper */}
                     <div className="relative w-56 h-56 rounded-full border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center bg-[rgba(255,255,255,0.04)] backdrop-blur-sm shadow-2xl overflow-hidden">
-                        <div className="absolute inset-0 bg-[#5aadcf]/5 animate-[pulse_4s_ease-in-out_infinite]"></div>
+                        <div
+                            className="absolute inset-0 bg-[#5aadcf]/5"
+                            style={{
+                                animation: `pulse ${animationSpeed} ease-in-out infinite`
+                            }}
+                        ></div>
                         <div className="relative z-10 text-xl font-light text-[#ddeef5] mb-1 font-serif italic">{currentPhase.t}</div>
                         <div className="relative z-10 text-5xl font-light text-[#5aadcf]">{counter}</div>
                     </div>

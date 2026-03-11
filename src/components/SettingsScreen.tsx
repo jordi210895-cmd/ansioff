@@ -1,8 +1,12 @@
-import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert, Bell, Phone, UserRoundPlus, X } from 'lucide-react';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert, Bell, Phone, UserRoundPlus, X, ZapOff, Activity } from 'lucide-react';
 import TopBar from './TopBar';
 import { getStats, STATS_KEYS } from '../utils/stats';
 import { exportClinicalDiaryPDF } from '../utils/exportUtils';
 import { EmergencyContact, getEmergencyContacts, addEmergencyContact, removeEmergencyContact } from '../utils/contacts';
+import { getNeuroSettings, saveNeuroSettings, NeuroUXSettings } from '../utils/neuroux';
 import * as db from '../lib/db';
 
 interface SettingsScreenProps {
@@ -13,6 +17,9 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [pushEnabled, setPushEnabled] = useState(false);
+
+    // NeuroUX settings
+    const [neuroSettings, setNeuroSettings] = useState<NeuroUXSettings>({ reduceAnimations: false, breathingSpeed: 'normal' });
 
     // Contacts State
     const [contacts, setContacts] = useState<EmergencyContact[]>([]);
@@ -52,6 +59,21 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
         } else {
             alert("El servicio de notificaciones se está cargando o tu navegador no es compatible.");
         }
+    };
+
+    const handleToggleAnimations = () => {
+        const newSettings = { ...neuroSettings, reduceAnimations: !neuroSettings.reduceAnimations };
+        setNeuroSettings(newSettings);
+        saveNeuroSettings(newSettings);
+    };
+
+    const handleCycleBreathingSpeed = () => {
+        const speeds: ('slow' | 'normal' | 'fast')[] = ['slow', 'normal', 'fast'];
+        const currentIndex = speeds.indexOf(neuroSettings.breathingSpeed);
+        const nextSpeed = speeds[(currentIndex + 1) % speeds.length];
+        const newSettings = { ...neuroSettings, breathingSpeed: nextSpeed };
+        setNeuroSettings(newSettings);
+        saveNeuroSettings(newSettings);
     };
 
     const handleSaveContact = () => {
@@ -266,7 +288,64 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
                         </div>
                         <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)] group-hover:text-[#5aadcf] transition-colors" />
                     </button>
+                </div>
 
+                {/* --- CONFIGURACIÓN COGNITIVA (NEUROUX) --- */}
+                <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[#5aadcf] mb-4 px-1 flex mt-8">
+                    Accesibilidad (NeuroUX)
+                </div>
+
+                <div className="space-y-3 mb-8">
+                    {/* Reduce Animations */}
+                    <button
+                        onClick={handleToggleAnimations}
+                        className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center justify-between border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.06)] transition-colors shadow-sm"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors border ${neuroSettings.reduceAnimations ? 'bg-[#5aadcf]/10 border-[#5aadcf]/20 text-[#5aadcf]' : 'bg-[rgba(255,255,255,0.06)] border-[rgba(255,255,255,0.1)] text-[#ddeef5]'}`}>
+                                <ZapOff size={20} className="stroke-[1.5]" />
+                            </div>
+                            <div className="text-left">
+                                <h3 className={`font-sans font-medium text-sm mb-1 transition-colors ${neuroSettings.reduceAnimations ? 'text-[#5aadcf]' : 'text-[#ddeef5]'}`}>
+                                    Reducir Animaciones
+                                </h3>
+                                <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.5)]">
+                                    Desactiva parpadeos y destellos intensos
+                                </p>
+                            </div>
+                        </div>
+                        <div className={`w-12 h-6 rounded-full p-1 transition-colors duration-200 ease-in-out ${neuroSettings.reduceAnimations ? 'bg-[#5aadcf]' : 'bg-[rgba(255,255,255,0.1)]'}`}>
+                            <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out ${neuroSettings.reduceAnimations ? 'translate-x-6' : 'translate-x-0'}`} />
+                        </div>
+                    </button>
+
+                    {/* Breathing Speed */}
+                    <button
+                        onClick={handleCycleBreathingSpeed}
+                        className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center justify-between border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.06)] transition-colors shadow-sm"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.1)] text-[#ddeef5] flex items-center justify-center">
+                                <Activity size={20} className="stroke-[1.5]" />
+                            </div>
+                            <div className="text-left">
+                                <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">
+                                    Velocidad Guía Respiración
+                                </h3>
+                                <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.5)]">
+                                    {neuroSettings.breathingSpeed === 'slow' ? 'Lenta (Mucha hiperventilación)' :
+                                        neuroSettings.breathingSpeed === 'normal' ? 'Normal (Recomendada)' :
+                                            'Rápida (Poca ansiedad)'}
+                                </p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+
+                {/* --- ZONA PELIGROSA --- */}
+                <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[#d97c6a]/80 mb-4 px-1 mt-10">Zona de Peligro</div>
+
+                <div className="space-y-3 mb-8">
                     {/* Delete Account / Data */}
                     <button
                         onClick={() => hasData ? setShowDeleteConfirm(true) : null}

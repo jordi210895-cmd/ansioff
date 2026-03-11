@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Shield, ArrowRight, Brain, Sparkles } from 'lucide-react';
+import { Shield, ArrowRight, Brain, Sparkles, CheckCircle2 } from 'lucide-react';
 import { addSosUse } from '../utils/stats';
 import TopBar from './TopBar';
 import SOSDisclaimer from './SOSGames/SOSDisclaimer';
@@ -20,11 +20,11 @@ const BREATH_PHASES = [
 ];
 
 const GROUNDING_DATA = [
-    { t: '5 cosas que <span className="text-[#e07d6a]">ves</span>', s: 'Mira a tu alrededor y nombra 5 cosas que puedes ver ahora mismo.', n: 5, items: ['Una silla o mueble cercano', 'La luz de la habitación', 'Tus propias manos', 'Una ventana o pared', 'El suelo o el techo'] },
-    { t: '4 cosas que <span className="text-[#e07d6a]">tocas</span>', s: 'Siente 4 texturas: tu ropa, la silla, el suelo...', n: 4, items: ['Mi ropa sobre la piel', 'La silla o el suelo', 'Mi propio brazo', 'Una superficie cerca'] },
-    { t: '3 sonidos que <span className="text-[#e07d6a]">oyes</span>', s: 'Cierra los ojos. ¿Qué 3 sonidos escuchas?', n: 3, items: ['El tráfico o el exterior', 'Mi propia respiración', 'Un sonido interior'] },
-    { t: '2 aromas que <span className="text-[#e07d6a]">hueles</span>', s: 'Identifica 2 olores en el ambiente.', n: 2, items: ['El aire de la habitación', 'Mi ropa o colonia'] },
-    { t: '1 sabor que <span className="text-[#e07d6a]">sientes</span>', s: 'Presta atención al sabor en tu boca ahora.', n: 1, items: ['El sabor en mi boca ahora'] },
+    { t: '5 cosas que <span className="text-[#e07d6a]">ves</span>', s: 'Mira a tu alrededor. Busca 5 objetos.', n: 5, items: ['Ej: Una silla', 'Ej: La pared', 'Ej: Mis manos', 'Ej: La luz', 'Ej: El suelo'] },
+    { t: '4 cosas que <span className="text-[#e07d6a]">tocas</span>', s: 'Siente 4 texturas: ropa, el suelo...', n: 4, items: ['Ej: Mi ropa', 'Ej: La silla', 'Ej: Mi piel', 'Ej: El móvil'] },
+    { t: '3 sonidos que <span className="text-[#e07d6a]">oyes</span>', s: 'Cierra los ojos. 3 sonidos.', n: 3, items: ['Ej: Tráfico', 'Ej: Mi respiración', 'Ej: Un motor'] },
+    { t: '2 olores que <span className="text-[#e07d6a]">hueles</span>', s: 'Busca 2 cosas que huelan.', n: 2, items: ['Ej: Perfume', 'Ej: El aire'] },
+    { t: '1 cosa que <span className="text-[#e07d6a]">saboreas</span>', s: '¿Qué gusto tienes en la boca?', n: 1, items: ['Ej: Café'] },
 ];
 
 type SOSMode = 'BREATHING' | 'GROUNDING' | 'GAMES_DISCLAIMER' | 'GAMES_MENU' | 'GAME_TETRIS' | 'GAME_SUBTRACTION';
@@ -35,6 +35,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
     const [counter, setCounter] = useState(BREATH_PHASES[0].n);
     const [groundStep, setGroundStep] = useState(0);
     const [groundTexts, setGroundTexts] = useState<string[]>([]);
+    const [rewardText, setRewardText] = useState<string | null>(null);
 
     useEffect(() => {
         if (mode !== 'BREATHING') return;
@@ -75,7 +76,19 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
     const handleGroundTextChange = (idx: number, val: string) => {
         setGroundTexts(prev => {
             const next = [...prev];
+            const wasEmpty = !prev[idx]?.trim();
             next[idx] = val;
+
+            // NeuroUX micro-reward when filling a new input
+            if (wasEmpty && val.trim().length > 2) {
+                if (typeof navigator !== 'undefined' && navigator.vibrate) {
+                    navigator.vibrate(50); // Small haptic feedback
+                }
+                const rewards = ["¡Muy bien!", "Eso es.", "Sigue así.", "Lo estás logrando."];
+                setRewardText(rewards[Math.floor(Math.random() * rewards.length)]);
+                setTimeout(() => setRewardText(null), 2000);
+            }
+
             return next;
         });
     };
@@ -87,10 +100,10 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                 <div className="flex-1 flex flex-col items-center justify-between py-8 px-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
                     <div className="text-center">
                         <div className="text-[10px] uppercase tracking-widest text-[#d97c6a] mb-2 font-medium flex items-center justify-center gap-2">
-                            <Shield className="w-4 h-4" /> Guía de Crisis · Paso 1 de 2
+                            <Shield className="w-4 h-4" /> Guía de Crisis · Paso 1
                         </div>
-                        <h1 className="text-3xl text-[#ddeef5] font-serif mb-4 leading-tight italic">Sigue el ritmo</h1>
-                        <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] max-w-[240px] mx-auto italic">Tu cuerpo sabe cómo encontrar la calma de nuevo.</p>
+                        <h1 className="text-3xl text-[#ddeef5] font-serif mb-4 leading-tight italic">Respira Conmigo</h1>
+                        <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] max-w-[240px] mx-auto">Sigue los números en voz alta.</p>
                     </div>
 
                     <div className="relative flex items-center justify-center w-72 h-72 my-8">
@@ -141,20 +154,27 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
 
                     <div className="space-y-3">
                         {Array.from({ length: g.n }).map((_, i) => (
-                            <div key={i} className="flex items-center gap-3">
+                            <div key={i} className="flex items-center gap-3 relative">
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${groundTexts[i]?.trim() ? 'bg-[#d97c6a] text-[#03080f]' : 'bg-[rgba(255,255,255,0.05)] text-[rgba(200,225,235,0.38)]'}`}>
-                                    {groundTexts[i]?.trim() ? '✓' : i + 1}
+                                    {groundTexts[i]?.trim() ? <CheckCircle2 size={16} /> : i + 1}
                                 </div>
                                 <input
                                     type="text"
                                     value={groundTexts[i] || ''}
                                     onChange={(e) => handleGroundTextChange(i, e.target.value)}
-                                    placeholder={g.items[i] ? `Ej: ${g.items[i]}` : 'Escribe...'}
-                                    className="flex-1 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-2xl px-4 py-4 text-[#ddeef5] placeholder-[rgba(200,225,235,0.3)] focus:outline-none focus:border-[#d97c6a]/50 focus:bg-[#d97c6a]/5 transition-all text-sm font-light font-sans shadow-sm"
+                                    placeholder={g.items[i] || 'Escribe...'}
+                                    className={`flex-1 bg-[rgba(255,255,255,0.04)] border ${groundTexts[i]?.trim() ? 'border-[#d97c6a]/30' : 'border-[rgba(255,255,255,0.07)]'} rounded-2xl px-4 py-4 text-[#ddeef5] placeholder-[rgba(200,225,235,0.3)] focus:outline-none focus:border-[#d97c6a]/50 focus:bg-[#d97c6a]/5 transition-all text-sm font-light font-sans shadow-sm`}
                                 />
                             </div>
                         ))}
                     </div>
+
+                    {/* NeuroUX Reward Toast */}
+                    {rewardText && (
+                        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#d97c6a] text-[#03080f] px-6 py-3 rounded-full font-sans font-bold text-sm shadow-[0_0_20px_rgba(217,124,106,0.3)] animate-in fade-in slide-in-from-bottom-4 duration-300 z-50 flex items-center gap-2">
+                            <Sparkles size={16} /> {rewardText}
+                        </div>
+                    )}
                 </div>
                 <div className="p-5 bg-[#03080f]/95 backdrop-blur-3xl border-t border-[rgba(255,255,255,0.06)]">
                     <button

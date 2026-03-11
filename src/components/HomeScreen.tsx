@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Phone, X } from 'lucide-react';
 import { EmergencyContact, getEmergencyContacts } from '../utils/contacts';
+import { getNeuroSettings } from '../utils/neuroux';
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
@@ -12,9 +13,12 @@ interface HomeScreenProps {
 export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
     const [contacts, setContacts] = useState<EmergencyContact[]>([]);
     const [showContactsModal, setShowContactsModal] = useState(false);
+    const [reduceAnimations, setReduceAnimations] = useState(false);
 
     useEffect(() => {
         setContacts(getEmergencyContacts());
+        const settings = getNeuroSettings();
+        setReduceAnimations(settings.reduceAnimations);
     }, []);
 
     return (
@@ -80,7 +84,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                     <div className="absolute top-[40%] left-1/2 w-[320px] h-[320px] pointer-events-none -z-10"
                         style={{
                             background: 'radial-gradient(circle, rgba(180,30,30,0.18) 0%, transparent 65%)',
-                            animation: 'ambientPulse 3s ease-in-out infinite'
+                            animation: reduceAnimations ? 'none' : 'ambientPulse 3s ease-in-out infinite'
                         }}>
                     </div>
 
@@ -97,7 +101,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         <div className="absolute -inset-[30px] rounded-full group-active:opacity-100 opacity-60 transition-opacity"
                             style={{
                                 background: 'radial-gradient(circle, rgba(220,50,50,0.22) 0%, transparent 70%)',
-                                animation: 'sosGlow 2.5s ease-in-out infinite'
+                                animation: reduceAnimations ? 'none' : 'sosGlow 2.5s ease-in-out infinite'
                             }}>
                         </div>
 
@@ -105,7 +109,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         <div className="absolute -inset-[10px] rounded-full"
                             style={{
                                 background: 'radial-gradient(circle, rgba(200,40,40,0.35) 0%, rgba(160,20,20,0.1) 55%, transparent 70%)',
-                                animation: 'sosGlow 2.5s ease-in-out infinite',
+                                animation: reduceAnimations ? 'none' : 'sosGlow 2.5s ease-in-out infinite',
                                 animationDelay: '0.3s'
                             }}>
                         </div>
@@ -114,7 +118,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                         <div className="absolute inset-0 rounded-full transition-transform duration-200 group-active:scale-[0.95]"
                             style={{
                                 background: 'radial-gradient(circle at 40% 30%, #e84040, #c42020 45%, #991010 100%)',
-                                animation: 'sosPulse 2.5s ease-in-out infinite'
+                                animation: reduceAnimations ? 'none' : 'sosPulse 2.5s ease-in-out infinite'
                             }}>
                         </div>
 

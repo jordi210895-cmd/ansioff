@@ -43,21 +43,21 @@ export default function EvaluationScreen({ onBack }: EvaluationScreenProps) {
             c: 'text-emerald-400',
             bg: 'bg-emerald-500/10',
             border: 'border-emerald-500/20',
-            d: 'Tus niveles de ansiedad están dentro de lo normal. Sigue practicando la respiración para mantener este equilibrio.'
+            d: 'Estás en zona verde. Estás bien. Sigue respirando un poco cada día para mantenerte aquí.'
         };
         if (totalScore <= 20) return {
             t: 'Ansiedad Moderada',
             c: 'text-amber-400',
             bg: 'bg-amber-500/10',
             border: 'border-amber-500/20',
-            d: 'Estás experimentando una ansiedad significativa. Te recomendamos usar el apartado de Técnicas TCC a diario.'
+            d: 'Estás notando tensión. Es normal. Usa las herramientas de ANSIOFF un rato hoy para bajar las revoluciones.'
         };
         return {
-            t: 'Ansiedad Severa',
+            t: 'Ansiedad Alta',
             c: 'text-rose-400',
             bg: 'bg-rose-500/10',
             border: 'border-rose-500/20',
-            d: 'Tus niveles son altos. Es importante que consultes con un profesional y uses el módulo SOS cuando lo necesites.'
+            d: 'Tienes el cuerpo muy alerta. Pide ayuda a tus personas seguras y usa el botón SOS si lo necesitas.'
         };
     };
 
