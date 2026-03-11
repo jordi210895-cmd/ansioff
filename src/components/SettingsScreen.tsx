@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert } from 'lucide-react';
 import TopBar from './TopBar';
 import { getStats, STATS_KEYS } from '../utils/stats';
+import { exportClinicalDiaryPDF } from '../utils/exportUtils';
 import * as db from '../lib/db';
 
 interface SettingsScreenProps {
@@ -87,15 +88,18 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
                     </div>
 
                     {/* Export Data */}
-                    <button className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center gap-4 border border-[rgba(255,255,255,0.07)] target:opacity-50 opacity-50 cursor-not-allowed shadow-sm">
-                        <div className="w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex items-center justify-center text-[rgba(200,225,235,0.38)] transition-colors">
-                            <Download size={20} className="stroke-[1.5]" />
+                    <button
+                        onClick={() => exportClinicalDiaryPDF()}
+                        className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center gap-4 border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.06)] hover:border-[#5aadcf]/30 transition-all duration-200 hover:-translate-y-0.5 group shadow-sm"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-[#5aadcf]/10 border border-[#5aadcf]/20 flex items-center justify-center text-[#5aadcf] transition-colors group-hover:bg-[#5aadcf] group-hover:text-[#03080f]">
+                            <Download size={20} className="stroke-[1.5] group-hover:stroke-current" />
                         </div>
                         <div className="flex-1 text-left">
-                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">Exportar mi diario y datos</h3>
-                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.38)]">Próximamente</p>
+                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] group-hover:text-[#5aadcf] mb-1 transition-colors">Exportar mi diario y datos</h3>
+                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.5)]">Descarga un PDF clínico para tu terapeuta</p>
                         </div>
-                        <ChevronRight size={18} className="text-[rgba(200,225,235,0.38)]" />
+                        <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)] group-hover:text-[#5aadcf] transition-colors" />
                     </button>
 
                     {/* Delete Account / Data */}

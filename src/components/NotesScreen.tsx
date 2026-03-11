@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { PenLine, FileText, ChevronRight, Lock, Brain, Sparkles, AlertCircle, Calendar, Loader2, BrainCircuit, Trash2 } from 'lucide-react';
+import { PenLine, FileText, ChevronRight, Lock, Brain, Sparkles, AlertCircle, Calendar, Loader2, BrainCircuit, Trash2, Download } from 'lucide-react';
 import { addCbtEntry } from '../utils/stats';
 import TopBar from './TopBar';
+import { exportClinicalDiaryPDF } from '../utils/exportUtils';
 
 interface Note {
     id: number;
@@ -118,13 +119,20 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
             <TopBar title="Diario de Calma" onBack={onBack} />
             <div className="flex-1 overflow-y-auto px-5 pb-32 scrollbar-hide animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="mt-4 mb-6">
+                <div className="mt-4 mb-6 flex gap-3">
                     <button
                         onClick={() => setShowEditor(true)}
-                        className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#ddeef5] rounded-2xl py-5 flex items-center justify-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98]"
+                        className="flex-1 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#ddeef5] rounded-2xl py-5 flex items-center justify-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.98]"
                     >
                         <PenLine size={22} strokeWidth={2} />
                         <span className="font-sans font-semibold text-xs tracking-wider">Escribir nueva nota</span>
+                    </button>
+                    <button
+                        onClick={() => exportClinicalDiaryPDF()}
+                        className="w-16 bg-[#5aadcf]/10 border border-[#5aadcf]/20 text-[#5aadcf] rounded-2xl flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#5aadcf] hover:text-[#03080f] active:scale-[0.98]"
+                        title="Exportar Diario Clínico a PDF"
+                    >
+                        <Download size={22} className="stroke-[1.5] hover:stroke-current" />
                     </button>
                 </div>
 
