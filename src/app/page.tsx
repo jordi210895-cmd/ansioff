@@ -159,7 +159,7 @@ export default function App() {
       case 'sc-notes':
         return <NotesScreen onBack={goBack} />;
       case 'sc-sos':
-        return <SOSScreen onBack={goBack} onFinished={() => handleNav('sc-home')} />;
+        return <SOSScreen onBack={goBack} onFinished={() => handleNav('sc-home')} onNav={handleNav} />;
       case 'sc-breath':
         return <BreathingScreen onBack={goBack} />;
       case 'sc-tools':
