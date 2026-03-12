@@ -13,27 +13,27 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                 .screen::-webkit-scrollbar{display:none;}
                 .screen.active{display:flex;}
                 
-                #home .aurora-1{background:radial-gradient(circle,rgba(124,58,237,0.6),transparent 70%);top:-100px;left:-80px;}
-                #home .aurora-2{background:radial-gradient(circle,rgba(6,182,212,0.4),transparent 70%);top:200px;right:-120px;}
-                #home .aurora-3{background:radial-gradient(circle,rgba(244,63,94,0.25),transparent 70%);bottom:80px;left:20px;}
+                #home .aurora-1{background:radial-gradient(circle,rgba(6,182,212,0.4),transparent 70%);top:-100px;left:-80px;}
+                #home .aurora-2{background:radial-gradient(circle,rgba(34,211,238,0.3),transparent 70%);top:200px;right:-120px;}
+                #home .aurora-3{background:radial-gradient(circle,rgba(103,232,249,0.2),transparent 70%);bottom:80px;left:20px;}
 
                 .home-pad{padding:20px 22px 0;position:relative;z-index:5;}
 
                 .home-chip{
                   display:inline-flex;align-items:center;gap:7px;
-                  background:rgba(124,58,237,0.15);
-                  border:1px solid rgba(124,58,237,0.3);
+                  background:rgba(6,182,212,0.1);
+                  border:1px solid rgba(6,182,212,0.25);
                   border-radius:var(--radp);padding:6px 14px;margin-bottom:16px;
                 }
-                .chip-dot{width:6px;height:6px;border-radius:50%;background:var(--p2);box-shadow:0 0 8px var(--p2);animation:dotP 2s ease-in-out infinite;}
+                .chip-dot{width:6px;height:6px;border-radius:50%;background:var(--c2);box-shadow:0 0 8px var(--c2);animation:dotP 2s ease-in-out infinite;}
                 @keyframes dotP{0%,100%{opacity:.6;}50%{opacity:1;}}
-                .chip-txt{font-size:10px;font-weight:700;color:var(--p3);letter-spacing:.12em;text-transform:uppercase;}
+                .chip-txt{font-size:10px;font-weight:700;color:var(--c3);letter-spacing:.12em;text-transform:uppercase;}
 
                 .home-greet{
                   font-size:48px;font-weight:800;line-height:.96;color:var(--text);
                   letter-spacing:-.03em;margin-bottom:8px;
                 }
-                .home-greet .hi{color:transparent;background:linear-gradient(90deg,var(--p2),var(--c2));-webkit-background-clip:text;background-clip:text;}
+                .home-greet .hi{color:transparent;background:linear-gradient(90deg,var(--c2),var(--c3));-webkit-background-clip:text;background-clip:text;}
                 .home-sub{font-size:13px;color:var(--text2);font-weight:500;margin-bottom:22px;}
 
                 /* SOS pill */
@@ -113,7 +113,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                   padding:16px 18px;
                   background:var(--glass);backdrop-filter:blur(16px);
                   border:1px solid var(--border);border-radius:var(--rad);
-                  border-left:3px solid var(--p2);
+                  border-left:3px solid var(--c);
                 }
                 .hq-text{font-size:14px;font-style:italic;font-weight:500;color:rgba(241,240,245,.7);line-height:1.7;margin-bottom:8px;}
                 .hq-by{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
