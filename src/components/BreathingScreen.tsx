@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Wind, ChevronRight, Check } from 'lucide-react';
-import { addBreathMins } from '../utils/stats';
 import { getNeuroSettings } from '../utils/neuroux';
 import TopBar from './TopBar';
 
@@ -20,32 +18,25 @@ const PATTERNS: Record<string, Phase[]> = {
     '4-2-6': [
         { t: 'Inhala', n: 4, ms: 4000 },
         { t: 'Mantén', n: 2, ms: 2000 },
-        { t: 'Exhala', n: 6, ms: 6000 },
-        { t: 'Pausa', n: 2, ms: 2000 }
+        { t: 'Exhala', n: 6, ms: 6000 }
     ],
-    '4-6-7': [
+    '4-4-4': [
         { t: 'Inhala', n: 4, ms: 4000 },
-        { t: 'Mantén', n: 6, ms: 6000 },
-        { t: 'Exhala', n: 7, ms: 7000 },
-        { t: 'Pausa', n: 1, ms: 1000 }
+        { t: 'Mantén', n: 4, ms: 4000 },
+        { t: 'Exhala', n: 4, ms: 4000 },
+        { t: 'Mantén', n: 4, ms: 4000 }
     ]
 };
 
 export default function BreathingScreen({ onBack }: BreathingScreenProps) {
-    const [selectedPattern, setSelectedPattern] = useState<'4-2-6' | '4-6-7'>('4-2-6');
+    const [selectedPattern, setSelectedPattern] = useState<'4-2-6' | '4-4-4'>('4-2-6');
     const [phaseIndex, setPhaseIndex] = useState(0);
     const [counter, setCounter] = useState(PATTERNS['4-2-6'][0].n);
-    const [startTime] = useState<number>(Date.now());
-    const [animationSpeed, setAnimationSpeed] = useState('4s'); // Pulso por defecto
-
-    const currentPhases = PATTERNS[selectedPattern];
-    const currentPhase = currentPhases[phaseIndex];
+    const [reduceAnimations, setReduceAnimations] = useState(false);
 
     useEffect(() => {
         const settings = getNeuroSettings();
-        if (settings.breathingSpeed === 'slow') setAnimationSpeed('6s');
-        else if (settings.breathingSpeed === 'fast') setAnimationSpeed('2.5s');
-        else setAnimationSpeed('4s');
+        setReduceAnimations(settings.reduceAnimations);
     }, []);
 
     useEffect(() => {
@@ -78,91 +69,94 @@ export default function BreathingScreen({ onBack }: BreathingScreenProps) {
         };
     }, [selectedPattern]);
 
+    const currentPhases = PATTERNS[selectedPattern];
+    const currentPhase = currentPhases[phaseIndex];
+
     return (
-        <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
-            <TopBar title="Respiración Guiada" onBack={onBack} />
-            <div className="flex-1 flex flex-col items-center justify-between py-8 px-5 overflow-y-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="text-center w-full">
-                    <h2 className="text-3xl font-light mb-3 leading-tight font-serif italic text-[#ddeef5]">
-                        Calma tu sistema nervioso
-                    </h2>
-                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] mb-10">Sigue el ritmo del círculo para reducir el cortisol.</p>
+        <div id="s-breath" className="screen active flex flex-col items-center overflow-hidden">
+            <style jsx>{`
+                #s-breath {
+                    background: var(--navy-2);
+                    min-height: 100vh;
+                    position: relative;
+                }
+                .breath-head { padding: 40px 28px 0; text-align: center; }
+                .br-title {
+                    font-family: var(--serif); font-size: 34px; font-weight: 300;
+                    color: var(--white); margin-bottom: 10px;
+                }
+                .br-desc { font-size: 13px; color: var(--muted); max-width: 250px; margin: 0 auto; line-height: 1.5; }
 
-                    {/* Pattern Selector */}
-                    <div className="flex justify-center gap-3 mb-12">
-                        {(['4-2-6', '4-6-7'] as const).map((p) => (
-                            <button
-                                key={p}
-                                onClick={() => setSelectedPattern(p)}
-                                className={`px-5 py-2.5 rounded-full text-xs tracking-wider font-semibold transition-colors flex items-center gap-2 ${selectedPattern === p
-                                    ? 'bg-[#5aadcf] text-[#03080f]'
-                                    : 'bg-transparent text-slate-300 border border-white/10 hover:bg-[rgba(255,255,255,0.05)]'
-                                    }`}
-                            >
-                                {selectedPattern === p && <Check className="w-3 h-3" />}
-                                Patrón {p}
-                            </button>
-                        ))}
-                    </div>
+                .rhythm-chips {
+                    display: flex; gap: 8px; justify-content: center; margin-top: 24px;
+                }
+                .chip {
+                    padding: 10px 18px; border-radius: var(--r-pill);
+                    background: var(--navy-3); border: 1px solid rgba(255,255,255,0.06);
+                    font-size: 11px; font-weight: 600; color: var(--muted); cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .chip.active {
+                    background: var(--sky-1); color: var(--navy-1); border-color: var(--sky-1);
+                }
+
+                .orb-stage {
+                    flex: 1; display: flex; flex-direction: column;
+                    align-items: center; justify-content: center; width: 100%;
+                }
+                .big-orb {
+                    width: 180px; height: 180px; border-radius: 50%;
+                    background: radial-gradient(circle at 35% 30%, #a8dff0, #4aaac8 60%, #1e6a8a);
+                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                    box-shadow: 0 0 40px rgba(74,168,204,0.3);
+                    animation: ${reduceAnimations ? 'none' : 'bigOrbBreath 12s ease-in-out infinite'};
+                    /* Note: The 12s cycle should ideally match total sequence duration, 
+                       but for simplicity we use a generic slow pulse or will need dynamic injection */
+                }
+                .orb-t1 { font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--white); opacity: 0.9; margin-bottom: 2px; }
+                .orb-t2 { font-size: 48px; font-weight: 300; color: var(--white); line-height: 1; }
+
+                .phases-list {
+                    width: 100%; padding: 0 28px 40px;
+                }
+                .ph-item {
+                    display: flex; align-items: center; gap: 14px; padding: 12px 0;
+                    border-bottom: 1px solid rgba(255,255,255,0.04); opacity: 0.3; transition: all 0.4s;
+                }
+                .ph-item.active { opacity: 1; transform: translateX(4px); }
+                .ph-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+                .ph-item.active .ph-dot { background: var(--sky-1); box-shadow: 0 0 10px var(--sky-1); }
+                .ph-name { font-size: 14px; color: var(--white); font-weight: 500; flex: 1; }
+                .ph-time { font-size: 12px; font-weight: 700; color: var(--sky-1); }
+            `}</style>
+
+            <TopBar title="" onBack={onBack} />
+
+            <div className="breath-head">
+                <div className="br-title">Respira profundamente</div>
+                <div className="br-desc">Sincroniza tu ritmo con el orbe para calmar tu mente.</div>
+
+                <div className="rhythm-chips">
+                    <div className={`chip ${selectedPattern === '4-2-6' ? 'active' : ''}`} onClick={() => setSelectedPattern('4-2-6')}>Relajación 4-2-6</div>
+                    <div className={`chip ${selectedPattern === '4-4-4' ? 'active' : ''}`} onClick={() => setSelectedPattern('4-4-4')}>Cuadrada 4-4-4</div>
                 </div>
+            </div>
 
-                <div className="relative flex items-center justify-center w-64 h-64">
-                    {/* Outer Glows */}
-                    <div
-                        className="absolute inset-0 bg-[#5aadcf]/10 rounded-full blur-3xl"
-                        style={{
-                            animation: `pulse ${animationSpeed} ease-in-out infinite`
-                        }}
-                    ></div>
-
-                    {/* Breathing Animation Wrapper */}
-                    <div className="relative w-56 h-56 rounded-full border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center bg-[rgba(255,255,255,0.04)] backdrop-blur-sm shadow-2xl overflow-hidden">
-                        <div
-                            className="absolute inset-0 bg-[#5aadcf]/5"
-                            style={{
-                                animation: `pulse ${animationSpeed} ease-in-out infinite`
-                            }}
-                        ></div>
-                        <div className="relative z-10 text-xl font-light text-[#ddeef5] mb-1 font-serif italic">{currentPhase.t}</div>
-                        <div className="relative z-10 text-5xl font-light text-[#5aadcf]">{counter}</div>
-                    </div>
+            <div className="orb-stage">
+                <div className="big-orb">
+                    <div className="orb-t1">{currentPhase.t}</div>
+                    <div className="orb-t2">{counter}</div>
                 </div>
+            </div>
 
-                <div className="w-full max-w-xs space-y-10 mt-8">
-                    {/* Visual Progress */}
-                    <div className="flex justify-center gap-2">
-                        {currentPhases.map((_, i) => (
-                            <div
-                                key={i}
-                                className={`h-1 rounded-full transition-all duration-500 ${i === phaseIndex ? 'w-8 bg-[#5aadcf] shadow-sm shadow-[#5aadcf]/50' : 'w-4 bg-[rgba(255,255,255,0.1)]'
-                                    }`}
-                            ></div>
-                        ))}
+            <div className="phases-list">
+                {currentPhases.map((p, i) => (
+                    <div key={i} className={`ph-item ${i === phaseIndex ? 'active' : ''}`}>
+                        <div className="ph-dot"></div>
+                        <div className="ph-name">{p.t}</div>
+                        <div className="ph-time">{p.n}s</div>
                     </div>
-
-                    {/* Pattern Description */}
-                    <div className="flex justify-between p-4 bg-[rgba(255,255,255,0.04)] rounded-2xl border border-[rgba(255,255,255,0.07)]">
-                        {currentPhases.slice(0, 3).map((p, i) => (
-                            <div key={i} className="text-center px-2">
-                                <div className="text-xl font-light text-[#ddeef5] font-serif">{p.n}s</div>
-                                <div className="text-[10px] text-[rgba(200,225,235,0.38)] uppercase tracking-widest font-medium mt-1">{p.t}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="w-full mt-12 mb-4">
-                    <button
-                        className="w-full bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.07)] text-[#ddeef5] rounded-2xl py-4 font-sans font-semibold text-xs tracking-wider transition-all duration-200 active:scale-95"
-                        onClick={() => {
-                            const minutes = Math.floor((Date.now() - startTime) / 60000);
-                            if (minutes > 0) addBreathMins(minutes);
-                            onBack();
-                        }}
-                    >
-                        Finalizar sesión
-                    </button>
-                </div>
+                ))}
             </div>
         </div>
     );

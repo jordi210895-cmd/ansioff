@@ -1,236 +1,119 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Shield, ArrowRight, Brain, Sparkles, CheckCircle2 } from 'lucide-react';
-import { addSosUse } from '../utils/stats';
+import { getNeuroSettings } from '../utils/neuroux';
 import TopBar from './TopBar';
-import SOSDisclaimer from './SOSGames/SOSDisclaimer';
-import MindfulTetris from './SOSGames/MindfulTetris';
-import CognitiveSubtraction from './SOSGames/CognitiveSubtraction';
 
 interface SOSScreenProps {
     onBack: () => void;
     onFinished: () => void;
 }
 
-const BREATH_PHASES = [
-    { t: 'Inhala', n: 4, ms: 4000 },
-    { t: 'Mantén', n: 2, ms: 2000 },
-    { t: 'Exhala', n: 6, ms: 6000 }
-];
-
-const GROUNDING_DATA = [
-    { t: '5 cosas que <span className="text-[#e07d6a]">ves</span>', s: 'Mira a tu alrededor. Busca 5 objetos.', n: 5, items: ['Ej: Una silla', 'Ej: La pared', 'Ej: Mis manos', 'Ej: La luz', 'Ej: El suelo'] },
-    { t: '4 cosas que <span className="text-[#e07d6a]">tocas</span>', s: 'Siente 4 texturas: ropa, el suelo...', n: 4, items: ['Ej: Mi ropa', 'Ej: La silla', 'Ej: Mi piel', 'Ej: El móvil'] },
-    { t: '3 sonidos que <span className="text-[#e07d6a]">oyes</span>', s: 'Cierra los ojos. 3 sonidos.', n: 3, items: ['Ej: Tráfico', 'Ej: Mi respiración', 'Ej: Un motor'] },
-    { t: '2 olores que <span className="text-[#e07d6a]">hueles</span>', s: 'Busca 2 cosas que huelan.', n: 2, items: ['Ej: Perfume', 'Ej: El aire'] },
-    { t: '1 cosa que <span className="text-[#e07d6a]">saboreas</span>', s: '¿Qué gusto tienes en la boca?', n: 1, items: ['Ej: Café'] },
-];
-
-type SOSMode = 'BREATHING' | 'GROUNDING' | 'GAMES_DISCLAIMER' | 'GAMES_MENU' | 'GAME_TETRIS' | 'GAME_SUBTRACTION';
-
 export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
-    const [mode, setMode] = useState<SOSMode>('BREATHING');
-    const [breathPhase, setBreathPhase] = useState(0);
-    const [counter, setCounter] = useState(BREATH_PHASES[0].n);
-    const [groundStep, setGroundStep] = useState(0);
-    const [groundTexts, setGroundTexts] = useState<string[]>([]);
-    const [rewardText, setRewardText] = useState<string | null>(null);
+    const [reduceAnimations, setReduceAnimations] = useState(false);
 
     useEffect(() => {
-        if (mode !== 'BREATHING') return;
+        const settings = getNeuroSettings();
+        setReduceAnimations(settings.reduceAnimations);
+    }, []);
 
-        let timer: NodeJS.Timeout;
-        let countTimer: NodeJS.Timeout;
-
-        const run = (idx: number) => {
-            const p = BREATH_PHASES[idx];
-            setCounter(p.n);
-            countTimer = setInterval(() => {
-                setCounter(c => c > 1 ? c - 1 : p.n);
-            }, 1000);
-
-            timer = setTimeout(() => {
-                clearInterval(countTimer);
-                const nxt = (idx + 1) % BREATH_PHASES.length;
-                setBreathPhase(nxt);
-                run(nxt);
-            }, p.ms);
-        };
-
-        run(0);
-        return () => { clearTimeout(timer); clearInterval(countTimer); };
-    }, [mode]);
-
-    const handleNextGround = () => {
-        if (groundStep < 4) {
-            setGroundStep(s => s + 1);
-            setGroundTexts([]);
-        } else {
-            addSosUse(); // Gamification tracking for completing a crisis grounding session
-            onFinished(); // Navigate back to home
-            setMode('GAMES_DISCLAIMER'); // Prep state just in case
-        }
-    };
-
-    const handleGroundTextChange = (idx: number, val: string) => {
-        setGroundTexts(prev => {
-            const next = [...prev];
-            const wasEmpty = !prev[idx]?.trim();
-            next[idx] = val;
-
-            // NeuroUX micro-reward when filling a new input
-            if (wasEmpty && val.trim().length > 2) {
-                if (typeof navigator !== 'undefined' && navigator.vibrate) {
-                    navigator.vibrate(50); // Small haptic feedback
+    return (
+        <div id="s-crisis" className="screen active flex flex-col items-center">
+            <style jsx>{`
+                #s-crisis {
+                    background: var(--navy-2);
+                    min-height: 100vh;
+                    overflow: hidden;
+                    position: relative;
                 }
-                const rewards = ["¡Muy bien!", "Eso es.", "Sigue así.", "Lo estás logrando."];
-                setRewardText(rewards[Math.floor(Math.random() * rewards.length)]);
-                setTimeout(() => setRewardText(null), 2000);
-            }
+                .crisis-glow {
+                    position: absolute;
+                    top: 50%; left: 50%; transform: translate(-50%, -50%);
+                    width: 500px; height: 500px;
+                    background: radial-gradient(circle, rgba(217,64,64,0.12) 0%, transparent 70%);
+                    pointer-events: none;
+                    animation: ${reduceAnimations ? 'none' : 'crisisGlow 4s ease-in-out infinite'};
+                }
+                .crisis-head {
+                    padding: 60px 40px 0; text-align: center; z-index: 2;
+                }
+                .crisis-title {
+                    font-family: var(--serif); font-size: 38px; font-weight: 300;
+                    color: var(--white); line-height: 1.15; margin-bottom: 12px;
+                }
+                .crisis-title em { font-style: italic; color: #f08080; }
+                .crisis-desc { font-size: 14px; color: var(--muted); max-width: 240px; margin: 0 auto; line-height: 1.5; }
 
-            return next;
-        });
-    };
+                .sos-btn-wrap {
+                    flex: 1; display: flex; align-items: center; justify-content: center;
+                    position: relative; z-index: 2; width: 100%;
+                }
+                .sos-big {
+                    width: 210px; height: 210px; border-radius: 50%;
+                    background: radial-gradient(circle at 35% 30%, #ff5e5e, #d94040 50%, #9e2a2a);
+                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                    cursor: pointer; box-shadow: 0 0 50px rgba(217,64,64,0.4), inset 0 4px 12px rgba(255,255,255,0.3);
+                    transition: all 0.2s var(--ease); position: relative;
+                    animation: ${reduceAnimations ? 'none' : 'sosDot 3s ease-in-out infinite'};
+                }
+                .sos-big:active { transform: scale(0.94); box-shadow: 0 0 20px rgba(217,64,64,0.3); }
+                .sos-big::after {
+                    content: ''; position: absolute; inset: -15px; border-radius: 50%;
+                    border: 1px solid rgba(217,64,64,0.2);
+                    animation: ${reduceAnimations ? 'none' : 'orbRing 3s ease-in-out infinite'};
+                }
+                .sos-t-1 { font-size: 42px; font-weight: 900; color: white; line-height: 1; letter-spacing: 0.04em; }
+                .sos-t-2 { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
 
-    if (mode === 'BREATHING') {
-        return (
-            <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
-                <TopBar title="Anclaje Rápido" onBack={onBack} />
-                <div className="flex-1 flex flex-col items-center justify-between py-8 px-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="text-center">
-                        <div className="text-[10px] uppercase tracking-widest text-[#d97c6a] mb-2 font-medium flex items-center justify-center gap-2">
-                            <Shield className="w-4 h-4" /> Guía de Crisis · Paso 1
-                        </div>
-                        <h1 className="text-3xl text-[#ddeef5] font-serif mb-4 leading-tight italic">Respira Conmigo</h1>
-                        <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] max-w-[240px] mx-auto">Sigue los números en voz alta.</p>
-                    </div>
+                .crisis-nav {
+                    padding: 0 28px 60px; display: flex; flex-direction: column; gap: 12px;
+                    width: 100%; z-index: 2;
+                }
+                .cpill {
+                    background: var(--navy-3); border: 1px solid rgba(255,255,255,0.06);
+                    border-radius: var(--r-pill); padding: 18px 24px;
+                    display: flex; align-items: center; gap: 16px;
+                    cursor: pointer; transition: all 0.2s;
+                }
+                .cpill:active { transform: scale(0.98); background: var(--navy-4); }
+                .cp-ico { font-size: 20px; }
+                .cp-txt { font-size: 14px; font-weight: 600; color: var(--white); flex: 1; }
+                .cp-arr { color: var(--muted); font-size: 18px; }
+            `}</style>
 
-                    <div className="relative flex items-center justify-center w-72 h-72 my-8">
-                        {/* Outer Glows */}
-                        <div className="absolute inset-0 bg-[#d97c6a]/10 rounded-full blur-3xl animate-pulse"></div>
-                        <div className="absolute inset-4 bg-[#d97c6a]/5 rounded-full blur-2xl"></div>
+            <TopBar title="" onBack={onBack} />
 
-                        {/* The Circle */}
-                        <div className="relative w-56 h-56 rounded-full border border-[#d97c6a]/25 flex flex-col items-center justify-center bg-[rgba(255,255,255,0.04)] backdrop-blur-md shadow-[0_0_30px_rgba(217,124,106,0.15)]">
-                            <div className="text-2xl font-light font-serif text-[#ddeef5] mb-1 italic">{BREATH_PHASES[breathPhase].t}</div>
-                            <div className="text-[56px] font-light text-[#d97c6a] leading-none mb-4">{counter}</div>
-                        </div>
-                    </div>
+            <div className="crisis-glow"></div>
 
-                    <div className="w-full max-w-xs space-y-4">
-                        <button
-                            onClick={() => setMode('GROUNDING')}
-                            className="w-full bg-[#d97c6a] hover:bg-[#e08c7c] text-[#03080f] font-semibold text-xs tracking-wider rounded-full py-4 flex items-center justify-center gap-2 transition-colors shadow-lg shadow-[#d97c6a]/20"
-                        >
-                            <span>Continuar al Grounding</span>
-                            <ArrowRight className="w-4 h-4" />
-                        </button>
-                        <button
-                            onClick={() => setMode('GAMES_DISCLAIMER')}
-                            className="w-full py-2 bg-transparent text-[rgba(200,225,235,0.38)] hover:text-[#ddeef5] text-xs font-semibold tracking-wider transition-colors flex items-center justify-center gap-2"
-                        >
-                            <Brain className="w-4 h-4" /> Necesito distracción (Juegos)
-                        </button>
-                    </div>
+            <div className="crisis-head">
+                <div className="crisis-title">Manten la calma, <em>estás a salvo</em></div>
+                <div className="crisis-desc">Pulsa el botón para iniciar la guía de anclaje rápido.</div>
+            </div>
+
+            <div className="sos-btn-wrap">
+                <div className="sos-big" onClick={onFinished}>
+                    <div className="sos-t-1">SOS</div>
+                    <div className="sos-t-2">Comenzar</div>
                 </div>
             </div>
-        );
-    }
 
-    if (mode === 'GROUNDING') {
-        const g = GROUNDING_DATA[groundStep];
-        return (
-            <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
-                <TopBar title="Técnica 5-4-3-2-1" onBack={() => setMode('BREATHING')} />
-                <div className="flex-1 overflow-y-auto px-5 py-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="text-[10px] uppercase tracking-widest text-[#d97c6a] mb-6 font-medium">
-                        Paso 2 de 2 · Sentidos
-                    </div>
-                    <h2 className="text-3xl font-serif text-[#ddeef5] mb-3 leading-tight italic">
-                        <span dangerouslySetInnerHTML={{ __html: g.t.replace('#e07d6a', '#d97c6a') }} />
-                    </h2>
-                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] mb-8">{g.s}</p>
-
-                    <div className="space-y-3">
-                        {Array.from({ length: g.n }).map((_, i) => (
-                            <div key={i} className="flex items-center gap-3 relative">
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${groundTexts[i]?.trim() ? 'bg-[#d97c6a] text-[#03080f]' : 'bg-[rgba(255,255,255,0.05)] text-[rgba(200,225,235,0.38)]'}`}>
-                                    {groundTexts[i]?.trim() ? <CheckCircle2 size={16} /> : i + 1}
-                                </div>
-                                <input
-                                    type="text"
-                                    value={groundTexts[i] || ''}
-                                    onChange={(e) => handleGroundTextChange(i, e.target.value)}
-                                    placeholder={g.items[i] || 'Escribe...'}
-                                    className={`flex-1 bg-[rgba(255,255,255,0.04)] border ${groundTexts[i]?.trim() ? 'border-[#d97c6a]/30' : 'border-[rgba(255,255,255,0.07)]'} rounded-2xl px-4 py-4 text-[#ddeef5] placeholder-[rgba(200,225,235,0.3)] focus:outline-none focus:border-[#d97c6a]/50 focus:bg-[#d97c6a]/5 transition-all text-sm font-light font-sans shadow-sm`}
-                                />
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* NeuroUX Reward Toast */}
-                    {rewardText && (
-                        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#d97c6a] text-[#03080f] px-6 py-3 rounded-full font-sans font-bold text-sm shadow-[0_0_20px_rgba(217,124,106,0.3)] animate-in fade-in slide-in-from-bottom-4 duration-300 z-50 flex items-center gap-2">
-                            <Sparkles size={16} /> {rewardText}
-                        </div>
-                    )}
+            <div className="crisis-nav">
+                <div className="cpill" onClick={onFinished}>
+                    <div className="cp-ico">🫁</div>
+                    <div className="cp-txt">Respiración de emergencia</div>
+                    <div className="cp-arr">›</div>
                 </div>
-                <div className="p-5 bg-[#03080f]/95 backdrop-blur-3xl border-t border-[rgba(255,255,255,0.06)]">
-                    <button
-                        className="w-full bg-[#5aadcf] hover:bg-[#89cee4] text-[#03080f] font-semibold text-xs tracking-wider rounded-full py-4 transition-colors shadow-lg"
-                        onClick={handleNextGround}
-                    >
-                        {groundStep < 4 ? 'Siguiente sentido →' : 'Finalizar sesión'}
-                    </button>
+                <div className="cpill" onClick={onFinished}>
+                    <div className="cp-ico">🧩</div>
+                    <div className="cp-txt">Distracción cognitiva</div>
+                    <div className="cp-arr">›</div>
+                </div>
+                <div className="cpill" onClick={onFinished}>
+                    <div className="cp-ico">📞</div>
+                    <div className="cp-txt">Llamar a un contacto</div>
+                    <div className="cp-arr">›</div>
                 </div>
             </div>
-        );
-    }
-
-    if (mode === 'GAMES_DISCLAIMER') {
-        return <SOSDisclaimer onAccept={() => setMode('GAMES_MENU')} onCancel={() => setMode('BREATHING')} />;
-    }
-
-    if (mode === 'GAMES_MENU') {
-        return (
-            <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
-                <TopBar title="Anclaje Mental" onBack={() => setMode('GAMES_DISCLAIMER')} />
-                <div className="flex-1 overflow-y-auto px-5 py-6 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="bg-[#0e1d2e] border border-[rgba(255,255,255,0.07)] flex items-center gap-4 p-5 rounded-2xl mb-6">
-                        <Sparkles className="w-6 h-6 text-[#c9a96e]" />
-                        <p className="font-sans font-light text-sm text-[#ddeef5] leading-relaxed">Activa tu mente analítica para silenciar la ansiedad.</p>
-                    </div>
-
-                    <button
-                        className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.15)] p-5 rounded-2xl text-left transition-transform duration-200 hover:-translate-y-0.5 group"
-                        onClick={() => setMode('GAME_TETRIS')}
-                    >
-                        <div className="w-14 h-14 bg-[#5aadcf]/20 rounded-full flex items-center justify-center mb-4 text-[24px]">🧩</div>
-                        <h3 className="text-xl font-serif text-[#ddeef5] italic mb-1">Tetris Mindful</h3>
-                        <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)]">Anclaje visual y rítmico.</p>
-                    </button>
-
-                    <button
-                        className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.15)] p-5 rounded-2xl text-left transition-transform duration-200 hover:-translate-y-0.5 group"
-                        onClick={() => setMode('GAME_SUBTRACTION')}
-                    >
-                        <div className="w-14 h-14 bg-[#c9a96e]/20 rounded-full flex items-center justify-center mb-4 text-[24px]">🔢</div>
-                        <h3 className="text-xl font-serif text-[#ddeef5] italic mb-1">Restas en Cascada</h3>
-                        <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)]">Activa la corteza prefrontal.</p>
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    if (mode === 'GAME_TETRIS') {
-        return <MindfulTetris onBack={() => setMode('GAMES_MENU')} />;
-    }
-
-    if (mode === 'GAME_SUBTRACTION') {
-        return <CognitiveSubtraction onBack={() => setMode('GAMES_MENU')} />;
-    }
-
-    return null;
+        </div>
+    );
 }

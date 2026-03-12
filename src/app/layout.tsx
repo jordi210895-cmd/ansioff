@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { DM_Sans, DM_Serif_Display } from "next/font/google";
+import { DM_Sans, Fraunces } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
 const dmSans = DM_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const dmSerif = DM_Serif_Display({
+const fraunces = Fraunces({
   variable: "--font-serif",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["300", "400"],
   style: ["normal", "italic"],
 });
 
@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body
-        className={`${dmSans.variable} ${dmSerif.variable} antialiased screen-px font-sans`}
+        className={`${dmSans.variable} ${fraunces.variable} antialiased font-sans bg-[var(--navy-2)]`}
       >
         {children}
         <Script
