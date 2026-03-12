@@ -1,26 +1,19 @@
 import type { Metadata } from "next";
-import { DM_Sans, Fraunces } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-sans",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const fraunces = Fraunces({
-  variable: "--font-serif",
-  subsets: ["latin"],
-  weight: ["300", "400"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
   title: "ANSIOFF - Tu calma en el bolsillo",
   description: "Guía inmediata y herramientas para crisis de pánico y ansiedad generalizada.",
   viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
-  themeColor: "#020617",
+  themeColor: "#08060f",
   icons: {
     icon: "/logo.png",
     shortcut: "/logo.png",
@@ -36,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body
-        className={`${dmSans.variable} ${fraunces.variable} antialiased font-sans bg-[var(--navy-2)]`}
+        className={`${plusJakartaSans.variable} antialiased font-[family-name:var(--font-plus-jakarta)] bg-[#040208] text-white`}
       >
         {children}
         <Script

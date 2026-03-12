@@ -1,117 +1,88 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { getNeuroSettings } from '../utils/neuroux';
-import TopBar from './TopBar';
+import { useState } from 'react';
 
 interface SOSScreenProps {
     onBack: () => void;
-    onFinished: () => void;
+    onFinished?: () => void;
 }
 
-export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
-    const [reduceAnimations, setReduceAnimations] = useState(false);
+const emergencySteps = [
+    { t: 'Pausa y Respira', d: 'No estás en peligro real, es solo una respuesta física intensa.', i: '🌬️' },
+    { t: 'Observa', d: 'Nombra 3 cosas que ves a tu alrededor ahora mismo.', i: '👁️' },
+    { t: 'Acepta', d: 'Deja que la sensación fluya, como una ola que sube y baja.', i: '🌊' }
+];
 
-    useEffect(() => {
-        const settings = getNeuroSettings();
-        setReduceAnimations(settings.reduceAnimations);
-    }, []);
+export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
+    const [step, setStep] = useState(0);
 
     return (
-        <div id="s-crisis" className="screen active flex flex-col items-center">
+        <div id="crisis" className="screen active">
             <style jsx>{`
-                #s-crisis {
-                    background: var(--navy-2);
-                    min-height: 100vh;
-                    overflow: hidden;
-                    position: relative;
-                }
-                .crisis-glow {
-                    position: absolute;
-                    top: 50%; left: 50%; transform: translate(-50%, -50%);
-                    width: 500px; height: 500px;
-                    background: radial-gradient(circle, rgba(217,64,64,0.12) 0%, transparent 70%);
-                    pointer-events: none;
-                    animation: ${reduceAnimations ? 'none' : 'crisisGlow 4s ease-in-out infinite'};
-                }
-                .crisis-head {
-                    padding: 60px 40px 0; text-align: center; z-index: 2;
-                }
-                .crisis-title {
-                    font-family: var(--serif); font-size: 38px; font-weight: 300;
-                    color: var(--white); line-height: 1.15; margin-bottom: 12px;
-                }
-                .crisis-title em { font-style: italic; color: #f08080; }
-                .crisis-desc { font-size: 14px; color: var(--muted); max-width: 240px; margin: 0 auto; line-height: 1.5; }
+                .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:96px;}
+                .screen::-webkit-scrollbar{display:none;}
 
-                .sos-btn-wrap {
-                    flex: 1; display: flex; align-items: center; justify-content: center;
-                    position: relative; z-index: 2; width: 100%;
-                }
-                .sos-big {
-                    width: 210px; height: 210px; border-radius: 50%;
-                    background: radial-gradient(circle at 35% 30%, #ff5e5e, #d94040 50%, #9e2a2a);
-                    display: flex; flex-direction: column; align-items: center; justify-content: center;
-                    cursor: pointer; box-shadow: 0 0 50px rgba(217,64,64,0.4), inset 0 4px 12px rgba(255,255,255,0.3);
-                    transition: all 0.2s var(--ease); position: relative;
-                    animation: ${reduceAnimations ? 'none' : 'sosDot 3s ease-in-out infinite'};
-                }
-                .sos-big:active { transform: scale(0.94); box-shadow: 0 0 20px rgba(217,64,64,0.3); }
-                .sos-big::after {
-                    content: ''; position: absolute; inset: -15px; border-radius: 50%;
-                    border: 1px solid rgba(217,64,64,0.2);
-                    animation: ${reduceAnimations ? 'none' : 'orbRing 3s ease-in-out infinite'};
-                }
-                .sos-t-1 { font-size: 42px; font-weight: 900; color: white; line-height: 1; letter-spacing: 0.04em; }
-                .sos-t-2 { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+                #crisis .aurora-1{background:radial-gradient(circle,rgba(244,63,94,0.65),transparent 70%);top:-100px;left:-60px;}
+                #crisis .aurora-2{background:radial-gradient(circle,rgba(245,158,11,0.3),transparent 70%);bottom:0;right:-80px;}
 
-                .crisis-nav {
-                    padding: 0 28px 60px; display: flex; flex-direction: column; gap: 12px;
-                    width: 100%; z-index: 2;
+                .sos-top{padding:24px 26px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5;}
+                .sos-badge{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);border-radius:var(--radp);padding:6px 14px;color:var(--r2);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;}
+                
+                .sos-main{flex:1;padding:0 26px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;z-index:5;}
+                .sos-hero{width:110px;height:110px;border-radius:100%;background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.2);display:flex;align-items:center;justify-content:center;font-size:42px;margin-bottom:26px;animation:spulse 2s infinite;}
+                .sos-h1{font-size:34px;font-weight:800;color:var(--text);line-height:1;margin-bottom:12px;letter-spacing:-.02em;}
+                .sos-p{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:32px;}
+
+                .sos-card{
+                    width:100%;background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+                    border:1px solid var(--border);border-radius:24px;padding:22px;
+                    display:flex;gap:18px;text-align:left;position:relative;transition:var(--t);margin-bottom:12px;
                 }
-                .cpill {
-                    background: var(--navy-3); border: 1px solid rgba(255,255,255,0.06);
-                    border-radius: var(--r-pill); padding: 18px 24px;
-                    display: flex; align-items: center; gap: 16px;
-                    cursor: pointer; transition: all 0.2s;
+                .sos-card:hover{border-color:var(--border2);}
+                .sc-num{
+                    width:38px;height:38px;border-radius:12px;flex-shrink:0;
+                    background:linear-gradient(135deg,var(--r),var(--am));
+                    display:flex;align-items:center;justify-content:center;
+                    font-size:16px;font-weight:800;color:#fff;
                 }
-                .cpill:active { transform: scale(0.98); background: var(--navy-4); }
-                .cp-ico { font-size: 20px; }
-                .cp-txt { font-size: 14px; font-weight: 600; color: var(--white); flex: 1; }
-                .cp-arr { color: var(--muted); font-size: 18px; }
+                .sc-t{font-size:17px;font-weight:800;color:var(--text);margin-bottom:4px;}
+                .sc-d{font-size:13px;color:var(--text2);line-height:1.5;}
+
+                .sos-nav{margin-top:24px;display:flex;gap:12px;width:100%;}
+                .sbtn-sec{flex:1;background:var(--glass);border:1px solid var(--border);color:var(--text2);padding:16px;border-radius:var(--rad);font-size:14px;font-weight:700;cursor:pointer;transition:var(--t);}
+                .sbtn-pri{flex:2;background:linear-gradient(135deg,var(--r),#fb7185);color:#fff;padding:16px;border-radius:var(--rad);font-size:14px;font-weight:800;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(244,63,94,.3);transition:var(--t);}
+                .sbtn-pri:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(244,63,94,.45);}
             `}</style>
 
-            <TopBar title="" onBack={onBack} />
+            <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div></div>
 
-            <div className="crisis-glow"></div>
-
-            <div className="crisis-head">
-                <div className="crisis-title">Manten la calma, <em>estás a salvo</em></div>
-                <div className="crisis-desc">Pulsa el botón para iniciar la guía de anclaje rápido.</div>
+            <div className="sos-top">
+                <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
+                <div className="sos-badge">Kit de Crisis</div>
+                <div style={{ width: 36 }}></div>
             </div>
 
-            <div className="sos-btn-wrap">
-                <div className="sos-big" onClick={onFinished}>
-                    <div className="sos-t-1">SOS</div>
-                    <div className="sos-t-2">Comenzar</div>
-                </div>
-            </div>
+            <div className="sos-main">
+                <div className="sos-hero">{emergencySteps[step].i}</div>
+                <div className="sos-h1">Mantén la calma,<br />esto pasará</div>
+                <div className="sos-p">Sigue estos pasos simples para recuperar el control de tu respiración y pensamientos.</div>
 
-            <div className="crisis-nav">
-                <div className="cpill" onClick={onFinished}>
-                    <div className="cp-ico">🫁</div>
-                    <div className="cp-txt">Respiración de emergencia</div>
-                    <div className="cp-arr">›</div>
+                <div className="sos-card">
+                    <div className="sc-num">{step + 1}</div>
+                    <div>
+                        <div className="sc-t">{emergencySteps[step].t}</div>
+                        <div className="sc-d">{emergencySteps[step].d}</div>
+                    </div>
                 </div>
-                <div className="cpill" onClick={onFinished}>
-                    <div className="cp-ico">🧩</div>
-                    <div className="cp-txt">Distracción cognitiva</div>
-                    <div className="cp-arr">›</div>
-                </div>
-                <div className="cpill" onClick={onFinished}>
-                    <div className="cp-ico">📞</div>
-                    <div className="cp-txt">Llamar a un contacto</div>
-                    <div className="cp-arr">›</div>
+
+                <div className="sos-nav">
+                    <button className="sbtn-sec" onClick={onBack}>Cerrar</button>
+                    <button className="sbtn-pri" onClick={() => {
+                        if (step < emergencySteps.length - 1) setStep(step + 1);
+                        else if (onFinished) onFinished();
+                    }}>
+                        {step < emergencySteps.length - 1 ? 'Siguiente paso' : 'Estoy mejor'}
+                    </button>
                 </div>
             </div>
         </div>
