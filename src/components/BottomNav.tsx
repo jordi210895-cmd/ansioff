@@ -47,13 +47,13 @@ export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
 
             <style jsx>{`
         .nav{
-          position:sticky;bottom:0;flex-shrink:0;
+          flex-shrink:0;
           background:rgba(8,6,15,0.98);
           backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
           border-top:1px solid var(--border);
           padding:12px 4px 28px;
           display:flex;justify-content:space-around;
-          z-index:100;
+          position:relative;z-index:100;
         }
         :global(.ni){
           display:flex;flex-direction:column;align-items:center;gap:5px;
