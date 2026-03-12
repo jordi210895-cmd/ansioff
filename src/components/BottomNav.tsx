@@ -47,8 +47,8 @@ export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
 
             <style jsx>{`
         .nav{
-          position:absolute;bottom:0;left:0;right:0;
-          background:rgba(8,6,15,0.96);
+          position:sticky;bottom:0;flex-shrink:0;
+          background:rgba(8,6,15,0.98);
           backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
           border-top:1px solid var(--border);
           padding:12px 4px 28px;
