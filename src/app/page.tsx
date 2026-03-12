@@ -155,16 +155,21 @@ export default function App() {
       case 'home':
         return <HomeScreen onNav={handleNav} cbtCount={cbtCount} />;
       case 'sounds':
+      case 'sc-audio':
         return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} />;
       case 'notes':
+      case 'sc-notes':
         return <NotesScreen onBack={goBack} />;
       case 'crisis':
+      case 'sc-sos':
         return <SOSScreen onBack={goBack} onFinished={() => handleNav('home')} />;
       case 'breath':
+      case 'sc-breath':
         return <BreathingScreen onBack={goBack} />;
       case 'progress':
+      case 'sc-stats':
         return <StatsScreen onBack={goBack} />;
-      // Legacy routes or others
+      // Modules / Tools Hub
       case 'sc-tools':
         return <ToolsScreen onBack={goBack} onNav={handleNav} />;
       case 'sc-games':

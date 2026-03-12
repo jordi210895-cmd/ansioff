@@ -1,64 +1,108 @@
 'use client';
 
 import {
-    Activity,
-    Wind,
-    Gamepad2,
-    Music,
-    PenLine,
-    Heart,
-    Brain,
-    FileText,
-    Stethoscope,
-    Moon,
-    ChevronRight,
-    Target
+    Activity, Wind, Gamepad2, Music, PenLine, Heart,
+    Brain, FileText, Stethoscope, Moon, Target, ChevronRight
 } from 'lucide-react';
-import TopBar from './TopBar';
 
 interface ToolsScreenProps {
     onBack: () => void;
     onNav: (screen: string) => void;
 }
 
-export default function ToolsScreen({ onBack, onNav }: ToolsScreenProps) {
-    const tools = [
-        { id: 'sc-sos', icon: <Activity />, name: 'SOS Crisis', sub: 'Anclaje rápido y 5-4-3-2-1', color: 'text-red-400' },
-        { id: 'sc-breath', icon: <Wind />, name: 'Respiración', sub: 'Patrones diafragmáticos guiados', color: 'text-blue-400' },
-        { id: 'sc-games', icon: <Gamepad2 />, name: 'Juegos de Anclaje', sub: 'Tetris y Distracción cognitiva', color: 'text-indigo-400' },
-        { id: 'sc-audio', icon: <Music />, name: 'Audios y sonidos', sub: 'Tu biblioteca de sonidos relax', color: 'text-cyan-400' },
-        { id: 'sc-notes', icon: <PenLine />, name: 'Diario de Calma', sub: 'Escribe para liberar tensión', color: 'text-teal-400' },
-        { id: 'sc-act', icon: <Heart />, name: 'Sin Miedo (ACT)', sub: 'Aceptación y Compromiso', color: 'text-rose-400' },
-        { id: 'sc-cbt', icon: <Brain />, name: 'Técnicas TCC', sub: 'Reestructuración de pensamientos', color: 'text-purple-400' },
-        { id: 'sc-eval', icon: <FileText />, name: 'Evaluación', sub: 'Tests de Hamilton, Goldberg y BAI', color: 'text-amber-400' },
-        { id: 'sc-support', icon: <Stethoscope />, name: 'Apoyo Médico', sub: 'Recursos y guía profesional', color: 'text-emerald-400' },
-        { id: 'sc-night', icon: <Moon />, name: 'Modo Noche', sub: 'Conciliación del sueño y pánico', color: 'text-blue-500' },
-        { id: 'sc-exposure-why', icon: <Target />, name: '¿Por qué Expongo?', sub: 'Mis motivos para no rendirme', color: 'text-orange-500' },
-    ];
+const moduleCategories = [
+    {
+        title: 'Terapéutico',
+        tools: [
+            { id: 'crisis', name: 'Kit de Crisis', sub: 'Anclaje rápido 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
+            { id: 'sc-cbt', name: 'Técnicas TCC', sub: 'Reestructuración de ideas', icon: <Brain />, color: 'var(--p)' },
+            { id: 'sc-act', name: 'Módulo ACT', sub: 'Aceptación y Compromiso', icon: <Heart />, color: 'var(--p2)' },
+        ]
+    },
+    {
+        title: 'Bienestar',
+        tools: [
+            { id: 'breath', name: 'Respiración', sub: 'Patrones guiados', icon: <Wind />, color: 'var(--c)' },
+            { id: 'sounds', name: 'Audios relax', sub: 'Paisajes sonoros', icon: <Music />, color: 'var(--c2)' },
+            { id: 'notes', name: 'Diario', sub: 'Escritura consciente', icon: <PenLine />, color: 'var(--em)' },
+        ]
+    },
+    {
+        title: 'Herramientas',
+        tools: [
+            { id: 'sc-games', name: 'Juegos', sub: 'Distracción cognitiva', icon: <Gamepad2 />, color: 'var(--am)' },
+            { id: 'sc-eval', name: 'Evaluaciones', sub: 'Hamilton y Goldberg', icon: <FileText />, color: 'var(--p3)' },
+            { id: 'sc-night', name: 'Modo Noche', sub: 'Higiene del sueño', icon: <Moon />, color: 'var(--c3)' },
+            { id: 'sc-exposure-why', name: 'Mis Motivos', sub: 'Exposición y mejora', icon: <Target />, color: 'var(--r2)' },
+        ]
+    }
+];
 
+export default function ToolsScreen({ onBack, onNav }: ToolsScreenProps) {
     return (
-        <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
-            <TopBar title="Todos los Módulos" onBack={onBack} />
-            <div className="flex-1 overflow-y-auto px-5 pb-32 pt-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="mt-2 space-y-4">
-                    {tools.map((tool, i) => (
-                        <button
-                            key={i}
-                            className="w-full flex items-center gap-4 p-5 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-2xl hover:bg-[rgba(255,255,255,0.06)] transition-transform duration-200 hover:-translate-y-0.5 group text-left shadow-sm"
-                            onClick={() => onNav(tool.id)}
-                        >
-                            <div className={`w-14 h-14 rounded-full bg-[rgba(255,255,255,0.05)] flex items-center justify-center transition-colors group-hover:bg-[rgba(255,255,255,0.08)] ${tool.color}`}>
-                                {tool.icon}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <h3 className="font-sans font-semibold text-sm text-[#ddeef5] tracking-tight leading-tight mb-1">{tool.name}</h3>
-                                <p className="font-sans font-light text-[13px] text-[rgba(200,225,235,0.38)] truncate leading-relaxed">{tool.sub}</p>
-                            </div>
-                            <ChevronRight size={20} className="text-[rgba(200,225,235,0.38)] group-hover:text-[#ddeef5] transition-colors" />
-                        </button>
-                    ))}
+        <div id="modules" className="screen active">
+            <style jsx>{`
+                .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:120px;}
+                .screen::-webkit-scrollbar{display:none;}
+
+                #modules .aurora-1{background:radial-gradient(circle,rgba(124,58,237,0.35),transparent 70%);top:-60px;right:-40px;}
+                #modules .aurora-2{background:radial-gradient(circle,rgba(6,182,212,0.25),transparent 70%);bottom:100px;left:-80px;}
+
+                .mod-hd{padding:22px 24px 20px;position:relative;z-index:5;}
+                .mod-title{font-size:36px;font-weight:800;letter-spacing:-.03em;color:var(--text);margin-bottom:3px;}
+                .mod-sub{font-size:12px;color:var(--text2);}
+
+                .cat-sec{margin-bottom:24px;padding:0 22px;position:relative;z-index:5;}
+                .cat-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--text3);text-transform:uppercase;margin-bottom:12px;padding-left:4px;}
+                
+                .mod-grid{display:flex;flex-direction:column;gap:10px;}
+                .mod-row{
+                    background:var(--glass);border:1px solid var(--border);border-radius:20px;
+                    padding:14px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:var(--t);
+                }
+                .mod-row:hover{border-color:var(--border2);background:rgba(255,255,255,0.08);transform:translateY(-1px);}
+                
+                .mod-ico-box{
+                    width:44px;height:44px;border-radius:14px;
+                    background:rgba(255,255,255,0.04);border:1px solid var(--border);
+                    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+                }
+                .mod-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:1px;}
+                .mod-meta{font-size:11px;color:var(--text2);}
+                .mod-arr{margin-left:auto;color:var(--text3);opacity:.5;}
+            `}</style>
+
+            <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div></div>
+
+            <div className="mod-hd">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <div className="mod-title">Módulos</div>
+                        <div className="mod-sub">Todas tus herramientas en un solo lugar</div>
+                    </div>
+                    <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
                 </div>
             </div>
+
+            {moduleCategories.map((cat, ci) => (
+                <div key={ci} className="cat-sec">
+                    <div className="cat-lbl">{cat.title}</div>
+                    <div className="mod-grid">
+                        {cat.tools.map((t, ti) => (
+                            <div key={ti} className="mod-row" onClick={() => onNav(t.id)}>
+                                <div className="mod-ico-box" style={{ color: t.color }}>
+                                    {t.icon}
+                                </div>
+                                <div>
+                                    <div className="mod-name">{t.name}</div>
+                                    <div className="mod-meta">{t.sub}</div>
+                                </div>
+                                <div className="mod-arr"><ChevronRight size={18} /></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
         </div>
     );
 }

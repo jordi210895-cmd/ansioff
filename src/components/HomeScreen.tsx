@@ -1,14 +1,14 @@
 'use client';
 
 interface HomeScreenProps {
-    onNav: (screen: string) => void;
-    cbtCount?: number;
+  onNav: (screen: string) => void;
+  cbtCount?: number;
 }
 
 export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
-    return (
-        <div id="home" className="screen active">
-            <style jsx>{`
+  return (
+    <div id="home" className="screen active">
+      <style jsx>{`
                 .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;padding-bottom:96px;}
                 .screen::-webkit-scrollbar{display:none;}
                 .screen.active{display:flex;}
@@ -119,49 +119,53 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
                 .hq-by{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
             `}</style>
 
-            <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div><div className="aurora-3"></div></div>
+      <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div><div className="aurora-3"></div></div>
 
-            <div className="home-pad">
-                <div className="home-chip"><div className="chip-dot"></div><span className="chip-txt">Tu espacio seguro</span></div>
-                <div className="home-greet">Buenos<br />días, <span className="hi">Jordi</span></div>
-                <div className="home-sub">Calma · Respira · Vive</div>
-            </div>
+      <div className="home-pad">
+        <div className="home-chip"><div className="chip-dot"></div><span className="chip-txt">Tu espacio seguro</span></div>
+        <div className="home-greet">Buenos<br />días, <span className="hi">Jordi</span></div>
+        <div className="home-sub">Calma · Respira · Vive</div>
+      </div>
 
-            <div className="sos-pill" onClick={() => onNav('crisis')}>
-                <div className="sos-icon">SOS</div>
-                <div className="sos-text"><div className="t">Necesito ayuda ahora</div><div className="s">Asistencia de crisis inmediata</div></div>
-                <div className="sos-pill-arr">›</div>
-            </div>
+      <div className="sos-pill" onClick={() => onNav('crisis')}>
+        <div className="sos-icon">SOS</div>
+        <div className="sos-text"><div className="t">Necesito ayuda ahora</div><div className="s">Asistencia de crisis inmediata</div></div>
+        <div className="sos-pill-arr">›</div>
+      </div>
 
-            <div className="bento">
-                <div className="card card-breath" onClick={() => onNav('breath')}>
-                    <div className="morb"><div className="morb-r"></div><div className="morb-r r2"></div><div className="morb-c"></div></div>
-                    <div style={{ flex: 1 }}><div className="bnums"><div className="bnum">4</div><div className="bnum">2</div><div className="bnum">6</div></div><div className="btitle">Alivio del estrés profundo</div><div className="bmeta">⏱ 5 min · Principiante</div></div>
-                    <button className="bstart">▶ Start</button>
-                </div>
-
-                <div className="card card-tool tc-sounds" onClick={() => onNav('sounds')}>
-                    <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--p3)" strokeWidth="1.7" strokeLinecap="round"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
-                    <div><div className="ct-name">Audios</div><div className="ct-desc">Sonidos y meditaciones</div></div>
-                </div>
-                <div className="card card-tool tc-diary" onClick={() => onNav('notes')}>
-                    <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--em)" strokeWidth="1.7" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
-                    <div><div className="ct-name">Diario</div><div className="ct-desc">Reflexión consciente</div></div>
-                </div>
-                <div className="card card-tool tc-games" onClick={() => onNav('sc-games')}>
-                    <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--am)" strokeWidth="1.7" strokeLinecap="round"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
-                    <div><div className="ct-name">Juegos</div><div className="ct-desc">Distracción terapéutica</div></div>
-                </div>
-                <div className="card card-tool tc-progress" onClick={() => onNav('progress')}>
-                    <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--r2)" strokeWidth="1.7" strokeLinecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
-                    <div><div className="ct-name">Progreso</div><div className="ct-desc">Tu evolución</div></div>
-                </div>
-            </div>
-
-            <div className="home-quote">
-                <div className="hq-text">Tus sentimientos son válidos, pero no son tu destino. Respira y confía en el proceso.</div>
-                <div className="hq-by">ANSIOFF · Reflexión de hoy</div>
-            </div>
+      <div className="bento">
+        <div className="card card-breath" onClick={() => onNav('breath')}>
+          <div className="morb"><div className="morb-r"></div><div className="morb-r r2"></div><div className="morb-c"></div></div>
+          <div style={{ flex: 1 }}><div className="bnums"><div className="bnum">4</div><div className="bnum">2</div><div className="bnum">6</div></div><div className="btitle">Alivio del estrés profundo</div><div className="bmeta">⏱ 5 min · Principiante</div></div>
+          <button className="bstart">▶ Start</button>
         </div>
-    );
+
+        <div className="card card-tool tc-sounds" onClick={() => onNav('sounds')}>
+          <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--p3)" strokeWidth="1.7" strokeLinecap="round"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
+          <div><div className="ct-name">Audios</div><div className="ct-desc">Sonidos y meditaciones</div></div>
+        </div>
+        <div className="card card-tool tc-diary" onClick={() => onNav('notes')}>
+          <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--em)" strokeWidth="1.7" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
+          <div><div className="ct-name">Diario</div><div className="ct-desc">Reflexión consciente</div></div>
+        </div>
+        <div className="card card-tool tc-sounds" style={{ background: 'linear-gradient(135deg,rgba(168,85,247,0.1),rgba(124,58,237,0.06))', borderColor: 'rgba(168,85,247,0.2)' }} onClick={() => onNav('sc-tools')}>
+          <div className="ct-top"><div className="ct-ico" style={{ background: 'rgba(168,85,247,0.12)', borderColor: 'rgba(168,85,247,0.25)' }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--p3)" strokeWidth="1.7" strokeLinecap="round"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
+          <div><div className="ct-name">Módulos</div><div className="ct-desc">Todas las herramientas</div></div>
+        </div>
+        <div className="card card-tool tc-games" onClick={() => onNav('sc-games')}>
+          <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--am)" strokeWidth="1.7" strokeLinecap="round"><polygon points="5 3 19 12 5 21 5 3" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
+          <div><div className="ct-name">Juegos</div><div className="ct-desc">Distracción cognitiva</div></div>
+        </div>
+        <div className="card card-tool tc-progress" onClick={() => onNav('progress')}>
+          <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--r2)" strokeWidth="1.7" strokeLinecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
+          <div><div className="ct-name">Progreso</div><div className="ct-desc">Tu evolución</div></div>
+        </div>
+      </div>
+
+      <div className="home-quote">
+        <div className="hq-text">Tus sentimientos son válidos, pero no son tu destino. Respira y confía en el proceso.</div>
+        <div className="hq-by">ANSIOFF · Reflexión de hoy</div>
+      </div>
+    </div>
+  );
 }
