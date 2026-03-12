@@ -141,15 +141,15 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
         </div>
 
         <div className="card card-tool tc-sounds" onClick={() => onNav('sounds')}>
-          <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--p3)" strokeWidth="1.7" strokeLinecap="round"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
+          <div className="ct-top"><div className="ct-ico" style={{ background: 'rgba(6,182,212,0.1)', borderColor: 'rgba(6,182,212,0.2)' }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--c2)" strokeWidth="1.7" strokeLinecap="round"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
           <div><div className="ct-name">Audios</div><div className="ct-desc">Sonidos y meditaciones</div></div>
         </div>
         <div className="card card-tool tc-diary" onClick={() => onNav('notes')}>
           <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--em)" strokeWidth="1.7" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
           <div><div className="ct-name">Diario</div><div className="ct-desc">Reflexión consciente</div></div>
         </div>
-        <div className="card card-tool tc-sounds" style={{ background: 'linear-gradient(135deg,rgba(168,85,247,0.1),rgba(124,58,237,0.06))', borderColor: 'rgba(168,85,247,0.2)' }} onClick={() => onNav('sc-tools')}>
-          <div className="ct-top"><div className="ct-ico" style={{ background: 'rgba(168,85,247,0.12)', borderColor: 'rgba(168,85,247,0.25)' }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--p3)" strokeWidth="1.7" strokeLinecap="round"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
+        <div className="card card-tool tc-modules" style={{ background: 'linear-gradient(135deg,rgba(34,211,238,0.1),rgba(6,182,212,0.06))', borderColor: 'rgba(34,211,238,0.2)' }} onClick={() => onNav('sc-tools')}>
+          <div className="ct-top"><div className="ct-ico" style={{ background: 'rgba(34,211,238,0.12)', borderColor: 'rgba(34,211,238,0.25)' }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--c2)" strokeWidth="1.7" strokeLinecap="round"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
           <div><div className="ct-name">Módulos</div><div className="ct-desc">Todas las herramientas</div></div>
         </div>
         <div className="card card-tool tc-games" onClick={() => onNav('sc-games')}>
