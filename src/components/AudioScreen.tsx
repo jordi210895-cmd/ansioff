@@ -139,9 +139,10 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
         .player{
             margin:0 22px 18px;
             background:rgba(255,255,255,0.07);
-            backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-            border:1px solid rgba(255,255,255,0.12);border-radius:var(--rad);
-            padding:18px;position:relative;overflow:hidden;z-index:5;
+            backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);
+            border:1px solid rgba(255,255,255,0.15);border-radius:var(--rad);
+            padding:20px 18px 24px;position:relative;z-index:10;
+            isolation: isolate;
         }
         .player::before{content:'';position:absolute;top:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(6,182,212,.5),transparent);}
         .player-glow{position:absolute;top:-20px;right:-20px;width:140px;height:140px;background:radial-gradient(circle,rgba(124,58,237,.15),transparent 65%);pointer-events:none;}
@@ -166,8 +167,8 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
         .prog-bar{width:100%;height:4px;background:rgba(255,255,255,.06);border-radius:3px;margin-bottom:6px;cursor:pointer;position:relative;}
         .prog-fill{height:100%;background:linear-gradient(90deg,var(--p2),var(--c2));border-radius:3px;position:relative;transition:width 0.1s linear;}
         .prog-fill::after{content:'';position:absolute;right:-4px;top:-3px;width:10px;height:10px;border-radius:50%;background:var(--c2);box-shadow:0 0 8px var(--c2);}
-        .prog-times{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);}
-        .ctrl-row{display:flex;align-items:center;justify-content:center;gap:28px;margin-top:14px;}
+        .prog-times{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:8px;}
+        .ctrl-row{display:flex;align-items:center;justify-content:center;gap:32px;margin-top:20px;position:relative;z-index:20;}
         .cbtn{background:none;border:none;cursor:pointer;color:var(--text2);transition:var(--t);display:flex;padding:10px;}
         .cbtn:hover{color:var(--text);}
         .cplay{
@@ -178,11 +179,11 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
         }
         .cplay:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(124,58,237,.6);}
         .cstop{
-          width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);
+          width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.1);
           border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
-          cursor:pointer;color:var(--text2);transition:var(--t);
+          cursor:pointer;color:white;transition:var(--t);
         }
-        .cstop:hover{background:rgba(244,63,94,0.1);border-color:rgba(244,63,94,0.3);color:var(--r);}
+        .cstop:hover{background:rgba(244,63,94,0.2);border-color:rgba(244,63,94,0.4);}
 
         .snd-cats{display:flex;gap:8px;padding:0 22px 14px;overflow-x:auto;z-index:5;position:relative;}
         .snd-cats::-webkit-scrollbar{display:none;}
@@ -240,7 +241,7 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
                     <button className="cbtn" onClick={prevTrack} title="Anterior"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><polygon points="19 20 9 12 19 4 19 20" /><line x1="5" y1="19" x2="5" y2="5" /></svg></button>
                     
                     <button className="cstop" onClick={handleStop} title="Detener">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2" /></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><rect x="6" y="6" width="12" height="12" rx="2" /></svg>
                     </button>
 
                     <button className="cplay" onClick={togglePlay} title={isPlaying ? "Pausar" : "Reproducir"}>
