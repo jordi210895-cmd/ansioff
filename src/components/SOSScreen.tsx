@@ -10,11 +10,13 @@ interface SOSScreenProps {
 const emergencySteps = [
     { t: 'Pausa y Respira', d: 'No estás en peligro real, es solo una respuesta física intensa.', i: '🌬️' },
     { t: 'Observa', d: 'Nombra 3 cosas que ves a tu alrededor ahora mismo.', i: '👁️' },
-    { t: 'Acepta', d: 'Deja que la sensación fluya, como una ola que sube y baja.', i: '🌊' }
+    { t: 'Acepta', d: 'Deja que la sensación fluya, como una ola que sube y baja.', i: '🌊' },
+    { t: 'Expresión Libre', d: 'Escribe sin filtros todo lo que sientes ahora mismo. Suéltalo todo.', i: '✍️' }
 ];
 
 export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
     const [step, setStep] = useState(0);
+    const [writing, setWriting] = useState('');
 
     return (
         <div id="crisis" className="screen active">
@@ -52,6 +54,14 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                 .sbtn-sec{flex:1;background:var(--glass);border:1px solid var(--border);color:var(--text2);padding:16px;border-radius:var(--rad);font-size:14px;font-weight:700;cursor:pointer;transition:var(--t);}
                 .sbtn-pri{flex:2;background:linear-gradient(135deg,var(--r),#fb7185);color:#fff;padding:16px;border-radius:var(--rad);font-size:14px;font-weight:800;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(244,63,94,.3);transition:var(--t);}
                 .sbtn-pri:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(244,63,94,.45);}
+
+                .sos-write{
+                    width:100%;min-height:160px;background:rgba(255,255,255,0.03);
+                    border:1px solid var(--border);border-radius:20px;padding:16px;
+                    color:var(--text);font-family:inherit;font-size:15px;line-height:1.6;
+                    resize:none;outline:none;transition:var(--t);margin-top:12px;
+                }
+                .sos-write:focus{border-color:rgba(244,63,94,0.4);background:rgba(255,255,255,0.06);}
             `}</style>
 
             <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div></div>
@@ -69,9 +79,19 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
 
                 <div className="sos-card">
                     <div className="sc-num">{step + 1}</div>
-                    <div>
+                    <div style={{ flex: 1 }}>
                         <div className="sc-t">{emergencySteps[step].t}</div>
                         <div className="sc-d">{emergencySteps[step].d}</div>
+
+                        {emergencySteps[step].i === '✍️' && (
+                            <textarea
+                                className="sos-write"
+                                placeholder="Escribe aquí lo que tienes en mente..."
+                                value={writing}
+                                onChange={(e) => setWriting(e.target.value)}
+                                autoFocus
+                            />
+                        )}
                     </div>
                 </div>
 
