@@ -205,6 +205,11 @@ export default function App() {
         {renderScreen()}
       </main>
 
+      <button className="sos-fab" onClick={() => handleNav('crisis')}>
+        <div className="sos-fab-pulse"></div>
+        <span>SOS</span>
+      </button>
+
       <BottomNav activeScreen={curScreen} onNav={handleNav} />
       <DisclaimerModal />
     </div>

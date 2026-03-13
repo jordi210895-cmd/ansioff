@@ -123,14 +123,6 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
 
       <div className="home-pad">
         <div className="home-chip"><div className="chip-dot"></div><span className="chip-txt">Tu espacio seguro</span></div>
-        <div className="home-greet">Buenos<br />días, <span className="hi">Jordi</span></div>
-        <div className="home-sub">Calma · Respira · Vive</div>
-      </div>
-
-      <div className="sos-pill" onClick={() => onNav('crisis')}>
-        <div className="sos-icon">SOS</div>
-        <div className="sos-text"><div className="t">Necesito ayuda ahora</div><div className="s">Asistencia de crisis inmediata</div></div>
-        <div className="sos-pill-arr">›</div>
       </div>
 
       <div className="bento">
