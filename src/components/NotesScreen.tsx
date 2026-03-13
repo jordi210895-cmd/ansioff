@@ -97,6 +97,16 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
 
         .nt-empty{text-align:center;padding:40px 0;color:var(--text3);}
         .nt-empty-ico{font-size:32px;margin-bottom:12px;opacity:.3;}
+
+        .nt-ai-info{
+          margin:0 22px 16px;padding:14px 18px;
+          background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);
+          border-radius:18px;display:flex;gap:12px;align-items:center;
+          position:relative;z-index:5;transition:var(--t);
+        }
+        .nt-ai-info:hover{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3);}
+        .nt-ai-txt{font-size:12.5px;color:rgba(255,255,255,0.8);line-height:1.5;font-weight:500;}
+        .nt-ai-txt b{color:#10b981;font-weight:700;}
       `}</style>
 
             <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div></div>
@@ -109,6 +119,11 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                     </div>
                     <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
                 </div>
+            </div>
+
+            <div className="nt-ai-info">
+                <div style={{ fontSize: '18px' }}>💡</div>
+                <div className="nt-ai-txt">Una vez escritas tus notas, la <b>IA</b> puede ayudarte a identificar patrones en tu ansiedad.</div>
             </div>
 
             <div className="nt-editor">
