@@ -29,6 +29,9 @@ export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
             <NavItem id="home" activeScreen={activeScreen} onNav={onNav} label="Inicio">
                 <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={activeScreen === 'home' ? 'var(--c2)' : 'var(--text3)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
             </NavItem>
+            <NavItem id="sc-tools" activeScreen={activeScreen} onNav={onNav} label="Módulos">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={activeScreen === 'sc-tools' ? 'var(--c2)' : 'var(--text3)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>
+            </NavItem>
             <NavItem id="sounds" activeScreen={activeScreen} onNav={onNav} label="Sonidos">
                 <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={activeScreen === 'sounds' ? 'var(--c2)' : 'var(--text3)'} strokeWidth="1.8" strokeLinecap="round"><path d="M3 14h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H3v-6z" /><path d="M21 14h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2v-6z" /><path d="M5 14V9a7 7 0 0 1 14 0v5" /></svg>
             </NavItem>
