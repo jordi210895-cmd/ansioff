@@ -7,11 +7,14 @@ interface SOSScreenProps {
     onFinished?: () => void;
 }
 
-const emergencySteps = [
-    { t: 'Pausa y Respira', d: 'No estás en peligro real, es solo una respuesta física intensa.', i: '🌬️' },
-    { t: 'Observa', d: 'Nombra 3 cosas que ves a tu alrededor ahora mismo.', i: '👁️' },
-    { t: 'Acepta', d: 'Deja que la sensación fluya, como una ola que sube y baja.', i: '🌊' },
-    { t: 'Expresión Libre', d: 'Escribe sin filtros todo lo que sientes ahora mismo. Suéltalo todo.', i: '✍️' }
+const groundingSteps = [
+    { id: 'intro', t: 'Pausa y Respira', d: 'No estás en peligro real, es solo una respuesta física intensa.', i: '🌬️', count: 0 },
+    { id: 'see', t: '5 cosas que VES', d: 'Nombra y describe 5 objetos que tengas delante.', i: '👁️', count: 5 },
+    { id: 'touch', t: '4 cosas que TOCAS', d: 'Siente las texturas de 4 cosas a tu alcance.', i: '🤝', count: 4 },
+    { id: 'hear', t: '3 cosas que OYES', d: 'Presta atención a 3 sonidos distintos.', i: '👂', count: 3 },
+    { id: 'smell', t: '2 cosas que HUELES', d: 'Identifica 2 olores en tu entorno.', i: '👃', count: 2 },
+    { id: 'taste', t: '1 cosa que SABOREAS', d: 'Nota 1 sensación en tu boca.', i: '👅', count: 1 },
+    { id: 'write', t: 'Expresión Libre', d: 'Escribe sin filtros todo lo que sientes ahora mismo. Suéltalo todo.', i: '✍️', count: 0 }
 ];
 
 export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
