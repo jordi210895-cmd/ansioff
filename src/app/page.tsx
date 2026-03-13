@@ -86,8 +86,23 @@ export default function App() {
     });
 
     loadTracks();
+    
+    // 3. One-time notification prompt for new users
+    const hasPrompted = localStorage.getItem('ansioff_notif_prompted');
+    if (!hasPrompted) {
+      const timer = setTimeout(() => {
+        if (typeof window !== 'undefined' && (window as any).OneSignal) {
+          const OneSignal = (window as any).OneSignal;
+          if (OneSignal.Slidedown) {
+            OneSignal.Slidedown.promptPush();
+            localStorage.setItem('ansioff_notif_prompted', 'true');
+          }
+        }
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
 
-    // 3. CBT record count
+    // 4. CBT record count
     supabase.from('cbt_records').select('id', { count: 'exact', head: true }).then(({ count }) => {
       if (count !== null) setCbtCount(count);
     });
