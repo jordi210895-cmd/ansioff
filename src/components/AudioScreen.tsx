@@ -25,13 +25,17 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const currentTrack = tracks[curIdx] || tracks[0];
 
+    // Initialize audio once on mount
     useEffect(() => {
-        if (!audioRef.current) {
+        if (typeof window !== 'undefined' && !audioRef.current) {
             audioRef.current = new Audio();
         }
+        
         const audio = audioRef.current;
+        if (!audio) return;
 
         const updateProgress = () => {
+            if (!audio.duration) return;
             const p = (audio.currentTime / audio.duration) * 100;
             setProgress(isNaN(p) ? 0 : p);
             setCurTime(fmtTime(audio.currentTime));
@@ -51,6 +55,7 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
 
         return () => {
             audio.pause();
+            audio.src = ''; // Force release of the resource
             audio.removeEventListener('timeupdate', updateProgress);
             audio.removeEventListener('ended', onEnded);
             audio.removeEventListener('play', onPlay);
@@ -58,29 +63,45 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
         };
     }, []);
 
+    // Handle track source changes
     useEffect(() => {
-        if (audioRef.current && currentTrack) {
+        const audio = audioRef.current;
+        if (audio && currentTrack) {
             const wasPlaying = isPlaying;
-            audioRef.current.src = currentTrack.url;
+            // Only update src if it's actually different to avoid restart loops
+            if (audio.src !== window.location.origin + currentTrack.url && !currentTrack.url.startsWith('blob:')) {
+                 audio.src = currentTrack.url;
+            } else if (currentTrack.url.startsWith('blob:') && audio.src !== currentTrack.url) {
+                 audio.src = currentTrack.url;
+            }
+
             if (wasPlaying) {
-                audioRef.current.play().catch(e => console.error("Playback failed:", e));
+                audio.play().catch(e => {
+                    if (e.name !== 'AbortError') console.error("Playback failed:", e);
+                });
             }
         }
     }, [currentTrack]);
 
     const togglePlay = () => {
-        if (!audioRef.current) return;
+        const audio = audioRef.current;
+        if (!audio) return;
+
         if (isPlaying) {
-            audioRef.current.pause();
+            audio.pause();
         } else {
-            audioRef.current.play().catch(e => console.error("Playback failed:", e));
+            audio.play().catch(e => {
+                if (e.name !== 'AbortError') console.error("Playback failed:", e);
+            });
         }
     };
 
     const handleStop = () => {
-        if (!audioRef.current) return;
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+        const audio = audioRef.current;
+        if (!audio) return;
+        
+        audio.pause();
+        audio.currentTime = 0;
         setProgress(0);
         setCurTime('0:00');
         setIsPlaying(false);
