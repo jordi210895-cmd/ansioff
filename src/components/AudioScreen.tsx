@@ -29,7 +29,6 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
         if (!audioRef.current) {
             audioRef.current = new Audio();
         }
-
         const audio = audioRef.current;
 
         const updateProgress = () => {
@@ -42,20 +41,30 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
             nextTrack();
         };
 
+        const onPlay = () => setIsPlaying(true);
+        const onPause = () => setIsPlaying(false);
+
         audio.addEventListener('timeupdate', updateProgress);
         audio.addEventListener('ended', onEnded);
+        audio.addEventListener('play', onPlay);
+        audio.addEventListener('pause', onPause);
 
         return () => {
+            audio.pause();
             audio.removeEventListener('timeupdate', updateProgress);
             audio.removeEventListener('ended', onEnded);
+            audio.removeEventListener('play', onPlay);
+            audio.removeEventListener('pause', onPause);
         };
-    }, [curIdx]);
+    }, []);
 
     useEffect(() => {
         if (audioRef.current && currentTrack) {
             const wasPlaying = isPlaying;
             audioRef.current.src = currentTrack.url;
-            if (wasPlaying) audioRef.current.play().catch(e => console.error(e));
+            if (wasPlaying) {
+                audioRef.current.play().catch(e => console.error("Playback failed:", e));
+            }
         }
     }, [currentTrack]);
 
@@ -64,9 +73,17 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
         if (isPlaying) {
             audioRef.current.pause();
         } else {
-            audioRef.current.play().catch(e => console.error(e));
+            audioRef.current.play().catch(e => console.error("Playback failed:", e));
         }
-        setIsPlaying(!isPlaying);
+    };
+
+    const handleStop = () => {
+        if (!audioRef.current) return;
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setProgress(0);
+        setCurTime('0:00');
+        setIsPlaying(false);
     };
 
     const nextTrack = () => {
@@ -139,6 +156,12 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
           box-shadow:0 0 20px rgba(124,58,237,.4);transition:var(--t);
         }
         .cplay:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(124,58,237,.6);}
+        .cstop{
+          width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);
+          border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+          cursor:pointer;color:var(--text2);transition:var(--t);
+        }
+        .cstop:hover{background:rgba(244,63,94,0.1);border-color:rgba(244,63,94,0.3);color:var(--r);}
 
         .snd-cats{display:flex;gap:8px;padding:0 22px 14px;overflow-x:auto;z-index:5;position:relative;}
         .snd-cats::-webkit-scrollbar{display:none;}
@@ -193,15 +216,21 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
                 </div>
                 <div className="prog-times"><span>{curTime}</span><span>{currentTrack?.duration}</span></div>
                 <div className="ctrl-row">
-                    <button className="cbtn" onClick={prevTrack}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><polygon points="19 20 9 12 19 4 19 20" /><line x1="5" y1="19" x2="5" y2="5" /></svg></button>
-                    <button className="cplay" onClick={togglePlay}>
+                    <button className="cbtn" onClick={prevTrack} title="Anterior"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><polygon points="19 20 9 12 19 4 19 20" /><line x1="5" y1="19" x2="5" y2="5" /></svg></button>
+                    
+                    <button className="cstop" onClick={handleStop} title="Detener">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2" /></svg>
+                    </button>
+
+                    <button className="cplay" onClick={togglePlay} title={isPlaying ? "Pausar" : "Reproducir"}>
                         {isPlaying ? (
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>
                         ) : (
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3" /></svg>
                         )}
                     </button>
-                    <button className="cbtn" onClick={nextTrack}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><polygon points="5 4 15 12 5 20 5 4" /><line x1="19" y1="5" x2="19" y2="19" /></svg></button>
+                    
+                    <button className="cbtn" onClick={nextTrack} title="Siguiente"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><polygon points="5 4 15 12 5 20 5 4" /><line x1="19" y1="5" x2="19" y2="19" /></svg></button>
                 </div>
             </div>
 
@@ -213,10 +242,10 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
                 {tracks.map((t, i) => (
                     <div key={i} className={`si ${curIdx === i ? 'on' : ''}`} onClick={() => {
                         setCurIdx(i);
-                        setIsPlaying(true);
-                        if (audioRef.current) {
-                            audioRef.current.src = t.url;
-                            audioRef.current.play().catch(e => console.error(e));
+                        // The track source will change via useEffect, and if it was already playing, it will continue.
+                        // If it wasn't playing, we start it.
+                        if (!isPlaying) {
+                            setIsPlaying(true);
                         }
                     }}>
                         <div className="si-art">{t.icon}</div>
