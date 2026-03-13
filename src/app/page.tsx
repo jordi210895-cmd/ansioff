@@ -153,7 +153,12 @@ export default function App() {
   const renderScreen = () => {
     switch (curScreen) {
       case 'home':
-        return <HomeScreen onNav={handleNav} cbtCount={cbtCount} />;
+        return (
+          <>
+            <Header onSettings={() => handleNav('sc-settings')} />
+            <HomeScreen onNav={handleNav} cbtCount={cbtCount} />
+          </>
+        );
       case 'sounds':
       case 'sc-audio':
         return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} />;
@@ -191,7 +196,12 @@ export default function App() {
       case 'sc-exposure-why':
         return <ExposureScreen onBack={goBack} />;
       default:
-        return <HomeScreen onNav={handleNav} cbtCount={cbtCount} />;
+        return (
+          <>
+            <Header onSettings={() => handleNav('sc-settings')} />
+            <HomeScreen onNav={handleNav} cbtCount={cbtCount} />
+          </>
+        );
     }
   };
 
