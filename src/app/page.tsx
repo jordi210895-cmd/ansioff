@@ -202,7 +202,9 @@ export default function App() {
   return (
     <div className="app-container">
       <main className="screen-wrapper">
-        {renderScreen()}
+        <div key={curScreen} className="screen-fade">
+          {renderScreen()}
+        </div>
       </main>
 
       <button className="sos-fab" onClick={() => handleNav('crisis')}>
