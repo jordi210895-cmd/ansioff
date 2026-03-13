@@ -4,9 +4,9 @@
     ],
     "target": {
         "namespace": "android_app",
-        "package_name": "REPLACE_WITH_YOUR_PACKAGE_NAME",
+        "package_name": "app.vercel.app_ansiedad_flame.twa",
         "sha256_cert_fingerprints": [
-            "REPLACE_WITH_SHA256_FROM_PWABUILDER"
+            "E4:FE:B7:36:A2:E0:02:4F:65:93:CD:19:03:1E:83:82:40:42:9C:37:8E:7F:D7:98:CC:89:CD:04:FF:4E:3A:C6"
         ]
     }
 }
