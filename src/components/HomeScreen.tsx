@@ -9,7 +9,7 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
   return (
     <div id="home" className="screen active">
       <style jsx>{`
-                .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;padding-bottom:96px;}
+                .screen{position:relative;flex:1;display:none;flex-direction:column;overflow-y:auto;padding-bottom:96px;min-height:0;}
                 .screen::-webkit-scrollbar{display:none;}
                 .screen.active{display:flex;}
                 
@@ -122,7 +122,6 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
       <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div><div className="aurora-3"></div></div>
 
       <div className="home-pad">
-        <div className="home-chip"><div className="chip-dot"></div><span className="chip-txt">Tu espacio seguro</span></div>
       </div>
 
       <div className="bento">
