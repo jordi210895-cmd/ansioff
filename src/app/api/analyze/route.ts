@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         }
 
         // Limit the notes logic to the last 15 to keep context size manageable
-        const recentNotes = notes.slice(0, 15).map((n: any) => `- [${new Date(n.created_at).toLocaleDateString()}]: ${n.text}`).join('\n');
+        const recentNotes = notes.slice(0, 15).map((n: any) => `- [${new Date(n.created_at).toLocaleDateString()}]: ${n.content}`).join('\n');
 
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { BrainCircuit, Loader2 } from 'lucide-react';
 
 interface Note {
     id: string;
@@ -16,6 +17,11 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
     const [notes, setNotes] = useState<Note[]>([]);
     const [text, setText] = useState('');
     const [loading, setLoading] = useState(true);
+    
+    // AI State
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [aiResult, setAiResult] = useState<any>(null);
+    const [aiError, setAiError] = useState('');
 
     useEffect(() => {
         fetchNotes();
@@ -52,6 +58,33 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         const updated = notes.filter(n => n.id !== id);
         setNotes(updated);
         localStorage.setItem('ansioff_notes', JSON.stringify(updated));
+    };
+
+    const analyzeNotes = async () => {
+        if (notes.length === 0) return;
+        setIsAnalyzing(true);
+        setAiError('');
+        setAiResult(null);
+
+        try {
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ notes })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Error al analizar las notas.');
+            }
+
+            setAiResult(data);
+        } catch (err: any) {
+            setAiError(err.message || 'Error de conexión con la IA.');
+        } finally {
+            setIsAnalyzing(false);
+        }
     };
 
     return (
@@ -111,6 +144,32 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         .nt-ai-info:hover{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3);}
         .nt-ai-txt{font-size:12.5px;color:rgba(255,255,255,0.8);line-height:1.5;font-weight:500;}
         .nt-ai-txt b{color:#10b981;font-weight:700;}
+        
+        .ai-btn{
+            width:100%;margin-top:12px;
+            background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.05));
+            border:1px solid rgba(16,185,129,0.3);border-radius:14px;
+            padding:12px;color:var(--em);font-size:13px;font-weight:700;
+            display:flex;align-items:center;justify-content:center;gap:8px;
+            cursor:pointer;transition:var(--t);
+        }
+        .ai-btn:hover{background:rgba(16,185,129,0.2);border-color:rgba(16,185,129,0.5);}
+        .ai-btn:disabled{opacity:0.5;cursor:not-allowed;}
+        
+        .ai-card{
+            background:linear-gradient(180deg,rgba(16,185,129,0.08),rgba(3,8,15,0.5));
+            border:1px solid rgba(16,185,129,0.2);border-radius:20px;
+            padding:20px;margin-top:14px;
+            animation: fadeIn 0.4s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .ai-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+        .ai-section{margin-bottom:14px;}
+        .ai-section-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--em);margin-bottom:6px;}
+        .ai-tag{display:inline-block;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--text);margin-right:6px;margin-bottom:6px;}
+        .ai-p{font-size:13px;color:rgba(255,255,255,0.8);line-height:1.5;}
+        .ai-rec{background:rgba(255,255,255,0.04);border-left:3px solid var(--r);border-radius:8px;padding:12px;font-size:13px;font-weight:500;color:var(--text2);}
       `}</style>
 
             <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div></div>
@@ -126,8 +185,44 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
             </div>
 
             <div className="nt-ai-info">
-                <div style={{ fontSize: '18px' }}>💡</div>
-                <div className="nt-ai-txt">Una vez escritas tus notas, la <b>IA</b> puede ayudarte a identificar patrones en tu ansiedad.</div>
+                <div>
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                        <div style={{ fontSize: '18px' }}>💡</div>
+                        <div className="nt-ai-txt">La <b>IA Clínica</b> puede analizar tus notas recientes para identificar patrones ocultos y recomendar herramientas.</div>
+                    </div>
+                    {notes.length > 0 && (
+                        <button className="ai-btn" onClick={analyzeNotes} disabled={isAnalyzing}>
+                            {isAnalyzing ? <Loader2 size={16} className="animate-spin" /> : <BrainCircuit size={16} />}
+                            {isAnalyzing ? 'Analizando patrones...' : 'Analizar mis patrones con IA'}
+                        </button>
+                    )}
+                    {aiError && <div style={{ color: 'var(--r)', fontSize: '12px', marginTop: '8px', textAlign: 'center' }}>{aiError}</div>}
+                    
+                    {aiResult && (
+                        <div className="ai-card">
+                            <div className="ai-title"><BrainCircuit size={18} className="text-[#10b981]" /> Tu Análisis Clínico</div>
+                            
+                            <div className="ai-section">
+                                <div className="ai-section-title">Desencadenantes Detectados</div>
+                                <div>
+                                    {aiResult.triggers?.map((t: string, i: number) => (
+                                        <span key={i} className="ai-tag">{t}</span>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            <div className="ai-section">
+                                <div className="ai-section-title">Resumen Emocional</div>
+                                <div className="ai-p">{aiResult.emotion_summary}</div>
+                            </div>
+                            
+                            <div className="ai-section" style={{ marginBottom: 0 }}>
+                                <div className="ai-section-title">Sugerencia Inmediata</div>
+                                <div className="ai-rec">{aiResult.recommendation}</div>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
 
             <div className="nt-editor">
