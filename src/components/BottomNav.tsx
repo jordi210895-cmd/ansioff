@@ -56,7 +56,8 @@ export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
           border-top:1px solid var(--border);
           padding:12px 4px 28px;
           display:flex;justify-content:space-around;
-          position:relative;z-index:100;
+          position:fixed;bottom:0;left:0;right:0;
+          z-index:1000;
         }
         :global(.ni){
           display:flex;flex-direction:column;align-items:center;gap:5px;

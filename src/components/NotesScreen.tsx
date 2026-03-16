@@ -1,11 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 
 interface Note {
     id: string;
-    user_id: string;
     content: string;
     created_at: string;
 }
@@ -25,29 +23,35 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
 
     const fetchNotes = async () => {
         setLoading(true);
-        const { data, error } = await supabase
-            .from('notes')
-            .select('*')
-            .order('created_at', { ascending: false });
-        if (!error && data) setNotes(data);
+        try {
+            const saved = localStorage.getItem('ansioff_notes');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                setNotes(parsed);
+            }
+        } catch (e) {
+            console.error(e);
+        }
         setLoading(false);
     };
 
     const addNote = async () => {
         if (!text.trim()) return;
-        const { data, error } = await supabase
-            .from('notes')
-            .insert([{ content: text.trim() }])
-            .select();
-        if (!error && data) {
-            setNotes([data[0], ...notes]);
-            setText('');
-        }
+        const newNote: Note = {
+            id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
+            content: text.trim(),
+            created_at: new Date().toISOString()
+        };
+        const updated = [newNote, ...notes];
+        setNotes(updated);
+        localStorage.setItem('ansioff_notes', JSON.stringify(updated));
+        setText('');
     };
 
     const deleteNote = async (id: string) => {
-        const { error } = await supabase.from('notes').delete().eq('id', id);
-        if (!error) setNotes(notes.filter(n => n.id !== id));
+        const updated = notes.filter(n => n.id !== id);
+        setNotes(updated);
+        localStorage.setItem('ansioff_notes', JSON.stringify(updated));
     };
 
     return (

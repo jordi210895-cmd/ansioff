@@ -108,8 +108,9 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
             // 2. Clear LocalStorage stats
             Object.values(STATS_KEYS).forEach(key => localStorage.removeItem(key));
 
-            // 3. Clear any CBT forms draft in localstorage if they existed
+            // 3. Clear any CBT forms draft or diary notes in localstorage
             localStorage.removeItem('ansioff_cbt_draft');
+            localStorage.removeItem('ansioff_notes');
 
             // Artificial delay for better UX
             await new Promise(resolve => setTimeout(resolve, 1500));
