@@ -306,7 +306,9 @@ body {
   height: 100%;
   background: #040208;
   color: var(--text);
-  overflow-x: hidden;
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: var(--f);
