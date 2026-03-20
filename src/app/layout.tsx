@@ -13,7 +13,12 @@ export const metadata: Metadata = {
   title: "ANSIOFF - Tu calma en el bolsillo",
   description: "Guía inmediata y herramientas para crisis de pánico y ansiedad generalizada.",
   viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
-  themeColor: "#08060f",
+  themeColor: "#040208",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ANSIOFF",
+  },
   icons: {
     icon: "/logo.png",
     shortcut: "/logo.png",

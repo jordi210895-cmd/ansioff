@@ -168,8 +168,8 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         .ai-section{margin-bottom:14px;}
         .ai-section-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--em);margin-bottom:6px;}
         .ai-tag{display:inline-block;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--text);margin-right:6px;margin-bottom:6px;}
-        .ai-p{font-size:13px;color:rgba(255,255,255,0.8);line-height:1.5;}
-        .ai-rec{background:rgba(255,255,255,0.04);border-left:3px solid var(--r);border-radius:8px;padding:12px;font-size:13px;font-weight:500;color:var(--text2);}
+        .ai-p{font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;white-space:pre-wrap;}
+        .ai-rec{background:rgba(255,255,255,0.04);border-left:3px solid var(--r);border-radius:8px;padding:12px;font-size:13px;font-weight:500;color:var(--text2);line-height:1.6;white-space:pre-wrap;}
       `}</style>
 
             <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div></div>
