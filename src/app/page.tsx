@@ -243,7 +243,7 @@ export default function App() {
       case 'sc-night':
         return <NightModeScreen onBack={goBack} onNav={handleNav} />;
       case 'sc-settings':
-        return <SettingsScreen onBack={goBack} />;
+        return <SettingsScreen onBack={goBack} profile={profile} />;
       case 'sc-exposure-why':
         return <ExposureScreen onBack={goBack} />;
       default:
