@@ -124,6 +124,15 @@ export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
       <div className="home-pad">
       </div>
 
+      <div className="sos-pill" onClick={() => onNav('sc-sos')}>
+        <div className="sos-icon">SOS</div>
+        <div className="sos-text">
+          <div className="t">Necesito ayuda ahora</div>
+          <div className="s">Asistencia de crisis inmediata</div>
+        </div>
+        <div className="sos-pill-arr">›</div>
+      </div>
+
       <div className="bento">
         <div className="card card-breath" onClick={() => onNav('breath')}>
           <div className="morb"><div className="morb-r"></div><div className="morb-r r2"></div><div className="morb-c"></div></div>

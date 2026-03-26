@@ -25,41 +25,46 @@ export default function PrivacyPolicy() {
                         <h2 className="text-2xl font-semibold text-white mb-4">2. Recopilación de su información</h2>
                         <p>Podemos recopilar información sobre usted de varias maneras. La información que podemos recopilar en la Aplicación incluye:</p>
                         <ul className="list-disc pl-5 mt-4 space-y-2">
-                            <li><strong>Datos Personales:</strong> Información de identificación personal, como su dirección de correo electrónico, que nos proporciona voluntariamente al registrarse en la Aplicación.</li>
-                            <li><strong>Datos Generados por el Usuario:</strong> Entradas de diario, registros de pensamientos (CBT) y configuraciones personales que decide guardar dentro de la Aplicación. Estos datos se asocian a su cuenta para proporcionar una experiencia personalizada.</li>
-                            <li><strong>Datos Derivados:</strong> Información que nuestros servidores recopilan automáticamente cuando accede a la Aplicación, como su dirección IP, tipo de navegador, sistema operativo y los tiempos de acceso.</li>
+                            <li><strong>Datos Personales:</strong> Información de identificación personal, como su dirección de correo electrónico, que nos proporciona voluntariamente al registrarse en la Aplicación a través de <strong>Supabase Auth</strong>.</li>
+                            <li><strong>Identificadores de Dispositivo:</strong> Si permite las notificaciones, recopilamos un identificador de dispositivo único (push token) a través de <strong>OneSignal</strong> para enviarle recordatorios y consejos de bienestar.</li>
+                            <li><strong>Datos Generados por el Usuario:</strong> Entradas de diario, registros de pensamientos (CBT) y configuraciones personales. Estos datos se almacenan de forma segura en <strong>Supabase</strong> (cuando inicia sesión) o localmente en su dispositivo (IndexedDB/LocalStorage).</li>
+                            <li><strong>Datos Derivados:</strong> Información que nuestros servidores recopilan automáticamente cuando accede a la Aplicación, como su dirección IP y tiempos de acceso.</li>
                         </ul>
                     </section>
 
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-4">3. Uso de su información</h2>
-                        <p>Tener información precisa sobre usted nos permite brindarle una experiencia fluida, eficiente y personalizada. Específicamente, podemos utilizar la información recopilada a través de la Aplicación para:</p>
+                        <p>Tener información precisa sobre usted nos permite brindarle una experiencia fluida, eficiente y personalizada. Específicamente, utilizamos la información para:</p>
                         <ul className="list-disc pl-5 mt-4 space-y-2">
-                            <li>Crear y administrar su cuenta.</li>
-                            <li>Sincronizar sus datos (como entradas de diario) entre dispositivos.</li>
-                            <li>Mejorar la eficiencia y el funcionamiento de la Aplicación.</li>
-                            <li>Supervisar y analizar el uso y las tendencias para mejorar su experiencia.</li>
+                            <li>Crear y administrar su cuenta y sincronizar sus datos entre dispositivos.</li>
+                            <li>Enviarle notificaciones push con ejercicios de respiración y recordatorios de calma (solo si se activan).</li>
+                            <li>Personalizar su experiencia basada en su progreso y uso de herramientas.</li>
+                            <li>Supervisar el rendimiento técnico de la Aplicación.</li>
                         </ul>
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-semibold text-white mb-4">4. Seguridad de los datos</h2>
-                        <p>Utilizamos medidas de seguridad administrativas, técnicas y físicas, incluida la infraestructura de Supabase, para ayudar a proteger su información personal. Si bien hemos tomado medidas razonables para asegurar la información personal que nos proporciona, tenga en cuenta que, a pesar de nuestros esfuerzos, ninguna medida de seguridad es perfecta o impenetrable, y ningún método de transmisión de datos puede garantizarse contra cualquier intercepción u otro tipo de uso indebido.</p>
+                        <h2 className="text-2xl font-semibold text-white mb-4">4. Proveedores de Servicios Terceros</h2>
+                        <p>Para el funcionamiento de la aplicación, utilizamos los siguientes proveedores de confianza:</p>
+                        <ul className="list-disc pl-5 mt-4 space-y-2">
+                            <li><strong>Supabase:</strong> Para la gestión de usuarios y base de datos segura.</li>
+                            <li><strong>OneSignal:</strong> Para el envío de notificaciones push.</li>
+                        </ul>
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-semibold text-white mb-4">5. Compartir su información</h2>
-                        <p>No vendemos, comercializamos ni alquilamos información de identificación personal de los Usuarios a terceros. Podemos compartir información demográfica agregada genérica no vinculada a ninguna información de identificación personal sobre visitantes y usuarios con nuestros socios comerciales y anunciantes de confianza.</p>
+                        <h2 className="text-2xl font-semibold text-white mb-4">5. Seguridad y Retención</h2>
+                        <p>Utilizamos medidas de seguridad técnicas para proteger su información. Sus datos se conservan mientras su cuenta esté activa o sea necesario para proporcionarle los servicios de la Aplicación. Puede solicitar la eliminación de todos sus datos en cualquier momento desde la sección de Ajustes de la Aplicación.</p>
                     </section>
 
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-4">6. Derechos del usuario</h2>
-                        <p>Dependiendo de su jurisdicción, puede tener ciertos derechos con respecto a su información personal, incluido el derecho a acceder, corregir o eliminar los datos que hemos recopilado de usted. Para ejercer estos derechos, puede ponerse en contacto con nosotros.</p>
+                        <p>Usted tiene derecho a acceder, rectificar o eliminar sus datos personales. Puede eliminar su cuenta y todos los datos asociados directamente desde el botón "Borrar todos mis datos" en el menú de Ajustes. Para cualquier otra consulta, puede contactarnos.</p>
                     </section>
 
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-4">7. Contacto</h2>
-                        <p>Si tiene preguntas o comentarios sobre esta Política de Privacidad, por favor contáctenos a través de los canales de soporte de la Aplicación.</p>
+                        <p>Si tiene preguntas sobre esta Política de Privacidad o desea ejercer sus derechos, por favor contáctenos en: <span className="text-blue-500 underline">soporte@ansioff.com</span></p>
                     </section>
                 </div>
             </div>

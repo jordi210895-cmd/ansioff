@@ -289,6 +289,20 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
                         </div>
                         <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)] group-hover:text-[#5aadcf] transition-colors" />
                     </button>
+
+                    {/* Privacy Policy Link */}
+                    <button
+                        onClick={() => window.location.href = '/privacy'}
+                        className="w-full bg-[rgba(255,255,255,0.02)] p-4 rounded-xl flex items-center gap-4 border border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.04)] transition-all duration-200 group mt-4"
+                    >
+                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                            <Shield size={16} className="stroke-[1.5]" />
+                        </div>
+                        <div className="flex-1 text-left">
+                            <h3 className="font-sans font-medium text-xs text-slate-300 group-hover:text-blue-400 transition-colors">Política de Privacidad</h3>
+                        </div>
+                        <ChevronRight size={16} className="text-slate-600 group-hover:text-blue-400 transition-colors" />
+                    </button>
                 </div>
 
                 {/* --- CONFIGURACIÓN COGNITIVA (NEUROUX) --- */}

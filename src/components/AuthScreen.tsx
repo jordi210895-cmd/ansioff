@@ -2,144 +2,187 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, Loader2, Wind } from 'lucide-react';
 
 interface AuthScreenProps {
     onAuth: () => void;
 }
 
 export default function AuthScreen({ onAuth }: AuthScreenProps) {
-    const [mode, setMode] = useState<'login' | 'register'>('login');
+    const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showPw, setShowPw] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
-    const handleSubmit = async () => {
-        if (!email.trim() || !password.trim()) {
-            setError('Por favor, rellena todos los campos.');
-            return;
-        }
+    const handleAuth = async (e: React.FormEvent) => {
+        e.preventDefault();
         setLoading(true);
-        setError('');
-        setSuccess('');
+        setError(null);
 
-        if (mode === 'register') {
-            const { error: err } = await supabase.auth.signUp({ email, password });
-            if (err) {
-                setError(err.message);
+        try {
+            if (isLogin) {
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
             } else {
-                setSuccess('¡Cuenta creada! Revisa tu email para confirmar y luego inicia sesión.');
-                setMode('login');
+                const { error } = await supabase.auth.signUp({ email, password });
+                if (error) throw error;
+                alert('¡Registro casi completo! Revisa tu email para confirmar tu cuenta.');
+                setIsLogin(true);
+                setLoading(false);
+                return;
             }
-        } else {
-            const { error: err } = await supabase.auth.signInWithPassword({ email, password });
-            if (err) {
-                setError('Email o contraseña incorrectos.');
-            } else {
-                onAuth();
-            }
+            onAuth();
+        } catch (err: any) {
+            setError(err.message || 'Ocurrió un error inesperado');
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (
-        <div className="fixed inset-0 bg-slate-950 flex flex-col items-center justify-center px-8 overflow-hidden">
-            {/* Background breathe circle */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-96 h-96 rounded-full bg-blue-500/5 animate-breathe" />
-            </div>
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#03080f] text-[#ddeef5] selection:bg-[#5aadcf]/30">
+            <style jsx>{`
+                .auth-card {
+                    width: 100%;
+                    max-width: 400px;
+                    background: rgba(255, 255, 255, 0.03);
+                    backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 24px;
+                    padding: 40px 32px;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+                }
+                .input-group {
+                    position: relative;
+                    margin-bottom: 20px;
+                }
+                .input-group input {
+                    width: 100%;
+                    background: rgba(0, 0, 0, 0.2);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 12px;
+                    padding: 14px 14px 14px 44px;
+                    font-size: 15px;
+                    color: white;
+                    outline: none;
+                    transition: all 0.2s;
+                }
+                .input-group input:focus {
+                    border-color: #5aadcf;
+                    background: rgba(0, 0, 0, 0.4);
+                    box-shadow: 0 0 0 4px rgba(90, 173, 207, 0.1);
+                }
+                .input-group svg {
+                    position: absolute;
+                    left: 14px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: rgba(255, 255, 255, 0.4);
+                    transition: all 0.2s;
+                }
+                .input-group input:focus + svg {
+                    color: #5aadcf;
+                }
+                .btn-primary {
+                    width: 100%;
+                    background: linear-gradient(135deg, #5aadcf, #3b82f6);
+                    color: #03080f;
+                    font-weight: 700;
+                    padding: 14px;
+                    border-radius: 12px;
+                    border: none;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    transition: all 0.2s;
+                    font-size: 16px;
+                }
+                .btn-primary:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 10px 20px -5px rgba(90, 173, 207, 0.4);
+                }
+                .btn-primary:active {
+                    transform: translateY(0);
+                }
+                .btn-primary:disabled {
+                    opacity: 0.7;
+                    cursor: not-allowed;
+                    transform: none;
+                }
+            `}</style>
 
-            {/* Logo */}
-            <div className="flex-none flex flex-col items-center mb-10 relative z-10">
-                <img
-                    src="/logo.png"
-                    alt="ANSIOFF Logo"
-                    className="h-20 w-auto object-contain mb-3 drop-shadow-[0_0_20px_rgba(59,130,246,0.3)]"
-                />
-                <p className="text-[10px] text-blue-400/80 font-bold tracking-[0.3em] uppercase">Tu espacio seguro</p>
-            </div>
-
-            {/* Card */}
-            <div className="relative z-10 w-full max-w-sm bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 shadow-2xl">
-                {/* Tabs */}
-                <div className="flex bg-slate-800/60 rounded-2xl p-1 mb-8 gap-1">
-                    {(['login', 'register'] as const).map((m) => (
-                        <button
-                            key={m}
-                            onClick={() => { setMode(m); setError(''); setSuccess(''); }}
-                            className={`flex-1 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${mode === m
-                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                                : 'text-slate-500 hover:text-slate-300'
-                                }`}
-                        >
-                            {m === 'login' ? 'Iniciar sesión' : 'Registrarse'}
-                        </button>
-                    ))}
+            <div className="mb-12 text-center animate-in fade-in slide-in-from-top-4 duration-700">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#5aadcf] to-[#3b82f6] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500">
+                    <Wind size={40} className="text-[#03080f]" />
                 </div>
+                <h1 className="text-4xl font-extrabold tracking-tight mb-2">Ansioff</h1>
+                <p className="text-[rgba(200,225,235,0.6)] font-medium">Tu espacio de calma personal</p>
+            </div>
 
-                {/* Fields */}
-                <div className="space-y-4 mb-6">
-                    <div>
-                        <label className="block text-[10px] text-blue-400 uppercase tracking-widest font-bold mb-2">Email</label>
+            <div className="auth-card animate-in fade-in zoom-in-95 duration-500 delay-200">
+                <h2 className="text-2xl font-bold mb-8 text-center">
+                    {isLogin ? 'Bienvenido de nuevo' : 'Crea tu cuenta'}
+                </h2>
+
+                <form onSubmit={handleAuth}>
+                    <div className="input-group">
                         <input
                             type="email"
+                            placeholder="Email"
                             value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-                            placeholder="tu@email.com"
-                            className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500 transition-colors placeholder-slate-600"
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
                         />
+                        <Mail size={18} />
                     </div>
-                    <div>
-                        <label className="block text-[10px] text-blue-400 uppercase tracking-widest font-bold mb-2">Contraseña</label>
-                        <div className="relative">
-                            <input
-                                type={showPw ? 'text' : 'password'}
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-                                placeholder="••••••••"
-                                className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 pr-12 text-sm outline-none focus:border-blue-500 transition-colors placeholder-slate-600"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPw(!showPw)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
-                            >
-                                {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
-                            </button>
+
+                    <div className="input-group">
+                        <input
+                            type="password"
+                            placeholder="Contraseña"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <Lock size={18} />
+                    </div>
+
+                    {error && (
+                        <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-lg mb-6 text-red-400 text-sm">
+                            {error}
                         </div>
-                    </div>
+                    )}
+
+                    <button type="submit" className="btn-primary" disabled={loading}>
+                        {loading ? (
+                            <Loader2 className="animate-spin" size={20} />
+                        ) : (
+                            <>
+                                {isLogin ? <LogIn size={20} /> : <UserPlus size={20} />}
+                                {isLogin ? 'Iniciar Sesión' : 'Registrarse'}
+                            </>
+                        )}
+                    </button>
+                </form>
+
+                <div className="mt-8 text-center text-sm">
+                    <span className="text-[rgba(200,225,235,0.5)]">
+                        {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}
+                    </span>
+                    <button
+                        onClick={() => setIsLogin(!isLogin)}
+                        className="ml-2 text-[#5aadcf] font-bold hover:underline transition-all"
+                    >
+                        {isLogin ? 'Regístrate' : 'Inicia sesión'}
+                    </button>
                 </div>
-
-                {/* Error / Success */}
-                {error && (
-                    <div className="mb-4 p-3 bg-red-900/30 border border-red-500/30 rounded-xl text-red-300 text-xs text-center">
-                        {error}
-                    </div>
-                )}
-                {success && (
-                    <div className="mb-4 p-3 bg-green-900/30 border border-green-500/30 rounded-xl text-green-300 text-xs text-center">
-                        {success}
-                    </div>
-                )}
-
-                {/* Submit */}
-                <button
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white py-4 rounded-2xl font-bold text-sm transition-all active:scale-98 shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2"
-                >
-                    {loading && <Loader2 size={16} className="animate-spin" />}
-                    {mode === 'login' ? 'Entrar' : 'Crear cuenta'}
-                </button>
             </div>
 
-            <p className="relative z-10 mt-6 text-slate-600 text-[10px] text-center">
-                Tus datos son privados y seguros
+            <p className="mt-12 text-[rgba(200,225,235,0.3)] text-xs text-center font-medium max-w-[280px]">
+                Tus datos de salud mental están protegidos y encriptados.
             </p>
         </div>
     );

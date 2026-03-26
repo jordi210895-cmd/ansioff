@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getEmergencyContacts, EmergencyContact } from '@/utils/contacts';
+import { Phone, Anchor } from 'lucide-react';
 
 interface SOSScreenProps {
     onBack: () => void;
@@ -18,7 +20,13 @@ const groundingSteps = [
 ];
 
 export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
+    const [mode, setMode] = useState<'grounding' | 'call'>('grounding');
     const [step, setStep] = useState(0);
+    const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+
+    useEffect(() => {
+        setContacts(getEmergencyContacts());
+    }, []);
     const [inputs, setInputs] = useState<Record<string, string[]>>({
         see: ['', '', '', '', ''],
         touch: ['', '', '', ''],
@@ -113,66 +121,125 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
 
             <div className="sos-top">
                 <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
-                <div className="sos-badge">Guía de Anclaje</div>
+                <div className="flex bg-[rgba(255,255,255,0.05)] p-1.5 rounded-2xl border border-white/10 shadow-inner">
+                    <button 
+                        onClick={() => setMode('grounding')}
+                        className={`flex-1 px-8 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-[0.15em] transition-all duration-300 ${mode === 'grounding' ? 'bg-[#f43f5e] text-white shadow-xl shadow-red-500/30 scale-[1.02]' : 'text-white/30 hover:text-white/50'}`}
+                    >
+                        Anclaje
+                    </button>
+                    <button 
+                        onClick={() => setMode('call')}
+                        className={`flex-1 px-8 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-[0.15em] transition-all duration-300 ${mode === 'call' ? 'bg-[#f43f5e] text-white shadow-xl shadow-red-500/30 scale-[1.02]' : 'text-white/30 hover:text-white/50'}`}
+                    >
+                        Llamada
+                    </button>
+                </div>
                 <div style={{ width: 36 }}></div>
             </div>
 
-            <div className="sos-main">
-                <div className="sos-hero">{currentStep.i}</div>
-                <div className="sos-h1">Mantén la calma,<br />esto pasará</div>
-                <div className="sos-p">Sigue la técnica 5-4-3-2-1 para anclarte al presente.</div>
+            {mode === 'grounding' ? (
+                <div className="sos-main">
+                    <div className="sos-hero">{currentStep.i}</div>
+                    <div className="sos-h1">Mantén la calma,<br />esto pasará</div>
+                    <div className="sos-p">Sigue la técnica 5-4-3-2-1 para anclarte al presente.</div>
 
-                <div className="sos-card">
-                    <div className="sc-top">
-                        <div className="sc-num">{step + 1}</div>
-                        <div>
-                            <div className="sc-t">{currentStep.t}</div>
-                            <div className="sc-d">{currentStep.d}</div>
+                    <div className="sos-card">
+                        <div className="sc-top">
+                            <div className="sc-num">{step + 1}</div>
+                            <div>
+                                <div className="sc-t">{currentStep.t}</div>
+                                <div className="sc-d">{currentStep.d}</div>
+                            </div>
                         </div>
+
+                        {currentStep.count > 0 && (
+                            <div className="grounding-list">
+                                {(inputs[currentStep.id] || []).map((val, idx) => (
+                                    <input
+                                        key={idx}
+                                        className="g-input"
+                                        placeholder={`${idx + 1}º elemento...`}
+                                        value={val}
+                                        onChange={(e) => handleInputChange(currentStep.id, idx, e.target.value)}
+                                        autoFocus={idx === 0}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {currentStep.id === 'write' && (
+                            <textarea
+                                className="sos-write"
+                                placeholder="Escribe aquí lo que tienes en mente..."
+                                value={writing}
+                                onChange={(e) => setWriting(e.target.value)}
+                                autoFocus
+                            />
+                        )}
                     </div>
 
-                    {currentStep.count > 0 && (
-                        <div className="grounding-list">
-                            {(inputs[currentStep.id] || []).map((val, idx) => (
-                                <input
-                                    key={idx}
-                                    className="g-input"
-                                    placeholder={`${idx + 1}º elemento...`}
-                                    value={val}
-                                    onChange={(e) => handleInputChange(currentStep.id, idx, e.target.value)}
-                                    autoFocus={idx === 0}
-                                />
-                            ))}
+                    <div className="sos-nav">
+                        <button className="sbtn-sec" onClick={step === 0 ? onBack : () => setStep(step - 1)}>
+                            {step === 0 ? 'Cerrar' : 'Anterior'}
+                        </button>
+                        <button
+                            className="sbtn-pri"
+                            disabled={!isStepComplete()}
+                            onClick={() => {
+                                if (step < groundingSteps.length - 1) setStep(step + 1);
+                                else if (onFinished) onFinished();
+                            }}
+                        >
+                            {step < groundingSteps.length - 1 ? 'Siguiente paso' : 'Estoy mejor'}
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <div className="sos-main" style={{ justifyContent: 'flex-start', paddingTop: '20px' }}>
+                    <div className="sos-h1" style={{ marginBottom: '24px' }}>Contactos de Ayuda</div>
+                    <div className="flex flex-col gap-4 w-full">
+                        {contacts.length > 0 ? (
+                            contacts.map(c => (
+                                <a key={c.id} href={`tel:${c.phone}`} className="sos-card" style={{ textDecoration: 'none' }}>
+                                    <div className="sc-top">
+                                        <div className="sc-num" style={{ background: 'linear-gradient(135deg, #f43f5e, #fb7185)' }}>
+                                            <Phone size={18} />
+                                        </div>
+                                        <div style={{ flex: 1 }}>
+                                            <div className="sc-t">{c.name}</div>
+                                            <div className="sc-d">{c.role}</div>
+                                        </div>
+                                        <div className="text-[#f43f5e] font-bold text-xs uppercase tracking-widest">Llamar</div>
+                                    </div>
+                                </a>
+                            ))
+                        ) : (
+                            <div className="sos-card" style={{ textAlign: 'center', opacity: 0.7 }}>
+                                <p className="sc-d">No tienes contactos de emergencia guardados.</p>
+                                <button 
+                                    className="sbtn-sec" 
+                                    style={{ marginTop: '12px' }}
+                                    onClick={() => onBack()} // Navigate back to settings
+                                >
+                                    Configurar en Ajustes
+                                </button>
+                            </div>
+                        )}
+
+                        <div className="sos-card" style={{ marginTop: '20px', background: 'rgba(244,63,94,0.05)', borderColor: 'rgba(244,63,94,0.2)' }}>
+                            <div className="sc-top">
+                                <div className="sc-num" style={{ background: '#f43f5e' }}>!</div>
+                                <div>
+                                    <div className="sc-t">Servicios de Emergencia</div>
+                                    <div className="sc-d">Llamada directa al 112 (España)</div>
+                                </div>
+                                <a href="tel:112" className="sbtn-pri" style={{ padding: '8px 16px', boxShadow: 'none' }}>112</a>
+                            </div>
                         </div>
-                    )}
-
-                    {currentStep.id === 'write' && (
-                        <textarea
-                            className="sos-write"
-                            placeholder="Escribe aquí lo que tienes en mente..."
-                            value={writing}
-                            onChange={(e) => setWriting(e.target.value)}
-                            autoFocus
-                        />
-                    )}
+                    </div>
                 </div>
-
-                <div className="sos-nav">
-                    <button className="sbtn-sec" onClick={step === 0 ? onBack : () => setStep(step - 1)}>
-                        {step === 0 ? 'Cerrar' : 'Anterior'}
-                    </button>
-                    <button
-                        className="sbtn-pri"
-                        disabled={!isStepComplete()}
-                        onClick={() => {
-                            if (step < groundingSteps.length - 1) setStep(step + 1);
-                            else if (onFinished) onFinished();
-                        }}
-                    >
-                        {step < groundingSteps.length - 1 ? 'Siguiente paso' : 'Estoy mejor'}
-                    </button>
-                </div>
-            </div>
+            )}
         </div>
     );
 }

@@ -18,9 +18,11 @@ import SupportScreen from '@/components/SupportScreen';
 import NightModeScreen from '@/components/NightModeScreen';
 import SettingsScreen from '@/components/SettingsScreen';
 import * as db from '@/lib/db';
-import { supabase } from '@/lib/supabase';
+import { supabase, calculateTrialRemaining, getUserProfile } from '@/lib/supabase';
 import ExposureScreen from '@/components/ExposureScreen';
 import DisclaimerModal from '@/components/DisclaimerModal';
+import AuthScreen from '@/components/AuthScreen';
+import SubscriptionRequiredScreen from '@/components/SubscriptionRequiredScreen';
 
 interface Track {
   id?: number;
@@ -33,6 +35,11 @@ interface Track {
 const ICONS = ['🌊', '🌧️', '🌿', '🎵', '🔔', '🌬️', '🌙', '☀️', '🎶', '🦋'];
 
 export default function App() {
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<any>(null);
+  const [trialStatus, setTrialStatus] = useState({ days: 3, hours: 0, expired: false });
+
   const [curScreen, setCurScreen] = useState('home');
   const [prevScreen, setPrevScreen] = useState('home');
   const [cbtCount, setCbtCount] = useState(0);
@@ -42,8 +49,37 @@ export default function App() {
     { name: 'Respiración Guiada', url: '/audio/audio3.m4a', icon: '🍃', duration: '—' }
   ]);
 
+  // Auth & Trial Logic
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) fetchProfile(session.user.id, session.user.created_at);
+      else setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (session) fetchProfile(session.user.id, session.user.created_at);
+      else {
+        setProfile(null);
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchProfile = async (uid: string, createdAt: string) => {
+    const prof = await getUserProfile(uid);
+    setProfile(prof);
+    setTrialStatus(calculateTrialRemaining(createdAt));
+    setLoading(false);
+  };
+
   // Load persistence
   useEffect(() => {
+    if (!session) return;
+
     // 2. Audio Tracks from IndexedDB
     const loadTracks = async () => {
       try {
@@ -93,8 +129,8 @@ export default function App() {
       const timer = setTimeout(() => {
         if (typeof window !== 'undefined' && (window as any).OneSignal) {
           const OneSignal = (window as any).OneSignal;
-          if (OneSignal.Slidedown) {
-            OneSignal.Slidedown.promptPush();
+          if (OneSignal.Notifications) {
+            OneSignal.Notifications.requestPermission();
             localStorage.setItem('ansioff_notif_prompted', 'true');
           }
         }
@@ -114,7 +150,7 @@ export default function App() {
       });
     }
 
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [session]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleNav = (id: string) => {
     if (id === curScreen) return;
@@ -220,12 +256,29 @@ export default function App() {
     }
   };
 
-  // Authentication is disabled per user request
-  // if (!authChecked) return null; // Wait silently while checking session
-  // if (!isLoggedIn) return <AuthScreen onAuth={() => setIsLoggedIn(true)} />;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen bg-[#03080f]">
+        <div className="w-8 h-8 border-4 border-[#5aadcf]/30 border-t-[#5aadcf] rounded-full animate-spin"></div>
+    </div>
+  );
+
+  if (!session) return <AuthScreen onAuth={() => {}} />;
+
+  const isPremium = profile?.is_premium;
+  const trialExpired = trialStatus.expired;
+
+  if (trialExpired && !isPremium) {
+    return <SubscriptionRequiredScreen onSubscribe={() => alert('Próximamente: Integración con Stripe')} />;
+  }
 
   return (
     <div className="app-container">
+      {!isPremium && !trialExpired && (
+          <div className="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 text-blue-400 text-[10px] font-bold py-1.5 text-center border-b border-blue-500/10 backdrop-blur-md">
+              TIEMPO DE PRUEBA: <span className="text-white">{trialStatus.days} días, {trialStatus.hours} horas restantes</span>
+          </div>
+      )}
+
       <main className="screen-wrapper">
         <div key={curScreen} className="screen-fade">
           {renderScreen()}
