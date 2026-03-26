@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { LogIn, UserPlus, Mail, Lock, Loader2, Wind } from 'lucide-react';
 
@@ -9,30 +9,49 @@ interface AuthScreenProps {
 }
 
 export default function AuthScreen({ onAuth }: AuthScreenProps) {
-    const [isLogin, setIsLogin] = useState(true);
+    const [mode, setMode] = useState<'login' | 'signup' | 'forgot' | 'reset'>('login');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [message, setMessage] = useState<string | null>(null);
+
+    // Detect recovery link
+    useEffect(() => {
+        const hash = window.location.hash;
+        if (hash && hash.includes('type=recovery')) {
+            setMode('reset');
+        }
+    }, []);
 
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
+        setMessage(null);
 
         try {
-            if (isLogin) {
+            if (mode === 'login') {
                 const { error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
-            } else {
+                onAuth();
+            } else if (mode === 'signup') {
                 const { error } = await supabase.auth.signUp({ email, password });
                 if (error) throw error;
-                alert('¡Registro casi completo! Revisa tu email para confirmar tu cuenta.');
-                setIsLogin(true);
-                setLoading(false);
-                return;
+                setMessage('¡Registro casi completo! Revisa tu email para confirmar tu cuenta.');
+                setMode('login');
+            } else if (mode === 'forgot') {
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin,
+                });
+                if (error) throw error;
+                setMessage('¡Email enviado! Revisa tu bandeja de entrada para restablecer tu contraseña.');
+            } else if (mode === 'reset') {
+                const { error } = await supabase.auth.updateUser({ password });
+                if (error) throw error;
+                setMessage('¡Contraseña actualizada! Ya puedes iniciar sesión.');
+                setMode('login');
             }
-            onAuth();
         } catch (err: any) {
             setError(err.message || 'Ocurrió un error inesperado');
         } finally {
@@ -81,9 +100,6 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                     color: rgba(255, 255, 255, 0.4);
                     transition: all 0.2s;
                 }
-                .input-group input:focus + svg {
-                    color: #5aadcf;
-                }
                 .btn-primary {
                     width: 100%;
                     background: linear-gradient(135deg, #5aadcf, #3b82f6);
@@ -104,13 +120,9 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                     transform: translateY(-2px);
                     box-shadow: 0 10px 20px -5px rgba(90, 173, 207, 0.4);
                 }
-                .btn-primary:active {
-                    transform: translateY(0);
-                }
                 .btn-primary:disabled {
                     opacity: 0.7;
                     cursor: not-allowed;
-                    transform: none;
                 }
             `}</style>
 
@@ -124,35 +136,45 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
 
             <div className="auth-card animate-in fade-in zoom-in-95 duration-500 delay-200">
                 <h2 className="text-2xl font-bold mb-8 text-center">
-                    {isLogin ? 'Bienvenido de nuevo' : 'Crea tu cuenta'}
+                    {mode === 'login' ? 'Bienvenido de nuevo' : mode === 'signup' ? 'Crea tu cuenta' : mode === 'forgot' ? 'Recuperar acceso' : 'Nueva contraseña'}
                 </h2>
 
                 <form onSubmit={handleAuth}>
-                    <div className="input-group">
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                        <Mail size={18} />
-                    </div>
+                    {mode !== 'reset' && (
+                        <div className="input-group">
+                            <input
+                                type="email"
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                            <Mail size={18} />
+                        </div>
+                    )}
 
-                    <div className="input-group">
-                        <input
-                            type="password"
-                            placeholder="Contraseña"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                        <Lock size={18} />
-                    </div>
+                    {mode !== 'forgot' && (
+                        <div className="input-group">
+                            <input
+                                type="password"
+                                placeholder={mode === 'reset' ? 'Nueva Contraseña' : 'Contraseña'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                            <Lock size={18} />
+                        </div>
+                    )}
 
                     {error && (
                         <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-lg mb-6 text-red-400 text-sm">
                             {error}
+                        </div>
+                    )}
+
+                    {message && (
+                        <div className="bg-[#5aadcf]/10 border border-[#5aadcf]/20 p-3 rounded-lg mb-6 text-[#5aadcf] text-sm font-medium">
+                            {message}
                         </div>
                     )}
 
@@ -161,23 +183,45 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                             <Loader2 className="animate-spin" size={20} />
                         ) : (
                             <>
-                                {isLogin ? <LogIn size={20} /> : <UserPlus size={20} />}
-                                {isLogin ? 'Iniciar Sesión' : 'Registrarse'}
+                                {mode === 'login' ? <LogIn size={20} /> : mode === 'signup' ? <UserPlus size={20} /> : <Mail size={20} />}
+                                {mode === 'login' ? 'Iniciar Sesión' : mode === 'signup' ? 'Registrarse' : mode === 'forgot' ? 'Enviar enlace' : 'Actualizar contraseña'}
                             </>
                         )}
                     </button>
                 </form>
 
-                <div className="mt-8 text-center text-sm">
-                    <span className="text-[rgba(200,225,235,0.5)]">
-                        {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}
-                    </span>
-                    <button
-                        onClick={() => setIsLogin(!isLogin)}
-                        className="ml-2 text-[#5aadcf] font-bold hover:underline transition-all"
-                    >
-                        {isLogin ? 'Regístrate' : 'Inicia sesión'}
-                    </button>
+                <div className="mt-8 text-center text-sm space-y-3">
+                    {mode === 'login' && (
+                        <button
+                            onClick={() => setMode('forgot')}
+                            className="block w-full text-[rgba(200,225,235,0.4)] hover:text-[#5aadcf] transition-all"
+                        >
+                            ¿Olvidaste tu contraseña?
+                        </button>
+                    )}
+
+                    {mode !== 'reset' && (
+                        <div className="pt-2">
+                            <span className="text-[rgba(200,225,235,0.5)]">
+                                {mode === 'login' ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}
+                            </span>
+                            <button
+                                onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
+                                className="ml-2 text-[#5aadcf] font-bold hover:underline transition-all"
+                            >
+                                {mode === 'login' ? 'Regístrate' : 'Inicia sesión'}
+                            </button>
+                        </div>
+                    )}
+
+                    {mode === 'forgot' && (
+                        <button
+                            onClick={() => setMode('login')}
+                            className="block w-full text-[#5aadcf] font-bold hover:underline transition-all"
+                        >
+                            Volver al login
+                        </button>
+                    )}
                 </div>
             </div>
 
