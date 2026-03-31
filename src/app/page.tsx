@@ -33,6 +33,7 @@ interface Track {
 }
 
 const ICONS = ['🌊', '🌧️', '🌿', '🎵', '🔔', '🌬️', '🌙', '☀️', '🎶', '🦋'];
+const ADMIN_EMAILS = ['jordi210895@gmail.com'];
 
 export default function App() {
   const [session, setSession] = useState<any>(null);
@@ -263,8 +264,8 @@ export default function App() {
   );
 
   if (!session) return <AuthScreen onAuth={() => {}} />;
-
-  const isPremium = profile?.is_premium;
+ 
+  const isPremium = profile?.is_premium || ADMIN_EMAILS.includes(session.user.email);
   const trialExpired = trialStatus.expired;
 
   if (trialExpired && !isPremium) {

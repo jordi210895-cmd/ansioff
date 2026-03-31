@@ -15,6 +15,15 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
+    const [isStandalone, setIsStandalone] = useState(true);
+
+    useEffect(() => {
+        const checkStandalone = () => {
+            const isS = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+            setIsStandalone(!!isS);
+        };
+        checkStandalone();
+    }, []);
 
     // Detect recovery link
     useEffect(() => {
@@ -124,9 +133,46 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                     opacity: 0.7;
                     cursor: not-allowed;
                 }
+                .install-banner {
+                    width: 100%;
+                    max-width: 400px;
+                    background: rgba(90, 173, 207, 0.1);
+                    border: 1px dashed rgba(90, 173, 207, 0.3);
+                    border-radius: 20px;
+                    padding: 16px;
+                    margin-bottom: 24px;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .install-step {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 24px;
+                    height: 24px;
+                    background: #5aadcf;
+                    color: #03080f;
+                    border-radius: 50%;
+                    font-size: 12px;
+                    font-weight: 800;
+                    flex-shrink: 0;
+                }
             `}</style>
 
             <div className="mb-12 text-center animate-in fade-in slide-in-from-top-4 duration-700">
+                {!isStandalone && (
+                    <div className="install-banner animate-in fade-in zoom-in-95 duration-500 delay-500 mx-auto">
+                        <div className="install-step">!</div>
+                        <div className="text-left">
+                            <p className="text-sm font-bold text-[#5aadcf]">Instala Ansioff para mejor experiencia</p>
+                            <p className="text-[11px] text-[rgba(200,225,235,0.6)] leading-tight mt-0.5">
+                                Pulsa compartir <span className="inline-block px-1 bg-white/10 rounded">⎋</span> y luego <b>'Añadir a pantalla de inicio'</b>.
+                            </p>
+                        </div>
+                    </div>
+                )}
+                
                 <div className="w-20 h-20 bg-gradient-to-br from-[#5aadcf] to-[#3b82f6] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500">
                     <Wind size={40} className="text-[#03080f]" />
                 </div>
