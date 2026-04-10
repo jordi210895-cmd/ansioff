@@ -18,6 +18,15 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "ANSIOFF",
+    startupImage: [
+      {
+        url: "/logo.png",
+        media: "(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)",
+      },
+    ],
+  },
+  formatDetection: {
+    telephone: false,
   },
   icons: {
     icon: "/logo.png",

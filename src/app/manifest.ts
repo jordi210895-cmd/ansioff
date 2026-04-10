@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+export const dynamic = 'force-static';
+
 export default function manifest(): MetadataRoute.Manifest {
     return {
         name: "ANSIOFF - Tu calma en el bolsillo",
@@ -7,14 +9,22 @@ export default function manifest(): MetadataRoute.Manifest {
         description: "Guía inmediata y herramientas para crisis de pánico y ansiedad generalizada.",
         start_url: "/",
         display: "standalone",
-        background_color: "#040208", // matching body bg
+        background_color: "#040208",
         theme_color: "#040208",
+        orientation: "portrait",
+        scope: "/",
         icons: [
             {
                 src: "/logo.png",
                 sizes: "512x512",
                 type: "image/png",
                 purpose: "any",
+            },
+            {
+                src: "/logo.png",
+                sizes: "512x512",
+                type: "image/png",
+                purpose: "maskable",
             },
             {
                 src: "/icon-192.png",

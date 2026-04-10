@@ -23,6 +23,7 @@ import ExposureScreen from '@/components/ExposureScreen';
 import DisclaimerModal from '@/components/DisclaimerModal';
 import AuthScreen from '@/components/AuthScreen';
 import SubscriptionRequiredScreen from '@/components/SubscriptionRequiredScreen';
+import InstallPWA from '@/components/InstallPWA';
 
 interface Track {
   id?: number;
@@ -293,6 +294,7 @@ export default function App() {
 
       <BottomNav activeScreen={curScreen} onNav={handleNav} />
       <DisclaimerModal />
+      <InstallPWA />
     </div>
   );
 }
