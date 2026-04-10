@@ -22,6 +22,14 @@ jobs:
         run: npm install
 
       - name: Build Web App
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://sthyhbxdwsnbewxmiyla.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || 'sk_live_placeholder' }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET || 'whsec_placeholder' }}
+          STRIPE_PRICE_ID: ${{ secrets.STRIPE_PRICE_ID || 'price_1TFF4PLwRc1rwaq7enc3lw54' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'placeholder' }}
+          CI: false
         run: npm run build
 
       - name: Install Cocoapods
@@ -35,7 +43,7 @@ jobs:
           echo "${{ secrets.P12_BASE64 }}" | base64 --decode > certificate.p12
           security create-keychain -p "" build.keychain
           security import certificate.p12 -k build.keychain -P "${{ secrets.P12_PASSWORD }}" -T /usr/bin/codesign
-          security list-keychains -d user -s build.keychain
+          security list-keychains -d user -s build.keychain login.keychain
           security set-keychain-settings -lut 21600 build.keychain
           security unlock-keychain -p "" build.keychain
 
@@ -69,3 +77,4 @@ jobs:
             --file ios/App/output/App.ipa \
             --apiKey "$API_KEY_ID" \
             --apiIssuer "$API_ISSUER_ID"
+
