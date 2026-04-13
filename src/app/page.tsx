@@ -24,6 +24,7 @@ import DisclaimerModal from '@/components/DisclaimerModal';
 import AuthScreen from '@/components/AuthScreen';
 import SubscriptionRequiredScreen from '@/components/SubscriptionRequiredScreen';
 import InstallPWA from '@/components/InstallPWA';
+import { initIAP } from '@/utils/iap';
 
 interface Track {
   id?: number;
@@ -152,6 +153,10 @@ export default function App() {
       });
     }
 
+    if (session) {
+      fetchProfile(session.user.id, session.user.created_at);
+      initIAP(session.user.id);
+    }
   }, [session]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleNav = (id: string) => {

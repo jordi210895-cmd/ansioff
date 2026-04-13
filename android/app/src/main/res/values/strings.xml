@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ANSIOFF</string>
+    <string name="title_activity_main">ANSIOFF</string>
+    <string name="package_name">com.ansioff.app</string>
+    <string name="custom_url_scheme">com.ansioff.app</string>
+</resources>

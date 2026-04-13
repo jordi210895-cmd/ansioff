@@ -1,8 +1,9 @@
 'use client';
 
 import { supabase, getCurrentUser } from '@/lib/supabase';
-import { ShieldCheck, Zap, Clock, CreditCard, Wind, ChevronRight, CheckCircle2, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { ShieldCheck, Zap, Clock, CreditCard, Wind, ChevronRight, CheckCircle2, Loader2, RefreshCcw } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { getSubscriptionOfferings, purchaseSubscription, restorePurchases } from '@/utils/iap';
 
 interface SubscriptionRequiredScreenProps {
     onSubscribe: () => void;
@@ -10,9 +11,38 @@ interface SubscriptionRequiredScreenProps {
 
 export default function SubscriptionRequiredScreen({ onSubscribe }: SubscriptionRequiredScreenProps) {
     const [loading, setLoading] = useState(false);
+    const [isNative, setIsNative] = useState(false);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setIsNative((window as any).Capacitor?.isNative || false);
+        }
+    }, []);
+
     const handleLogout = async () => {
         await supabase.auth.signOut();
         window.location.reload();
+    };
+
+    const handleRestore = async () => {
+        setLoading(true);
+        try {
+            const result = await restorePurchases();
+            if (result.success) {
+                const user = await getCurrentUser();
+                if (user) {
+                    await supabase.from('profiles').update({ is_premium: true }).eq('id', user.id);
+                    alert("Suscripción restaurada con éxito.");
+                    window.location.reload();
+                }
+            } else {
+                alert("No se encontró ninguna suscripción activa para restaurar.");
+            }
+        } catch (e: any) {
+            alert("Error al restaurar: " + e.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSubscribe = async () => {
@@ -21,6 +51,28 @@ export default function SubscriptionRequiredScreen({ onSubscribe }: Subscription
             const user = await getCurrentUser();
             if (!user) return;
 
+            // IF NATIVE (iOS/Android), use RevenueCat
+            if (isNative) {
+                const offerings = await getSubscriptionOfferings();
+                if (offerings.length === 0) {
+                    alert('No hay ofertas disponibles. Asegúrate de que los productos están configurados en App Store Connect.');
+                    return;
+                }
+
+                const pkg = offerings.find(p => p.packageType === 'MONTHLY') || offerings[0];
+                const result = await purchaseSubscription(pkg);
+                
+                if (result.success) {
+                    await supabase.from('profiles').update({ is_premium: true }).eq('id', user.id);
+                    window.location.reload();
+                    return;
+                } else if (!result.userCancelled) {
+                    alert('Error en la compra: ' + result.error);
+                }
+                return;
+            }
+
+            // IF WEB, use Stripe
             const res = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -124,7 +176,8 @@ export default function SubscriptionRequiredScreen({ onSubscribe }: Subscription
                 <div className="flex justify-between items-center mb-8">
                     <div className="price-badge">Plan Ilimitado</div>
                     <div className="flex items-baseline gap-1">
-                        <span className="text-3xl font-black text-white">Próximamente</span>
+                        <span className="text-3xl font-black text-white">3,99€</span>
+                        <span className="text-sm text-[rgba(200,225,235,0.4)]">/mes</span>
                     </div>
                 </div>
 
@@ -167,6 +220,16 @@ export default function SubscriptionRequiredScreen({ onSubscribe }: Subscription
                     {loading ? <Loader2 className="animate-spin" /> : 'Comenzar suscripción'} <ChevronRight size={20} />
                 </button>
 
+                {isNative && (
+                    <button 
+                        onClick={handleRestore} 
+                        className="w-full mt-4 py-2 text-[10px] text-center text-[rgba(200,225,235,0.3)] hover:text-[#5aadcf] flex items-center justify-center gap-1 transition-colors"
+                        disabled={loading}
+                    >
+                        <RefreshCcw size={10} /> Restaurar compras anteriores
+                    </button>
+                )}
+
                 <p className="text-[10px] text-center mt-6 text-[rgba(200,225,235,0.3)] font-medium leading-relaxed italic">
                     "Invierte en tu bienestar. Ansioff está diseñado para ser tu acompañante en los momentos más difíciles."
                 </p>
@@ -175,6 +238,7 @@ export default function SubscriptionRequiredScreen({ onSubscribe }: Subscription
             <button
                 onClick={handleLogout}
                 className="mt-12 text-[rgba(200,225,235,0.4)] text-sm font-semibold hover:text-[#5aadcf] transition-colors"
+                disabled={loading}
             >
                 Cerrar Sesión
             </button>
