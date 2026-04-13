@@ -18,13 +18,11 @@ import SupportScreen from '@/components/SupportScreen';
 import NightModeScreen from '@/components/NightModeScreen';
 import SettingsScreen from '@/components/SettingsScreen';
 import * as db from '@/lib/db';
-import { supabase, calculateTrialRemaining, getUserProfile } from '@/lib/supabase';
+import { supabase, getUserProfile } from '@/lib/supabase';
 import ExposureScreen from '@/components/ExposureScreen';
 import DisclaimerModal from '@/components/DisclaimerModal';
 import AuthScreen from '@/components/AuthScreen';
-import SubscriptionRequiredScreen from '@/components/SubscriptionRequiredScreen';
 import InstallPWA from '@/components/InstallPWA';
-import { initIAP } from '@/utils/iap';
 
 interface Track {
   id?: number;
@@ -35,13 +33,11 @@ interface Track {
 }
 
 const ICONS = ['🌊', '🌧️', '🌿', '🎵', '🔔', '🌬️', '🌙', '☀️', '🎶', '🦋'];
-const ADMIN_EMAILS = ['jordi210895@gmail.com'];
 
 export default function App() {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
-  const [trialStatus, setTrialStatus] = useState({ days: 3, hours: 0, expired: false });
 
   const [curScreen, setCurScreen] = useState('home');
   const [prevScreen, setPrevScreen] = useState('home');
@@ -56,13 +52,13 @@ export default function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      if (session) fetchProfile(session.user.id, session.user.created_at);
+      if (session) fetchProfile(session.user.id);
       else setLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (session) fetchProfile(session.user.id, session.user.created_at);
+      if (session) fetchProfile(session.user.id);
       else {
         setProfile(null);
         setLoading(false);
@@ -72,10 +68,9 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchProfile = async (uid: string, createdAt: string) => {
+  const fetchProfile = async (uid: string) => {
     const prof = await getUserProfile(uid);
     setProfile(prof);
-    setTrialStatus(calculateTrialRemaining(createdAt));
     setLoading(false);
   };
 
@@ -154,8 +149,7 @@ export default function App() {
     }
 
     if (session) {
-      fetchProfile(session.user.id, session.user.created_at);
-      initIAP(session.user.id);
+      fetchProfile(session.user.id);
     }
   }, [session]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -269,22 +263,8 @@ export default function App() {
     </div>
   );
 
-  if (!session) return <AuthScreen onAuth={() => {}} />;
- 
-  const isPremium = profile?.is_premium || ADMIN_EMAILS.includes(session.user.email);
-  const trialExpired = trialStatus.expired;
-
-  if (trialExpired && !isPremium) {
-    return <SubscriptionRequiredScreen onSubscribe={() => alert('Próximamente: Integración con Stripe')} />;
-  }
-
   return (
     <div className="app-container">
-      {!isPremium && !trialExpired && (
-          <div className="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 text-blue-400 text-[10px] font-bold py-1.5 text-center border-b border-blue-500/10 backdrop-blur-md">
-              TIEMPO DE PRUEBA: <span className="text-white">{trialStatus.days} días, {trialStatus.hours} horas restantes</span>
-          </div>
-      )}
 
       <main className="screen-wrapper">
         <div key={curScreen} className="screen-fade">

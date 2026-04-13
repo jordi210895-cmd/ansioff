@@ -10,8 +10,6 @@ export async function getCurrentUser() {
     return user
 }
 
-export type SubscriptionStatus = 'none' | 'trialing' | 'active' | 'expired';
-
 export async function getUserProfile(userId: string) {
     const { data, error } = await supabase
         .from('profiles')
@@ -26,18 +24,13 @@ export async function getUserProfile(userId: string) {
     return data;
 }
 
-export function calculateTrialRemaining(createdAt: string): { days: number, hours: number, expired: boolean } {
-    const start = new Date(createdAt);
-    const end = new Date(start.getTime() + (3 * 24 * 60 * 60 * 1000)); // 3 days
-    const now = new Date();
-    
-    const diff = end.getTime() - now.getTime();
-    const expired = diff <= 0;
-    
-    if (expired) return { days: 0, hours: 0, expired: true };
-    
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    
-    return { days, hours, expired: false };
+export async function logUsageStat(companyId: string, moduleId: string) {
+    const { error } = await supabase
+        .from('usage_stats')
+        .insert({
+            company_id: companyId,
+            module_id: moduleId,
+            timestamp: new Date().toISOString()
+        });
+    if (error) console.error("Error logging usage stat:", error);
 }

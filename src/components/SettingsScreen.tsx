@@ -17,30 +17,7 @@ interface SettingsScreenProps {
 export default function SettingsScreen({ onBack, profile }: SettingsScreenProps) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [portalLoading, setPortalLoading] = useState(false);
     const [pushEnabled, setPushEnabled] = useState(false);
-
-    const handleManageSubscription = async () => {
-        if (!profile?.stripe_customer_id) {
-            alert("No se encontró una suscripción activa vinculada a tu cuenta.");
-            return;
-        }
-        setPortalLoading(true);
-        try {
-            const res = await fetch('/api/portal', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ customerId: profile.stripe_customer_id }),
-            });
-            const { url, error } = await res.json();
-            if (error) throw new Error(error);
-            if (url) window.location.href = url;
-        } catch (err: any) {
-            alert("Error al abrir el portal: " + err.message);
-        } finally {
-            setPortalLoading(false);
-        }
-    };
 
     // NeuroUX settings
     const [neuroSettings, setNeuroSettings] = useState<NeuroUXSettings>({ reduceAnimations: false, breathingSpeed: 'normal' });
@@ -314,23 +291,6 @@ export default function SettingsScreen({ onBack, profile }: SettingsScreenProps)
                         <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)] group-hover:text-[#5aadcf] transition-colors" />
                     </button>
 
-                    {/* Manage Subscription (Stripe Portal) */}
-                    {(profile?.is_premium || profile?.stripe_customer_id) && (
-                        <button
-                            onClick={handleManageSubscription}
-                            disabled={portalLoading}
-                            className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center gap-4 border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.06)] hover:border-indigo-400/30 transition-all duration-200 hover:-translate-y-0.5 group shadow-sm mt-3"
-                        >
-                            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 transition-colors group-hover:bg-indigo-500 group-hover:text-[#03080f]">
-                                {portalLoading ? <Loader2 className="animate-spin" size={20} /> : <CreditCard size={20} className="stroke-[1.5]" />}
-                            </div>
-                            <div className="flex-1 text-left">
-                                <h3 className="font-sans font-medium text-sm text-[#ddeef5] group-hover:text-indigo-400 mb-1 transition-colors">Gestionar Suscripción</h3>
-                                <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.5)]">Cambia tu método de pago o cancela el plan</p>
-                            </div>
-                            <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)] group-hover:text-indigo-400 transition-colors" />
-                        </button>
-                    )}
 
                     {/* Privacy Policy Link */}
                     <button
