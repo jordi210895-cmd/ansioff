@@ -5,9 +5,9 @@ export async function POST(req: Request) {
     try {
         const apiKey = process.env.GEMINI_API_KEY;
 
-        if (!apiKey || apiKey === 'placeholder_key') {
+        if (!apiKey || apiKey === 'placeholder_key' || apiKey.includes('tu_clave')) {
             return NextResponse.json(
-                { error: 'Falta configurar la API Key de Gemini en las variables de entorno.' },
+                { error: 'Falta configurar una API Key de Gemini válida en Vercel o .env.local' },
                 { status: 500 }
             );
         }
@@ -56,10 +56,10 @@ DEBES responder ÚNICA y EXCLUSIVAMENTE con un objeto JSON válido que cumpla ex
 
         return NextResponse.json(jsonResponse);
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error in analyze API:', error);
         return NextResponse.json(
-            { error: 'Error al contactar con el motor de Inteligencia Artificial.' },
+            { error: error.message || 'Error al contactar con el motor de Inteligencia Artificial.' },
             { status: 500 }
         );
     }
