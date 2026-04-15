@@ -73,11 +73,21 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                 body: JSON.stringify({ notes })
             });
 
-            const data = await response.json();
-
+            const contentType = response.headers.get('content-type');
+            
             if (!response.ok) {
-                throw new Error(data.error || 'Error al analizar las notas.');
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Error al analizar las notas.');
+                }
+                throw new Error(`Error del servidor (${response.status}). Posible error de configuración en el despliegue.`);
             }
+
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Respuesta del servidor no válida (no es JSON). Verifica que las API Routes estén funcionando.');
+            }
+
+            const data = await response.json();
 
             setAiResult(data);
         } catch (err: any) {
