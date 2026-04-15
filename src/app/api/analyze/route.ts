@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         const recentNotes = notes.slice(0, 15).map((n: any) => `- [${new Date(n.created_at).toLocaleDateString()}]: ${n.content}`).join('\n');
 
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
         const prompt = `
 Eres un psicólogo clínico experto y empático, especializado en Terapia Cognitivo-Conductual (TCC) y Terapia de Aceptación y Compromiso (ACT). Tu especialidad es ayudar a personas con ansiedad y depresión a identificar patrones de pensamiento y comportamiento.
