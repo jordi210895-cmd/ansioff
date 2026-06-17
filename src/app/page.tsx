@@ -208,7 +208,7 @@ export default function App() {
         return (
           <>
             <Header onSettings={() => handleNav('sc-settings')} />
-            <HomeScreen onNav={handleNav} cbtCount={cbtCount} />
+            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} />
           </>
         );
       case 'sounds':
@@ -251,7 +251,7 @@ export default function App() {
         return (
           <>
             <Header onSettings={() => handleNav('sc-settings')} />
-            <HomeScreen onNav={handleNav} cbtCount={cbtCount} />
+            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} />
           </>
         );
     }

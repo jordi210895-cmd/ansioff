@@ -1,171 +1,106 @@
 'use client';
 
+import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, AlertCircle, Sparkles } from 'lucide-react';
+
 interface HomeScreenProps {
-  onNav: (screen: string) => void;
-  cbtCount?: number;
+    onNav: (screen: string) => void;
+    noteCount?: number;
+    trackCount?: number;
+    cbtCount?: number;
+    userName?: string;
 }
 
-export default function HomeScreen({ onNav, cbtCount = 0 }: HomeScreenProps) {
-  return (
-    <div id="home" className="screen active">
-      <style jsx>{`
-                .screen{position:relative;flex:1;display:none;flex-direction:column;overflow-y:auto;padding-bottom:96px;min-height:0;}
-                .screen::-webkit-scrollbar{display:none;}
-                .screen.active{display:flex;}
-                
-                #home .aurora-1{background:radial-gradient(circle,rgba(6,182,212,0.4),transparent 70%);top:-100px;left:-80px;}
-                #home .aurora-2{background:radial-gradient(circle,rgba(34,211,238,0.3),transparent 70%);top:200px;right:-120px;}
-                #home .aurora-3{background:radial-gradient(circle,rgba(103,232,249,0.2),transparent 70%);bottom:80px;left:20px;}
+export default function HomeScreen({ onNav, noteCount = 0, trackCount = 0, cbtCount = 0, userName = "Amigo" }: HomeScreenProps) {
+    return (
+        <div className="min-h-full bg-slate-950 text-white overflow-y-auto scrollbar-hide">
+            {/* Header with time */}
+            <div className="px-6 pt-8 pb-6">
+                <div className="max-w-xl mx-auto flex items-center justify-between">
+                    <div className="text-sm text-blue-400">12:58</div>
+                    <Sparkles className="w-5 h-5 text-blue-500" strokeWidth={2} />
+                </div>
+            </div>
 
-                .home-pad{padding:20px 22px 0;position:relative;z-index:5;}
+            {/* Main Content */}
+            <main className="px-6 pb-12 max-w-xl mx-auto">
 
-                .home-chip{
-                  display:inline-flex;align-items:center;gap:7px;
-                  background:rgba(6,182,212,0.1);
-                  border:1px solid rgba(6,182,212,0.25);
-                  border-radius:var(--radp);padding:6px 14px;margin-bottom:16px;
-                }
-                .chip-dot{width:6px;height:6px;border-radius:50%;background:var(--c2);box-shadow:0 0 8px var(--c2);animation:dotP 2s ease-in-out infinite;}
-                @keyframes dotP{0%,100%{opacity:.6;}50%{opacity:1;}}
-                .chip-txt{font-size:10px;font-weight:700;color:var(--c3);letter-spacing:.12em;text-transform:uppercase;}
+                {/* Brand */}
+                <div className="text-center mb-12">
+                    <h1 className="text-5xl mb-3 tracking-tight" style={{ fontFamily: 'Georgia, serif', fontWeight: 400 }}>
+                        <span className="text-white">Hola, </span><span className="text-blue-500">{userName}</span>
+                    </h1>
+                    <p className="text-base text-blue-400">Tu espacio seguro</p>
+                </div>
 
-                .home-greet{
-                  font-size:48px;font-weight:800;line-height:.96;color:var(--text);
-                  letter-spacing:-.03em;margin-bottom:8px;
-                }
-                .home-greet .hi{color:transparent;background:linear-gradient(90deg,var(--c2),var(--c3));-webkit-background-clip:text;background-clip:text;}
-                .home-sub{font-size:13px;color:var(--text2);font-weight:500;margin-bottom:22px;}
+                {/* Emergency Button - Large & Bold */}
+                <div className="mb-12">
+                    <button
+                        onClick={() => onNav('sc-sos')}
+                        className="w-full bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white rounded-3xl p-10 transition-all duration-300 shadow-2xl shadow-blue-500/50 hover:shadow-blue-400/60 hover:scale-[1.02]"
+                    >
+                        <div className="flex items-center justify-center gap-5">
+                            <AlertCircle className="w-9 h-9" strokeWidth={2.5} />
+                            <div className="text-left">
+                                <div className="text-2xl font-medium mb-1">Necesito ayuda ahora</div>
+                                <div className="text-base text-blue-50">Guía de crisis inmediata</div>
+                            </div>
+                        </div>
+                    </button>
+                </div>
 
-                /* SOS pill */
-                .sos-pill{
-                  margin:0 22px 18px;
-                  background:linear-gradient(135deg,rgba(244,63,94,0.14),rgba(244,63,94,0.06));
-                  border:1px solid rgba(244,63,94,0.28);border-radius:var(--rad);
-                  padding:16px 18px;display:flex;align-items:center;gap:14px;
-                  cursor:pointer;position:relative;overflow:hidden;transition:var(--t);
-                }
-                .sos-pill::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--r);border-radius:3px 0 0 3px;}
-                .sos-pill:hover{border-color:rgba(244,63,94,0.5);background:linear-gradient(135deg,rgba(244,63,94,0.2),rgba(244,63,94,0.1));}
-                .sos-icon{
-                  width:42px;height:42px;border-radius:13px;background:var(--r);
-                  flex-shrink:0;display:flex;align-items:center;justify-content:center;
-                  font-size:11px;font-weight:800;color:#fff;letter-spacing:.04em;
-                  animation:spulse 2.5s ease-in-out infinite;
-                }
-                @keyframes spulse{0%,100%{box-shadow:0 0 0 0 rgba(244,63,94,0.5);}50%{box-shadow:0 0 0 8px rgba(244,63,94,0);}}
-                .sos-text .t{font-size:14px;font-weight:700;color:#ff9eae;}
-                .sos-text .s{font-size:11px;color:rgba(255,158,174,0.5);margin-top:1px;}
-                .sos-pill-arr{color:rgba(255,158,174,.35);font-size:20px;margin-left:auto;}
+                {/* Main Feature Card - Bigger */}
+                <div className="mb-10">
+                    <button
+                        onClick={() => onNav('sc-breath')}
+                        className="w-full bg-gradient-to-br from-blue-900 to-blue-950 border-2 border-blue-500 hover:border-blue-400 rounded-3xl p-10 transition-all duration-300 text-left hover:scale-[1.02] shadow-xl shadow-blue-900/50"
+                    >
+                        <div className="flex items-start gap-6">
+                            <div className="w-20 h-20 bg-blue-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/50">
+                                <Wind className="w-10 h-10 text-white" strokeWidth={2.5} />
+                            </div>
+                            <div className="flex-1">
+                                <h2 className="text-2xl text-white mb-3 font-medium" style={{ fontFamily: 'Georgia, serif' }}>
+                                    Respiración guiada
+                                </h2>
+                                <p className="text-base text-blue-300">
+                                    5 minutos • Patrón 4-2-6
+                                </p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
 
-                /* Bento cards */
-                .bento{padding:0 22px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+                {/* Tools Section */}
+                <div className="space-y-4">
+                    <h3 className="text-sm uppercase tracking-widest text-blue-400 mb-6 px-2 font-semibold">
+                        Herramientas disponibles
+                    </h3>
 
-                .card{
-                  background:var(--glass);
-                  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-                  border:1px solid var(--border);border-radius:var(--rad);
-                  padding:16px;cursor:pointer;position:relative;overflow:hidden;
-                  transition:var(--t);
-                }
-                .card:hover{border-color:var(--border2);transform:translateY(-2px);}
-                .card::before{content:'';position:absolute;inset:0;border-radius:var(--rad);background:linear-gradient(135deg,rgba(255,255,255,0.04),transparent);pointer-events:none;}
-
-                .card-breath{
-                  grid-column:span 2;display:flex;align-items:center;gap:16px;
-                  background:linear-gradient(135deg,rgba(6,182,212,0.12),rgba(124,58,237,0.08));
-                  border-color:rgba(6,182,212,0.2);
-                }
-                .card-breath:hover{border-color:rgba(6,182,212,0.4);}
-
-                .morb{position:relative;width:52px;height:52px;flex-shrink:0;}
-                .morb-r{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(6,182,212,.2);animation:moR 4s ease-in-out infinite;}
-                .morb-r.r2{inset:-8px;animation-delay:1.4s;border-color:rgba(6,182,212,.1);}
-                @keyframes moR{0%,100%{transform:scale(1);opacity:.4;}50%{transform:scale(1.1);opacity:.8;}}
-                .morb-c{position:absolute;inset:9px;border-radius:50%;background:radial-gradient(circle at 36% 30%,rgba(200,240,255,.9),rgba(6,182,212,.7) 50%,rgba(20,80,160,.8));animation:moC 4s ease-in-out infinite;box-shadow:0 0 16px rgba(6,182,212,.4);}
-                @keyframes moC{0%,100%{transform:scale(.86);}50%{transform:scale(1.12);}}
-
-                .bnums{display:flex;gap:4px;margin-bottom:4px;}
-                .bnum{width:21px;height:21px;border-radius:6px;background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.25);font-size:10px;font-weight:800;color:var(--c2);display:flex;align-items:center;justify-content:center;}
-                .btitle{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
-                .bmeta{font-size:10px;color:var(--text2);}
-                .bstart{
-                  margin-left:auto;flex-shrink:0;
-                  background:linear-gradient(135deg,var(--c),var(--p));
-                  color:#fff;font-size:11px;font-weight:800;letter-spacing:.04em;
-                  padding:9px 15px;border-radius:var(--radp);border:none;cursor:pointer;
-                  transition:var(--t);box-shadow:0 4px 16px rgba(6,182,212,.3);
-                }
-
-                .card-tool{display:flex;flex-direction:column;gap:0;min-height:100px;justify-content:space-between;}
-                .ct-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:auto;}
-                .ct-ico{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;}
-                .ct-arrow{width:24px;height:24px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;color:var(--text3);}
-                .ct-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
-                .ct-desc{font-size:10px;color:var(--text2);line-height:1.4;}
-
-                .tc-sounds .ct-ico{background:rgba(124,58,237,.12);border-color:rgba(124,58,237,.25);}
-                .tc-diary .ct-ico{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.22);}
-                .tc-games .ct-ico{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.22);}
-                .tc-progress .ct-ico{background:rgba(244,63,94,.1);border-color:rgba(244,63,94,.22);}
-
-                .home-quote{
-                  margin:0 22px;
-                  padding:16px 18px;
-                  background:var(--glass);backdrop-filter:blur(16px);
-                  border:1px solid var(--border);border-radius:var(--rad);
-                  border-left:3px solid var(--c);
-                }
-                .hq-text{font-size:14px;font-style:italic;font-weight:500;color:rgba(241,240,245,.7);line-height:1.7;margin-bottom:8px;}
-                .hq-by{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
-            `}</style>
-
-      <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div><div className="aurora-3"></div></div>
-
-      <div className="home-pad">
-      </div>
-
-      <div className="sos-pill" onClick={() => onNav('sc-sos')}>
-        <div className="sos-icon">SOS</div>
-        <div className="sos-text">
-          <div className="t">Necesito ayuda ahora</div>
-          <div className="s">Asistencia de crisis inmediata</div>
+                    {[
+                        { icon: Volume2, label: 'Audios', detail: trackCount > 0 ? `${trackCount} pistas disponibles` : 'De tu psicólogo y recordatorios', color: 'from-cyan-500 to-blue-500', screen: 'sc-audio' },
+                        { icon: BookOpen, label: 'Diario personal', detail: noteCount > 0 ? `${noteCount} entradas` : 'Sin entradas', color: 'from-blue-500 to-indigo-500', screen: 'sc-notes' },
+                        { icon: Gamepad2, label: 'Ejercicios', detail: 'Distracción cognitiva', color: 'from-indigo-500 to-purple-500', screen: 'sc-games' },
+                        { icon: GraduationCap, label: 'Aprender más', detail: 'Psicoeducación', color: 'from-purple-500 to-blue-500', screen: 'sc-tools' }
+                    ].map((item, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => onNav(item.screen)}
+                            className="w-full bg-gradient-to-br from-slate-900 to-slate-950 border-2 border-slate-800 hover:border-blue-500/50 rounded-2xl p-6 transition-all duration-300 text-left group hover:scale-[1.02] shadow-lg shadow-slate-900/50"
+                        >
+                            <div className="flex items-center gap-5">
+                                <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
+                                    <item.icon className="w-7 h-7 text-white" strokeWidth={2.5} />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="text-lg text-white font-medium mb-1">{item.label}</div>
+                                    <div className="text-sm text-blue-400">{item.detail}</div>
+                                </div>
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            </main>
         </div>
-        <div className="sos-pill-arr">›</div>
-      </div>
-
-      <div className="bento">
-        <div className="card card-breath" onClick={() => onNav('breath')}>
-          <div className="morb"><div className="morb-r"></div><div className="morb-r r2"></div><div className="morb-c"></div></div>
-          <div style={{ flex: 1 }}><div className="bnums"><div className="bnum">4</div><div className="bnum">2</div><div className="bnum">6</div></div><div className="btitle">Alivio del estrés profundo</div><div className="bmeta">⏱ 5 min · Principiante</div></div>
-          <button className="bstart">▶ Start</button>
-        </div>
-
-        <div className="card card-tool tc-sounds" onClick={() => onNav('sounds')}>
-          <div className="ct-top"><div className="ct-ico" style={{ background: 'rgba(6,182,212,0.1)', borderColor: 'rgba(6,182,212,0.2)' }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--c2)" strokeWidth="1.7" strokeLinecap="round"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
-          <div><div className="ct-name">Audios</div><div className="ct-desc">Sonidos y meditaciones</div></div>
-        </div>
-        <div className="card card-tool tc-diary" onClick={() => onNav('notes')}>
-          <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--em)" strokeWidth="1.7" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
-          <div><div className="ct-name">Diario</div><div className="ct-desc">Reflexión consciente</div></div>
-        </div>
-        <div className="card card-tool tc-modules" style={{ background: 'linear-gradient(135deg,rgba(34,211,238,0.1),rgba(6,182,212,0.06))', borderColor: 'rgba(34,211,238,0.2)' }} onClick={() => onNav('sc-tools')}>
-          <div className="ct-top"><div className="ct-ico" style={{ background: 'rgba(34,211,238,0.12)', borderColor: 'rgba(34,211,238,0.25)' }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--c2)" strokeWidth="1.7" strokeLinecap="round"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
-          <div><div className="ct-name">Módulos</div><div className="ct-desc">Todas las herramientas</div></div>
-        </div>
-        <div className="card card-tool tc-games" onClick={() => onNav('sc-games')}>
-          <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--am)" strokeWidth="1.7" strokeLinecap="round"><polygon points="5 3 19 12 5 21 5 3" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
-          <div><div className="ct-name">Juegos</div><div className="ct-desc">Distracción cognitiva</div></div>
-        </div>
-        <div className="card card-tool tc-progress" onClick={() => onNav('progress')}>
-          <div className="ct-top"><div className="ct-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--r2)" strokeWidth="1.7" strokeLinecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg></div><div className="ct-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M7 7h10v10" /></svg></div></div>
-          <div><div className="ct-name">Progreso</div><div className="ct-desc">Tu evolución</div></div>
-        </div>
-      </div>
-
-      <div className="home-quote">
-        <div className="hq-text">Tus sentimientos son válidos, pero no son tu destino. Respira y confía en el proceso.</div>
-        <div className="hq-by">ANSIOFF · Reflexión de hoy</div>
-      </div>
-    </div>
-  );
+    );
 }
+
