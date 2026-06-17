@@ -207,7 +207,6 @@ export default function App() {
       case 'home':
         return (
           <>
-            <Header onSettings={() => handleNav('sc-settings')} />
             <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} />
           </>
         );
@@ -250,7 +249,6 @@ export default function App() {
       default:
         return (
           <>
-            <Header onSettings={() => handleNav('sc-settings')} />
             <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} />
           </>
         );
