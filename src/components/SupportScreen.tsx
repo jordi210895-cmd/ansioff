@@ -37,35 +37,35 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
                     <div className="flex flex-col gap-6 mt-2 animate-in fade-in slide-in-from-left-4 duration-300">
                         <section>
                             <div className="font-sans font-bold text-[10px] text-[#5aadcf] uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
-                                <Leaf size={14} /> Fitoterapia y Natural
+                                <Leaf size={14} /> Uso de ANSIOFF
                             </div>
                             <div className="space-y-3">
                                 <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-5 rounded-2xl hover:-translate-y-0.5 transition-transform shadow-sm">
-                                    <h4 className="font-serif italic text-lg text-[#ddeef5] mb-2 font-light">Valeriana & Pasiflora</h4>
-                                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed">Ayudan a relajar el sistema nervioso central en estados de ansiedad leve o moderada.</p>
+                                    <h4 className="font-serif italic text-lg text-[#ddeef5] mb-2 font-light">Herramientas de apoyo</h4>
+                                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed">Usa respiración guiada, anclaje sensorial, diario y ejercicios de reflexión como recursos personales de bienestar.</p>
                                 </div>
                                 <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-5 rounded-2xl hover:-translate-y-0.5 transition-transform shadow-sm">
-                                    <h4 className="font-serif italic text-lg text-[#ddeef5] mb-2 font-light">Aceite de Lavanda</h4>
-                                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed">La inhalación de esencia de lavanda de grado médico puede reducir picos de cortisol rápidamente.</p>
+                                    <h4 className="font-serif italic text-lg text-[#ddeef5] mb-2 font-light">No sustituye ayuda profesional</h4>
+                                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed">ANSIOFF no diagnostica, no prescribe tratamientos y no reemplaza la atención de profesionales de salud mental.</p>
                                 </div>
                             </div>
                         </section>
 
                         <section>
                             <div className="font-sans font-bold text-[10px] text-[#5aadcf] uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
-                                <Pill size={14} /> Orientación Médica
+                                <Pill size={14} /> Ayuda Profesional
                             </div>
                             <div className="space-y-3">
                                 <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-5 rounded-2xl hover:-translate-y-0.5 transition-transform shadow-sm">
-                                    <h4 className="font-serif italic text-lg text-[#ddeef5] mb-2 font-light">Ansiolíticos (Benzodiacepinas)</h4>
-                                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed mb-4">Efecto rápido. Deben usarse solo bajo prescripción médica estricta por riesgo de dependencia.</p>
+                                    <h4 className="font-serif italic text-lg text-[#ddeef5] mb-2 font-light">Consulta con un especialista</h4>
+                                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed mb-4">Si la ansiedad interfiere con tu vida diaria, habla con tu médico, psicólogo o psiquiatra para recibir orientación personalizada.</p>
                                     <div className="font-sans font-medium text-xs text-[#5aadcf]/80 italic flex items-center gap-1.5 bg-[#5aadcf]/5 border border-[#5aadcf]/10 p-3 rounded-xl">
-                                        <Info size={14} className="shrink-0" /> Consulte siempre con su psiquiatra.
+                                        <Info size={14} className="shrink-0" /> No cambies medicación ni tratamientos sin indicación profesional.
                                     </div>
                                 </div>
                                 <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-5 rounded-2xl hover:-translate-y-0.5 transition-transform shadow-sm">
-                                    <h4 className="font-serif italic text-lg text-[#ddeef5] mb-2 font-light">Antidepresivos (ISRS)</h4>
-                                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed">Tratamiento de fondo para el trastorno de pánico. Tardan de 2 a 4 semanas en hacer efecto completo.</p>
+                                    <h4 className="font-serif italic text-lg text-[#ddeef5] mb-2 font-light">En una emergencia</h4>
+                                    <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed">Si hay riesgo inmediato para ti o para otra persona, usa la pestaña de ayuda urgente o llama directamente a emergencias.</p>
                                 </div>
                             </div>
                         </section>
@@ -118,4 +118,3 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
         </div>
     );
 }
-

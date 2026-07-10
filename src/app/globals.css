@@ -35,6 +35,8 @@
 
   --background: var(--bg);
   --foreground: var(--text);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 @keyframes fadeInUp {
@@ -216,7 +218,7 @@
 .sos-fab {
   position: fixed;
   right: 20px;
-  bottom: 120px;
+  bottom: calc(120px + var(--safe-bottom));
   width: 58px;
   height: 58px;
   border-radius: 50%;
@@ -341,8 +343,16 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 20px 10px;
+  padding: max(14px, calc(var(--safe-top) + 14px)) 20px 10px;
   background: var(--surf2);
+}
+
+.home-safe-header {
+  padding-top: max(76px, calc(var(--safe-top) + 20px));
+}
+
+.app-safe-topbar {
+  padding-top: max(64px, calc(var(--safe-top) + 16px));
 }
 
 .back-btn {

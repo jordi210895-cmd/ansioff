@@ -67,7 +67,9 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         setAiResult(null);
 
         try {
-            const response = await fetch('/api/analyze', {
+            const isCapacitor = typeof window !== 'undefined' && (window as any).Capacitor;
+            const baseUrl = isCapacitor ? 'https://ansioff.com' : '';
+            const response = await fetch(`${baseUrl}/api/analyze`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ notes })
@@ -198,22 +200,22 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                 <div>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{ fontSize: '18px' }}>💡</div>
-                        <div className="nt-ai-txt">La <b>IA Clínica</b> puede analizar tus notas recientes para identificar patrones ocultos y recomendar herramientas.</div>
+                        <div className="nt-ai-txt">La <b>IA de reflexión</b> puede resumir tus notas recientes y ayudarte a detectar temas repetidos. No ofrece diagnóstico ni consejo médico.</div>
                     </div>
                     {notes.length > 0 && (
                         <button className="ai-btn" onClick={analyzeNotes} disabled={isAnalyzing}>
                             {isAnalyzing ? <Loader2 size={16} className="animate-spin" /> : <BrainCircuit size={16} />}
-                            {isAnalyzing ? 'Analizando patrones...' : 'Analizar mis patrones con IA'}
+                            {isAnalyzing ? 'Resumiendo patrones...' : 'Reflexionar sobre mis notas con IA'}
                         </button>
                     )}
                     {aiError && <div style={{ color: 'var(--r)', fontSize: '12px', marginTop: '8px', textAlign: 'center' }}>{aiError}</div>}
                     
                     {aiResult && (
                         <div className="ai-card">
-                            <div className="ai-title"><BrainCircuit size={18} className="text-[#10b981]" /> Tu Análisis Clínico</div>
+                            <div className="ai-title"><BrainCircuit size={18} className="text-[#10b981]" /> Tu resumen personal</div>
                             
                             <div className="ai-section">
-                                <div className="ai-section-title">Desencadenantes Detectados</div>
+                                <div className="ai-section-title">Temas frecuentes</div>
                                 <div>
                                     {aiResult.triggers?.map((t: string, i: number) => (
                                         <span key={i} className="ai-tag">{t}</span>
@@ -227,7 +229,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                             </div>
                             
                             <div className="ai-section" style={{ marginBottom: 0 }}>
-                                <div className="ai-section-title">Sugerencia Inmediata</div>
+                                <div className="ai-section-title">Idea para explorar</div>
                                 <div className="ai-rec">{aiResult.recommendation}</div>
                             </div>
                         </div>

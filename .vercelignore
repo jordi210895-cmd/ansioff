@@ -1,0 +1,15 @@
+.env*
+.next
+out
+node_modules
+ios
+android
+deployment_handover
+deployment_handover.zip
+twa-build
+*.p8
+*.p12
+*.pem
+*.mobileprovision
+*.keychain-db
+*.password.txt

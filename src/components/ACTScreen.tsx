@@ -13,25 +13,25 @@ const STEPS = [
         t: 'Afrontar',
         icon: <Shield className="w-6 h-6" />,
         desc: 'No huyas de las sensaciones. Quédate en el lugar donde estás y observa lo que ocurre en tu cuerpo sin intentar evitarlo.',
-        long: 'Huir refuerza el miedo. Al quedarte, le estás diciendo a tu cerebro que la sensación no es peligrosa, solo incómoda.'
+        long: 'Practica quedarte unos instantes y observar con curiosidad. Si te sientes en peligro o necesitas ayuda, busca apoyo profesional o de emergencia.'
     },
     {
         t: 'Aceptar',
         icon: <Info className="w-6 h-6" />,
         desc: 'Deja que las sensaciones fluyan. No luches contra ellas. Acéptalas como si fueran una lluvia intensa que te está mojando.',
-        long: 'Aceptar significa no poner tensión. Si tu corazón late rápido, dite a ti mismo: "Vale, está latiendo rápido. Lo acepto".'
+        long: 'Aceptar aquí significa notar lo que ocurre sin juzgarlo. Este ejercicio no interpreta tus síntomas ni sustituye una valoración profesional.'
     },
     {
         t: 'Flotar',
         icon: <Wind className="w-6 h-6" />,
         desc: 'Imagínate flotando sobre las olas del pánico. No remes contra ellas, deja que te lleven mientras tú mantienes tu cuerpo relajado.',
-        long: 'El pánico es como una ola. Si nadas contra ella, te agotas. Si flotas, la ola pasará y tú seguirás en la superficie.'
+        long: 'Usa la imagen de una ola como metáfora de atención. Si las sensaciones son intensas o persistentes, consulta con un profesional de salud.'
     },
     {
         t: 'Dejar pasar',
         icon: <Clock className="w-6 h-6" />,
         desc: 'Sé paciente. La adrenalina tarda unos minutos en disolverse. Deja que el tiempo pase sin mirar el reloj con ansiedad.',
-        long: 'No esperes que el miedo se vaya "ya mismo". Dale permiso para estar el tiempo que necesite. Eventualmente, se cansará.'
+        long: 'Date tiempo y reduce la exigencia. Esta práctica es de autocuidado y no debe usarse para tomar decisiones médicas.'
     }
 ];
 
@@ -45,11 +45,11 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
                 <div className="mb-6 mt-4">
                     {/* Claire Weekes Attribution Card */}
                     <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-2xl p-5 mb-2 shadow-sm">
-                        <div className="text-[rgba(200,225,235,0.38)] text-[10px] uppercase tracking-widest font-bold mb-1">Método creado por</div>
-                        <div className="text-[#ddeef5] text-2xl font-light font-serif italic mb-1">Dra. Claire Weekes</div>
-                        <div className="text-[#5aadcf]/70 text-[11px] mb-4">Psiquiatra y pionera del pánico · 1962</div>
+                        <div className="text-[rgba(200,225,235,0.38)] text-[10px] uppercase tracking-widest font-bold mb-1">Ejercicio inspirado en</div>
+                        <div className="text-[#ddeef5] text-2xl font-light font-serif italic mb-1">Aceptación y atención plena</div>
+                        <div className="text-[#5aadcf]/70 text-[11px] mb-4">Recurso educativo de bienestar</div>
                         <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] leading-relaxed">
-                            La Dra. Weekes descubrió que el pánico se alimenta de la lucha y la huida. Sus 4 pasos — Afrontar, Aceptar, Flotar y Dejar pasar — rompen ese ciclo de raíz.
+                            Estos pasos son una práctica de observación y calma. No ofrecen diagnóstico, tratamiento ni sustituyen el consejo de profesionales de salud.
                         </p>
                     </div>
                 </div>
@@ -94,4 +94,3 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
         </div>
     );
 }
-

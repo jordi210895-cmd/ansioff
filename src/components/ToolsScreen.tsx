@@ -2,7 +2,7 @@
 
 import {
     Activity, Wind, Gamepad2, Music, PenLine, Heart,
-    Brain, FileText, Stethoscope, Moon, Target, ChevronRight
+    Brain, FileText, Moon, Target, ChevronRight
 } from 'lucide-react';
 
 interface ToolsScreenProps {
@@ -12,11 +12,11 @@ interface ToolsScreenProps {
 
 const moduleCategories = [
     {
-        title: 'Terapéutico',
+        title: 'Autocuidado',
         tools: [
-            { id: 'crisis', name: 'Kit de Crisis', sub: 'Anclaje rápido 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
-            { id: 'sc-cbt', name: 'Técnicas TCC', sub: 'Reestructuración de ideas', icon: <Brain />, color: 'var(--p)' },
-            { id: 'sc-act', name: 'Módulo ACT', sub: 'Aceptación y Compromiso', icon: <Heart />, color: 'var(--p2)' },
+            { id: 'crisis', name: 'Kit SOS', sub: 'Anclaje rápido 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
+            { id: 'sc-cbt', name: 'Pensamientos', sub: 'Registro y reflexión', icon: <Brain />, color: 'var(--p)' },
+            { id: 'sc-act', name: 'Aceptación', sub: 'Ejercicios guiados', icon: <Heart />, color: 'var(--p2)' },
         ]
     },
     {
@@ -30,8 +30,8 @@ const moduleCategories = [
     {
         title: 'Herramientas',
         tools: [
-            { id: 'sc-games', name: 'Juegos', sub: 'Distracción cognitiva', icon: <Gamepad2 />, color: 'var(--am)' },
-            { id: 'sc-eval', name: 'Evaluaciones', sub: 'Hamilton y Goldberg', icon: <FileText />, color: 'var(--p3)' },
+            { id: 'sc-games', name: 'Juegos', sub: 'Atención y pausa', icon: <Gamepad2 />, color: 'var(--am)' },
+            { id: 'sc-eval', name: 'Check-in', sub: 'Seguimiento personal', icon: <FileText />, color: 'var(--p3)' },
             { id: 'sc-night', name: 'Modo Noche', sub: 'Higiene del sueño', icon: <Moon />, color: 'var(--c3)' },
             { id: 'sc-exposure-why', name: 'Mis Motivos', sub: 'Exposición y mejora', icon: <Target />, color: 'var(--r2)' },
         ]
@@ -106,4 +106,3 @@ export default function ToolsScreen({ onBack, onNav }: ToolsScreenProps) {
         </div>
     );
 }
-

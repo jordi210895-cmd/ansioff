@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     return {
         name: "ANSIOFF - Tu calma en el bolsillo",
         short_name: "ANSIOFF",
-        description: "Guía inmediata y herramientas para crisis de pánico y ansiedad generalizada.",
+        description: "Herramientas de apoyo para respiración, calma y bienestar emocional.",
         start_url: "/",
         display: "standalone",
         background_color: "#040208",

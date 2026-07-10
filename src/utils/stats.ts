@@ -10,6 +10,7 @@ export interface UserStats {
     sosUses: number;
     breathMins: number;
     cbtEntries: number;
+    tracksCount?: number;
 }
 
 export function getStats(): UserStats {

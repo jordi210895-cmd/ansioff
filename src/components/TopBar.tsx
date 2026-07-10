@@ -10,7 +10,7 @@ interface TopBarProps {
 
 export default function TopBar({ title, onBack, dark }: TopBarProps) {
     return (
-        <div className="flex items-center gap-[14px] px-[24px] pt-[48px] pb-[20px] bg-[#03080f]/95 backdrop-blur-[24px] sticky top-0 z-50 border-b border-[rgba(255,255,255,0.06)]">
+        <div className="app-safe-topbar flex items-center gap-[14px] px-[24px] pb-[20px] bg-[#03080f]/95 backdrop-blur-[24px] sticky top-0 z-50 border-b border-[rgba(255,255,255,0.06)]">
             <button
                 onClick={onBack}
                 className="w-[36px] h-[36px] rounded-[12px] flex items-center justify-center transition-all bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.07)] active:scale-[0.95] text-[#ddeef5]"
@@ -23,4 +23,3 @@ export default function TopBar({ title, onBack, dark }: TopBarProps) {
         </div>
     );
 }
-

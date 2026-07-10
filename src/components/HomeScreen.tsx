@@ -1,214 +1,188 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Play, Moon, Heart, Brain, Search } from 'lucide-react';
+import React from 'react';
+import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, Clock, ChevronRight, AlertTriangle } from 'lucide-react';
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
-    noteCount?: number;
-    trackCount?: number;
     cbtCount?: number;
+    trackCount?: number;
     userName?: string;
 }
 
-export default function HomeScreen({ onNav, noteCount = 0, trackCount = 0, cbtCount = 0, userName = "Jordi" }: HomeScreenProps) {
-    const [mood, setMood] = useState<string>('Calma');
-    const [moodLevel, setMoodLevel] = useState<number>(6);
-    const [notes, setNotes] = useState('');
-    
-    const moods = [
-        { id: 'Feliz', emoji: '😊' },
-        { id: 'Calma', emoji: '😌' },
-        { id: 'Ansioso', emoji: '😟' },
-        { id: 'Triste', emoji: '😢' },
-        { id: 'Estrés', emoji: '😫' },
-    ];
-
+export default function HomeScreen({ onNav, cbtCount = 0, trackCount = 0, userName = "Jordi" }: HomeScreenProps) {
     const today = new Date().toLocaleDateString('es-ES', { weekday: 'long', month: 'short', day: 'numeric' });
 
     return (
-        <div className="min-h-full bg-[#111316] text-white overflow-y-auto pb-32 font-sans relative scrollbar-hide">
+        <div className="min-h-full bg-[#03080f] text-[#ddeef5] overflow-y-auto pb-32 font-sans relative scrollbar-hide">
             
-            {/* Soft background glows */}
-            <div className="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-0">
-                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[30%] bg-teal-500/10 blur-[100px] rounded-full"></div>
-                <div className="absolute bottom-[20%] right-[-10%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full"></div>
+            {/* Soft background glows (Matching the aurora of other screens) */}
+            <div className="aurora">
+                <div className="aurora-1" style={{ background: 'radial-gradient(circle, rgba(90, 173, 207, 0.4), transparent 70%)', top: '-100px', left: '-60px' }}></div>
+                <div className="aurora-2" style={{ background: 'radial-gradient(circle, rgba(124, 58, 237, 0.25), transparent 70%)', bottom: '100px', right: '-80px' }}></div>
             </div>
 
-            <div className="relative z-10">
+            <div className="relative z-10 px-5">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 pt-12 pb-6">
+                <div className="home-safe-header flex items-center justify-between pb-6">
                     <div className="flex items-center gap-2">
-                        {/* Styled A logo from image */}
+                        {/* Styled A logo aligned with the sky-blue palette */}
                         <div className="relative flex items-center justify-center">
-                            <span className="text-2xl italic font-serif bg-clip-text text-transparent bg-gradient-to-br from-teal-200 to-teal-600">A</span>
-                            <div className="absolute w-full h-[1px] bg-teal-400 top-[45%] -rotate-12 opacity-50"></div>
-                            <div className="absolute w-[60%] h-[1px] bg-teal-400 top-[60%] -rotate-12 opacity-50"></div>
+                            <span className="text-2xl italic font-serif bg-clip-text text-transparent bg-gradient-to-br from-sky-200 to-[#5aadcf]">A</span>
+                            <div className="absolute w-full h-[1px] bg-[#5aadcf] top-[45%] -rotate-12 opacity-50"></div>
+                            <div className="absolute w-[60%] h-[1px] bg-[#5aadcf] top-[60%] -rotate-12 opacity-50"></div>
                         </div>
-                        <span className="text-xl tracking-wide font-light text-slate-100">Ansioff</span>
+                        <span className="text-xl tracking-wide font-light text-[#ddeef5]">Ansioff</span>
                     </div>
                     
                     <div className="flex items-center gap-4">
-                        <span className="text-[13px] text-slate-300 capitalize">{today}</span>
-                        <button onClick={() => onNav('sc-settings')} className="w-8 h-8 rounded-full border border-white/20 bg-white/5 flex items-center justify-center text-sm text-slate-200 backdrop-blur-md">
+                        <span className="text-[13px] text-[rgba(200,225,235,0.38)] capitalize">{today}</span>
+                        <button onClick={() => onNav('sc-settings')} className="w-8 h-8 rounded-full border border-[rgba(255,255,255,0.15)] bg-[rgba(255,255,255,0.05)] flex items-center justify-center text-sm text-[#ddeef5] backdrop-blur-md hover:bg-[rgba(255,255,255,0.1)] active:scale-[0.95] transition-all">
                             {userName.charAt(0).toUpperCase()}
                         </button>
                     </div>
                 </div>
 
                 {/* Greeting */}
-                <div className="px-6 mb-8 mt-2">
-                    <h1 className="text-[28px] font-semibold text-teal-50 tracking-tight leading-tight">Hola, {userName}.</h1>
-                    <p className="text-[22px] font-light text-slate-200 tracking-tight mt-1">¿Cómo te sientes hoy?</p>
+                <div className="mb-8 mt-2">
+                    <h1 className="text-[28px] font-medium font-serif italic text-[#ddeef5] tracking-tight leading-tight">Hola, {userName}.</h1>
+                    <p className="text-[22px] font-light text-[rgba(200,225,235,0.8)] tracking-tight mt-1">¿Cómo te sientes hoy?</p>
                 </div>
 
-                {/* Daily Mood */}
-                <div className="px-6 mb-8">
-                    <h2 className="text-[11px] font-bold tracking-[0.15em] text-slate-400 mb-4 uppercase">ESTADO DE ÁNIMO</h2>
-                    
-                    {/* Emojis row */}
-                    <div className="flex justify-between items-center mb-5 px-1">
-                        {moods.map(m => {
-                            const isSelected = mood === m.id;
-                            return (
-                                <button 
-                                    key={m.id} 
-                                    onClick={() => setMood(m.id)}
-                                    className="flex flex-col items-center gap-2"
+                {/* Main Content Container */}
+                <div className="w-full flex flex-col gap-8">
+
+                    {/* 1. SOS Button Area */}
+                    <section className="text-left">
+                        <button
+                            onClick={() => onNav('sc-sos')}
+                            className="w-full group relative overflow-hidden rounded-[24px] p-px bg-gradient-to-r from-red-500/30 via-rose-500/10 to-red-500/30 transition-all active:scale-[0.98]"
+                        >
+                            <div className="relative bg-[#03080f]/80 backdrop-blur-md rounded-[23px] px-6 py-5 flex items-center justify-between border border-red-500/20">
+                                <div className="flex items-center gap-4 z-10 text-left">
+                                    <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 shrink-0 shadow-lg shadow-red-950/20">
+                                        <AlertTriangle className="w-6 h-6 animate-pulse" strokeWidth={2} />
+                                    </div>
+                                    <div className="flex flex-col justify-center">
+                                        <h3 className="text-[16px] font-bold text-[#ddeef5] leading-tight mb-1">Necesito ayuda ahora</h3>
+                                        <p className="text-[rgba(200,225,235,0.55)] text-[12px] font-medium">Asistencia de crisis inmediata</p>
+                                    </div>
+                                </div>
+                                <ChevronRight className="text-[rgba(200,225,235,0.38)] group-hover:text-[#ddeef5] transition-colors shrink-0" size={20} />
+
+                                {/* Decorative background glow */}
+                                <div className="absolute -right-4 -top-4 w-32 h-32 bg-red-600/10 blur-3xl rounded-full pointer-events-none"></div>
+                            </div>
+                        </button>
+                    </section>
+
+                    {/* 2. Featured Breathing Card */}
+                    <section>
+                        <div className="flex items-center justify-between mb-4 px-1">
+                            <h2 className="text-[20px] font-medium font-serif italic text-[#ddeef5] tracking-tight leading-none">Respiración guiada</h2>
+                            <button onClick={() => onNav('sc-breath')} className="text-xs text-[#5aadcf] font-bold hover:underline transition-all">Ver todos</button>
+                        </div>
+
+                        <div className="relative group rounded-[24px] bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-6 flex flex-col gap-6 shadow-xl w-full">
+                            {/* Abstract pattern background - contained */}
+                            <div className="absolute inset-0 overflow-hidden rounded-[24px] pointer-events-none">
+                                <div className="absolute -top-6 -right-6 p-4 opacity-[0.06] group-hover:rotate-12 transition-transform duration-700">
+                                    <Wind className="w-40 h-40 text-[#5aadcf]" strokeWidth={1} />
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-3 relative z-10">
+                                <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#5aadcf]/20 text-[#5aadcf] text-[10px] font-bold uppercase tracking-wider w-fit border border-[#5aadcf]/20">
+                                    Patrón 4-2-6
+                                </span>
+                                <h3 className="text-2xl sm:text-3xl font-light text-[#ddeef5] leading-tight font-serif italic">
+                                    Alivio del estrés <br /><span className="font-bold tracking-tight not-italic font-sans text-sky-200">Profundo</span>
+                                </h3>
+                            </div>
+
+                            <div className="flex items-center justify-between relative z-10 mt-2">
+                                <div className="flex items-center gap-2 text-[rgba(200,225,235,0.6)]">
+                                    <Clock size={16} className="text-[#5aadcf]/70" />
+                                    <span className="text-sm font-medium">5 min</span>
+                                </div>
+                                <button
+                                    onClick={() => onNav('sc-breath')}
+                                    className="bg-[#5aadcf] hover:bg-[#89cee4] text-[#03080f] rounded-full py-2.5 px-6 font-bold text-xs tracking-wider transition-all shadow-lg shadow-[#5aadcf]/20 active:scale-[0.98]"
                                 >
-                                    <div className={`w-[3.2rem] h-[3.2rem] rounded-[1.1rem] flex items-center justify-center text-[22px] transition-all duration-300 ${
-                                        isSelected 
-                                        ? 'bg-gradient-to-b from-teal-400/30 to-teal-500/10 border-2 border-teal-400/50 shadow-[0_0_15px_rgba(45,212,191,0.2)] scale-105' 
-                                        : 'bg-white/5 border border-white/10 hover:bg-white/10 opacity-70'
-                                    }`}>
-                                        <span className={isSelected ? 'drop-shadow-lg' : ''}>{m.emoji}</span>
-                                    </div>
-                                    <span className={`text-[10px] font-medium ${isSelected ? 'text-teal-50' : 'text-slate-400'}`}>{m.id}</span>
+                                    COMENZAR
                                 </button>
-                            );
-                        })}
-                    </div>
-
-                    {/* Level & Notes Glass Panel */}
-                    <div className="bg-white/[0.04] backdrop-blur-[20px] rounded-[1.5rem] p-5 border border-white/[0.08] shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
-                        <div className="flex justify-between items-center text-[11px] mb-4">
-                            <span className="text-slate-400 font-medium tracking-wide">Selecciona tu nivel: 1 a 10</span>
-                            <span className="text-slate-200 font-medium tracking-wide">Sintiendo <span className="text-teal-300 uppercase font-bold">{mood}</span> ({moodLevel}/10)</span>
-                        </div>
-                        
-                        {/* Custom Slider that matches the image */}
-                        <div className="relative h-1.5 w-full mb-6 mt-2">
-                            {/* Track background */}
-                            <div className="absolute inset-0 bg-slate-700/50 rounded-full"></div>
-                            {/* Filled track */}
-                            <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-400/80 to-teal-300 rounded-full" style={{ width: `${(moodLevel / 10) * 100}%` }}></div>
-                            {/* Thumb glow */}
-                            <div className="absolute top-1/2 -translate-y-1/2 w-8 h-8 bg-teal-200/20 rounded-full blur-md pointer-events-none transition-all duration-100" style={{ left: `calc(${(moodLevel / 10) * 100}% - 16px)` }}></div>
-                            {/* Thumb */}
-                            <div className="absolute top-1/2 -translate-y-1/2 w-[14px] h-[14px] bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)] pointer-events-none transition-all duration-100 border-2 border-teal-100" style={{ left: `calc(${(moodLevel / 10) * 100}% - 7px)` }}></div>
-                            
-                            {/* Hidden actual input */}
-                            <input 
-                                type="range" min="1" max="10" 
-                                value={moodLevel} onChange={(e) => setMoodLevel(Number(e.target.value))}
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                            />
-                        </div>
-
-                        {/* Notes Input */}
-                        <div className="relative">
-                            <input 
-                                type="text" 
-                                value={notes}
-                                onChange={(e) => setNotes(e.target.value)}
-                                placeholder="Añadir notas..." 
-                                className="w-full bg-black/20 border border-white/[0.05] rounded-xl px-4 py-3 text-[13px] text-white placeholder-slate-500 outline-none focus:border-white/20 transition-colors shadow-inner" 
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Guided Meditation */}
-                <div className="px-6 mb-6">
-                    <h2 className="text-[11px] font-bold tracking-[0.15em] text-slate-400 mb-4 uppercase">MEDITACIÓN GUIADA</h2>
-
-                    {/* Featured Session (Nature Image Card) */}
-                    <button 
-                        onClick={() => onNav('sc-breath')} 
-                        className="w-full mb-4 rounded-[1.5rem] relative overflow-hidden group text-left h-[140px] shadow-2xl shadow-black/50 border border-white/10"
-                    >
-                        {/* Background Image from unsplash (nature/meditation vibe) */}
-                        <div 
-                            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                            style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")' }}
-                        ></div>
-                        
-                        {/* Gradient overlay to ensure text is readable */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
-
-                        <div className="absolute inset-0 p-5 flex items-end justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-lg">
-                                    <Play className="w-4 h-4 text-white ml-1" fill="currentColor" />
-                                </div>
-                                <div>
-                                    <div className="text-[10px] text-teal-50/80 font-medium mb-1">Sesión Destacada:</div>
-                                    <div className="text-lg font-semibold text-white leading-tight">Respiración Mindful</div>
-                                    <div className="text-[11px] text-slate-300 mt-1 flex items-center gap-2">
-                                        <div className="w-[14px] h-[14px] rounded-full border border-white/40 flex items-center justify-center">
-                                            <div className="w-1 h-1 bg-white rounded-full"></div>
-                                        </div>
-                                        15 min · con Ansioff
-                                    </div>
-                                </div>
                             </div>
                         </div>
-                    </button>
+                    </section>
 
-                    {/* 2 Small Cards below (Therapies as requested) */}
-                    <div className="grid grid-cols-2 gap-3 pb-4">
-                        <button onClick={() => onNav('sc-cbt')} className="bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-[1.5rem] p-4 text-left hover:bg-white/10 transition-colors shadow-lg relative h-[110px]">
-                            <div className="absolute top-4 right-4 text-slate-400">
-                                <Brain className="w-[18px] h-[18px]" />
-                            </div>
-                            <div className="text-[13px] font-semibold text-white mb-1 pr-6 leading-tight">Terapia TCC</div>
-                            <div className="text-[10px] text-slate-400 mb-2 flex items-center gap-1.5">
-                                <div className="w-[10px] h-[10px] rounded-full border border-slate-500 flex items-center justify-center">
-                                    <div className="w-[3px] h-[3px] bg-slate-400 rounded-full"></div>
+                    {/* 3. Tools Grid */}
+                    <section>
+                        <div className="px-1 mb-4">
+                            <h2 className="text-[11px] font-bold text-[rgba(200,225,235,0.38)] tracking-[0.2em] uppercase">Herramientas</h2>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Audio Tool */}
+                            <button
+                                onClick={() => onNav('sc-audio')}
+                                className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center text-center p-4 pb-6 rounded-[24px] hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.98] transition-all group overflow-hidden relative shadow-lg"
+                            >
+                                <div className="w-12 h-12 rounded-[14px] bg-[#5aadcf]/10 border border-[#5aadcf]/25 flex items-center justify-center text-[#5aadcf] mb-3 group-hover:scale-110 group-hover:bg-[#5aadcf]/25 transition-all duration-300">
+                                    <Volume2 size={24} strokeWidth={2} />
                                 </div>
-                                10 min · Mente
-                            </div>
-                            <div className="text-[10px] text-slate-500 leading-snug line-clamp-2">
-                                Reestructuración para pensamientos intrusivos.
-                            </div>
-                        </button>
-                        
-                        <button onClick={() => onNav('sc-act')} className="bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-[1.5rem] p-4 text-left hover:bg-white/10 transition-colors shadow-lg relative h-[110px]">
-                            <div className="absolute top-4 right-4 text-slate-400">
-                                <Moon className="w-[18px] h-[18px]" />
-                            </div>
-                            <div className="text-[13px] font-semibold text-white mb-1 pr-6 leading-tight">Módulo ACT</div>
-                            <div className="text-[10px] text-slate-400 mb-2 flex items-center gap-1.5">
-                                <div className="w-[10px] h-[10px] rounded-full border border-slate-500 flex items-center justify-center">
-                                    <div className="w-[3px] h-[3px] bg-slate-400 rounded-full"></div>
+                                <h4 className="font-semibold text-[#ddeef5] text-[15px] font-serif italic">Audios</h4>
+                            </button>
+
+                            {/* Diary Tool */}
+                            <button
+                                onClick={() => onNav('sc-notes')}
+                                className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center text-center p-4 pb-6 rounded-[24px] hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.98] transition-all group overflow-hidden relative shadow-lg"
+                            >
+                                <div className="w-12 h-12 rounded-[14px] bg-[#6bbf8e]/10 border border-[#6bbf8e]/25 flex items-center justify-center text-[#6bbf8e] mb-3 group-hover:scale-110 group-hover:bg-[#6bbf8e]/25 transition-all duration-300">
+                                    <BookOpen size={24} strokeWidth={2} />
                                 </div>
-                                20 min · Aceptación
-                            </div>
-                            <div className="text-[10px] text-slate-500 leading-snug line-clamp-2">
-                                Sesiones de aceptación emocional y calma.
-                            </div>
-                        </button>
-                    </div>
-                    
-                    {/* Extra row for original elements so we don't lose navigation */}
-                    <div className="grid grid-cols-2 gap-3 mt-1">
-                         <button onClick={() => onNav('sc-audio')} className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-4 text-left flex items-center justify-between hover:bg-white/[0.05]">
-                             <span className="text-[12px] text-slate-300">Mis Audios</span>
-                         </button>
-                         <button onClick={() => onNav('sc-sos')} className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 text-left flex items-center justify-between hover:bg-red-500/20">
-                             <span className="text-[12px] text-red-300 font-medium">Boton SOS</span>
-                         </button>
-                    </div>
+                                <h4 className="font-semibold text-[#ddeef5] text-[15px] mb-0.5 font-serif italic">Diario</h4>
+                                <p className="text-[11px] leading-tight text-[rgba(200,225,235,0.38)] font-medium truncate w-full px-1">Reflexión diaria</p>
+                            </button>
+
+                            {/* Games Tool */}
+                            <button
+                                onClick={() => onNav('sc-games')}
+                                className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center text-center p-4 pb-6 rounded-[24px] hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.98] transition-all group overflow-hidden relative shadow-lg"
+                            >
+                                <div className="w-12 h-12 rounded-[14px] bg-orange-500/10 border border-orange-500/25 flex items-center justify-center text-orange-400 mb-3 group-hover:scale-110 group-hover:bg-orange-500/25 transition-all duration-300">
+                                    <Gamepad2 size={24} strokeWidth={2} />
+                                </div>
+                                <h4 className="font-semibold text-[#ddeef5] text-[15px] mb-0.5 font-serif italic">Juegos</h4>
+                                <p className="text-[11px] leading-tight text-[rgba(200,225,235,0.38)] font-medium truncate w-full px-1">Distracción sana</p>
+                            </button>
+
+                            {/* Modules Tool */}
+                            <button
+                                onClick={() => onNav('sc-tools')}
+                                className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center text-center p-4 pb-6 rounded-[24px] hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.98] transition-all group overflow-hidden relative shadow-lg"
+                            >
+                                <div className="w-12 h-12 rounded-[14px] bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 mb-3 group-hover:scale-110 group-hover:bg-purple-500/25 transition-all duration-300">
+                                    <GraduationCap size={24} strokeWidth={2} />
+                                </div>
+                                <h4 className="font-semibold text-[#ddeef5] text-[15px] mb-0.5 font-serif italic">Módulos</h4>
+                                <p className="text-[11px] leading-tight text-[rgba(200,225,235,0.38)] font-medium truncate w-full px-1">Aprende y practica</p>
+                            </button>
+                        </div>
+                    </section>
+
+                    {/* 4. Quote of the Day */}
+                    <section className="mb-6">
+                        <div className="bg-[#0e1d2e]/30 border border-[rgba(255,255,255,0.05)] p-6 rounded-[24px] text-center shadow-inner relative overflow-hidden">
+                            {/* Decorative quotes */}
+                            <div className="absolute top-2 left-4 text-[#5aadcf]/10 text-6xl font-serif">&quot;</div>
+                            <p className="relative z-10 italic text-[#ddeef5]/90 text-[15px] leading-relaxed font-light font-serif">
+                                Tus sentimientos son válidos, pero no son tu destino. Respira y confía en el proceso.
+                            </p>
+                            <div className="absolute bottom-[-1rem] right-4 text-[#5aadcf]/10 text-6xl font-serif rotate-180">&quot;</div>
+                        </div>
+                    </section>
+
                 </div>
             </div>
         </div>

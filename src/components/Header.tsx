@@ -10,7 +10,7 @@ interface HeaderProps {
 
 export default function Header({ onLogout, onSettings }: HeaderProps) {
     return (
-        <header className="sticky top-0 z-[60] px-6 pt-12 pb-4 flex items-center justify-between border-b border-white/5 bg-transparent backdrop-blur-md">
+        <header className="app-safe-topbar sticky top-0 z-[60] px-6 pb-4 flex items-center justify-between border-b border-white/5 bg-transparent backdrop-blur-md">
             <div className="flex items-center justify-start w-12 z-10">
                 {onSettings ? (
                     <button

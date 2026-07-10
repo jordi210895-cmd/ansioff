@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert, Bell, Phone, UserRoundPlus, X, ZapOff, Activity, CreditCard, Loader2 } from 'lucide-react';
+import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert, Bell, Phone, UserRoundPlus, X, ZapOff, Activity, CreditCard, Loader2, LogOut } from 'lucide-react';
 import TopBar from './TopBar';
 import { getStats, STATS_KEYS } from '../utils/stats';
 import { exportClinicalDiaryPDF } from '../utils/exportUtils';
@@ -12,11 +12,15 @@ import * as db from '../lib/db';
 interface SettingsScreenProps {
     onBack: () => void;
     profile?: any;
+    onLogout?: () => void;
+    onDeleteAccount?: () => Promise<void>;
 }
 
-export default function SettingsScreen({ onBack, profile }: SettingsScreenProps) {
+export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAccount }: SettingsScreenProps) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [showAccountDeleteConfirm, setShowAccountDeleteConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isDeletingAccount, setIsDeletingAccount] = useState(false);
     const [pushEnabled, setPushEnabled] = useState(false);
 
     // NeuroUX settings
@@ -122,6 +126,20 @@ export default function SettingsScreen({ onBack, profile }: SettingsScreenProps)
             setIsDeleting(false);
             setShowDeleteConfirm(false);
             alert("Hubo un error borrando los datos. Por favor, inténtalo de nuevo.");
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        if (!onDeleteAccount) return;
+
+        setIsDeletingAccount(true);
+        try {
+            await onDeleteAccount();
+        } catch (error) {
+            console.error("Error deleting account:", error);
+            setIsDeletingAccount(false);
+            setShowAccountDeleteConfirm(false);
+            alert("No se ha podido completar la eliminación. Contacta con soporte@ansioff.com para terminar la solicitud.");
         }
     };
 
@@ -286,7 +304,7 @@ export default function SettingsScreen({ onBack, profile }: SettingsScreenProps)
                         </div>
                         <div className="flex-1 text-left">
                             <h3 className="font-sans font-medium text-sm text-[#ddeef5] group-hover:text-[#5aadcf] mb-1 transition-colors">Exportar mi diario y datos</h3>
-                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.5)]">Descarga un PDF clínico para tu terapeuta</p>
+                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.5)]">Descarga un PDF personal de tus registros</p>
                         </div>
                         <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)] group-hover:text-[#5aadcf] transition-colors" />
                     </button>
@@ -305,6 +323,21 @@ export default function SettingsScreen({ onBack, profile }: SettingsScreenProps)
                         </div>
                         <ChevronRight size={16} className="text-slate-600 group-hover:text-blue-400 transition-colors" />
                     </button>
+
+                    {onLogout && (
+                        <button
+                            onClick={onLogout}
+                            className="w-full bg-[rgba(255,255,255,0.02)] p-4 rounded-xl flex items-center gap-4 border border-[rgba(255,255,255,0.05)] hover:bg-red-500/10 hover:border-red-500/20 transition-all duration-200 group"
+                        >
+                            <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
+                                <LogOut size={16} className="stroke-[1.5]" />
+                            </div>
+                            <div className="flex-1 text-left">
+                                <h3 className="font-sans font-medium text-xs text-slate-300 group-hover:text-red-300 transition-colors">Cerrar sesión</h3>
+                            </div>
+                            <ChevronRight size={16} className="text-slate-600 group-hover:text-red-300 transition-colors" />
+                        </button>
+                    )}
                 </div>
 
                 {/* --- CONFIGURACIÓN COGNITIVA (NEUROUX) --- */}
@@ -376,6 +409,21 @@ export default function SettingsScreen({ onBack, profile }: SettingsScreenProps)
                             <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.38)]">Elimina progreso, audios locales y configuración de este dispositivo</p>
                         </div>
                     </button>
+
+                    {onDeleteAccount && (
+                        <button
+                            onClick={() => setShowAccountDeleteConfirm(true)}
+                            className="w-full p-5 rounded-2xl flex items-center gap-4 transition-transform duration-200 border shadow-sm bg-[#d97c6a]/10 border-[#d97c6a]/25 hover:bg-[#d97c6a]/15 hover:border-[#d97c6a]/40 hover:-translate-y-0.5 group"
+                        >
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors border bg-[#d97c6a]/10 text-[#d97c6a] border-[#d97c6a]/20 group-hover:bg-[#d97c6a] group-hover:text-[#03080f]">
+                                <Trash2 size={20} className="stroke-current" />
+                            </div>
+                            <div className="flex-1 text-left">
+                                <h3 className="font-sans font-medium text-sm mb-1 text-[#ddeef5] group-hover:text-[#d97c6a]">Eliminar mi cuenta</h3>
+                                <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.55)]">Inicia la eliminación de tu cuenta, sesión y datos guardados en ANSIOFF</p>
+                            </div>
+                        </button>
+                    )}
                 </div>
 
             </div>
@@ -412,6 +460,49 @@ export default function SettingsScreen({ onBack, profile }: SettingsScreenProps)
                             <button
                                 onClick={() => !isDeleting && setShowDeleteConfirm(false)}
                                 disabled={isDeleting}
+                                className="w-full py-4 rounded-full bg-transparent border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.04)] text-[#ddeef5] font-sans font-semibold text-xs tracking-wider transition-colors disabled:opacity-50 shadow-sm"
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#d97c6a]/5 blur-3xl rounded-full pointer-events-none z-0"></div>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL DE CONFIRMACIÓN DE ELIMINACIÓN DE CUENTA */}
+            {showAccountDeleteConfirm && (
+                <div className="absolute inset-0 z-[100] bg-[#03080f]/90 backdrop-blur-md flex items-end justify-center sm:items-center p-5 pb-8 animate-in fade-in duration-300">
+                    <div className="bg-[#0e1d2e] border border-[#d97c6a]/30 rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-in slide-in-from-bottom-10 fade-in duration-300 relative overflow-hidden">
+
+                        <div className="w-16 h-16 bg-[#d97c6a]/10 border border-[#d97c6a]/20 rounded-full flex items-center justify-center text-[#d97c6a] mx-auto mb-6 shadow-inner relative z-10">
+                            <AlertTriangle size={32} className="stroke-[1.5]" />
+                        </div>
+
+                        <h3 className="text-3xl font-light text-[#ddeef5] text-center mb-4 font-serif italic relative z-10">Eliminar cuenta</h3>
+                        <p className="font-sans font-light text-[rgba(200,225,235,0.8)] text-sm text-center mb-8 px-2 leading-relaxed relative z-10">
+                            Esta acción cerrará tu sesión e iniciará la eliminación de tu cuenta de ANSIOFF junto con los datos guardados en este dispositivo. Si necesitas ayuda, puedes escribir a soporte@ansioff.com.
+                        </p>
+
+                        <div className="flex flex-col gap-3 relative z-10">
+                            <button
+                                onClick={handleDeleteAccount}
+                                disabled={isDeletingAccount}
+                                className="w-full py-4 rounded-full bg-[#d97c6a] hover:bg-[#c66c5c] text-[#03080f] font-sans font-semibold text-xs tracking-wider transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-wait shadow-sm"
+                            >
+                                {isDeletingAccount ? (
+                                    <>
+                                        <div className="w-4 h-4 border-2 border-[#03080f]/30 border-t-[#03080f] rounded-full animate-spin"></div>
+                                        Eliminando cuenta...
+                                    </>
+                                ) : (
+                                    'Sí, eliminar mi cuenta'
+                                )}
+                            </button>
+                            <button
+                                onClick={() => !isDeletingAccount && setShowAccountDeleteConfirm(false)}
+                                disabled={isDeletingAccount}
                                 className="w-full py-4 rounded-full bg-transparent border border-[rgba(255,255,255,0.07)] hover:bg-[rgba(255,255,255,0.04)] text-[#ddeef5] font-sans font-semibold text-xs tracking-wider transition-colors disabled:opacity-50 shadow-sm"
                             >
                                 Cancelar

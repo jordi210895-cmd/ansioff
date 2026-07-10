@@ -52,7 +52,7 @@ export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
           background:rgba(4,2,8,0.85);
           backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
           border-top:1px solid rgba(255,255,255,0.08);
-          padding:10px 8px 34px;
+          padding:10px 8px max(34px, calc(var(--safe-bottom) + 10px));
           display:flex;justify-content:space-around;
           position:fixed;bottom:0;left:0;right:0;
           z-index:1000;
