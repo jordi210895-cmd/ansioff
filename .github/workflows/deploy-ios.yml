@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,6 +24,9 @@ jobs:
           STATIC_EXPORT: 'true'
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://sthyhbxdwsnbewxmiyla.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL || 'https://app-ansiedad-flame.vercel.app' }}
+          NEXT_PUBLIC_REVENUECAT_IOS_API_KEY: ${{ secrets.NEXT_PUBLIC_REVENUECAT_IOS_API_KEY }}
+          NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY: ${{ secrets.NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY }}
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || 'stripe_secret_placeholder' }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET || 'webhook_secret_placeholder' }}
           STRIPE_PRICE_ID: ${{ secrets.STRIPE_PRICE_ID || 'price_1TFF4PLwRc1rwaq7enc3lw54' }}

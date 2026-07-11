@@ -61,7 +61,7 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
 
     const spawnPiece = useCallback(() => {
         let currentPiece = nextPiece;
-        let futurePiece = getRandomPiece();
+        const futurePiece = getRandomPiece();
 
         if (!currentPiece) {
             currentPiece = getRandomPiece();

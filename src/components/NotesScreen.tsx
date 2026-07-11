@@ -1,7 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BrainCircuit, Loader2 } from 'lucide-react';
+import { BrainCircuit, Loader2, ShieldCheck, X } from 'lucide-react';
+import { Capacitor, CapacitorHttp } from '@capacitor/core';
+
+const AI_CONSENT_KEY = 'ansioff_ai_reflection_consent_v1';
 
 interface Note {
     id: string;
@@ -22,6 +25,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [aiResult, setAiResult] = useState<any>(null);
     const [aiError, setAiError] = useState('');
+    const [showAiConsent, setShowAiConsent] = useState(false);
 
     useEffect(() => {
         fetchNotes();
@@ -60,6 +64,21 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         localStorage.setItem('ansioff_notes', JSON.stringify(updated));
     };
 
+    const requestNotesAnalysis = () => {
+        if (notes.length === 0) return;
+        if (localStorage.getItem(AI_CONSENT_KEY) === 'accepted') {
+            void analyzeNotes();
+            return;
+        }
+        setShowAiConsent(true);
+    };
+
+    const acceptAiConsent = () => {
+        localStorage.setItem(AI_CONSENT_KEY, 'accepted');
+        setShowAiConsent(false);
+        void analyzeNotes();
+    };
+
     const analyzeNotes = async () => {
         if (notes.length === 0) return;
         setIsAnalyzing(true);
@@ -67,29 +86,34 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         setAiResult(null);
 
         try {
-            const isCapacitor = typeof window !== 'undefined' && (window as any).Capacitor;
-            const baseUrl = isCapacitor ? 'https://ansioff.com' : '';
-            const response = await fetch(`${baseUrl}/api/analyze`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ notes })
-            });
+            const recentNotes = notes.slice(0, 15);
+            let data: any;
 
-            const contentType = response.headers.get('content-type');
-            
-            if (!response.ok) {
-                if (contentType && contentType.includes('application/json')) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Error al analizar las notas.');
+            if (Capacitor.isNativePlatform()) {
+                const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://app-ansiedad-flame.vercel.app';
+                const response = await CapacitorHttp.post({
+                    url: `${apiBaseUrl}/api/analyze`,
+                    headers: { 'Content-Type': 'application/json' },
+                    data: { notes: recentNotes },
+                });
+                data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+                if (response.status < 200 || response.status >= 300) {
+                    throw new Error(data?.error || `Error del servidor (${response.status}).`);
                 }
-                throw new Error(`Error del servidor (${response.status}). Posible error de configuración en el despliegue.`);
+            } else {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ notes: recentNotes }),
+                });
+                const contentType = response.headers.get('content-type');
+                if (!response.ok) {
+                    const errorData = contentType?.includes('application/json') ? await response.json() : null;
+                    throw new Error(errorData?.error || `Error del servidor (${response.status}).`);
+                }
+                if (!contentType?.includes('application/json')) throw new Error('Respuesta del servidor no válida.');
+                data = await response.json();
             }
-
-            if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Respuesta del servidor no válida (no es JSON). Verifica que las API Routes estén funcionando.');
-            }
-
-            const data = await response.json();
 
             setAiResult(data);
         } catch (err: any) {
@@ -182,6 +206,17 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         .ai-tag{display:inline-block;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--text);margin-right:6px;margin-bottom:6px;}
         .ai-p{font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;white-space:pre-wrap;}
         .ai-rec{background:rgba(255,255,255,0.04);border-left:3px solid var(--r);border-radius:8px;padding:12px;font-size:13px;font-weight:500;color:var(--text2);line-height:1.6;white-space:pre-wrap;}
+        .consent-overlay{position:fixed;inset:0;z-index:120;background:rgba(3,8,15,.88);backdrop-filter:blur(12px);display:flex;align-items:flex-end;justify-content:center;padding:20px max(20px,env(safe-area-inset-right)) max(24px,calc(env(safe-area-inset-bottom) + 16px)) max(20px,env(safe-area-inset-left));}
+        .consent-card{width:100%;max-width:420px;background:#0e1d2e;border:1px solid rgba(90,173,207,.25);border-radius:22px;padding:22px;position:relative;box-shadow:0 24px 70px rgba(0,0,0,.5);}
+        .consent-icon{width:46px;height:46px;border-radius:14px;background:rgba(90,173,207,.12);color:#5aadcf;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+        .consent-title{font-size:21px;font-weight:800;color:var(--text);margin-bottom:10px;}
+        .consent-copy{font-size:13px;line-height:1.6;color:var(--text2);margin-bottom:12px;}
+        .consent-note{font-size:11px;line-height:1.5;color:var(--text3);padding:11px 12px;border:1px solid var(--border);border-radius:12px;margin-bottom:18px;}
+        .consent-actions{display:flex;flex-direction:column;gap:9px;}
+        .consent-primary,.consent-secondary{min-height:48px;border-radius:13px;font-size:13px;font-weight:800;cursor:pointer;}
+        .consent-primary{border:0;background:#5aadcf;color:#03080f;}
+        .consent-secondary{border:1px solid var(--border);background:transparent;color:var(--text2);}
+        .consent-close{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--glass);color:var(--text2);display:flex;align-items:center;justify-content:center;}
       `}</style>
 
             <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div></div>
@@ -203,7 +238,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                         <div className="nt-ai-txt">La <b>IA de reflexión</b> puede resumir tus notas recientes y ayudarte a detectar temas repetidos. No ofrece diagnóstico ni consejo médico.</div>
                     </div>
                     {notes.length > 0 && (
-                        <button className="ai-btn" onClick={analyzeNotes} disabled={isAnalyzing}>
+                        <button className="ai-btn" onClick={requestNotesAnalysis} disabled={isAnalyzing}>
                             {isAnalyzing ? <Loader2 size={16} className="animate-spin" /> : <BrainCircuit size={16} />}
                             {isAnalyzing ? 'Resumiendo patrones...' : 'Reflexionar sobre mis notas con IA'}
                         </button>
@@ -267,6 +302,23 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                     ))
                 )}
             </div>
+
+            {showAiConsent && (
+                <div className="consent-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-consent-title">
+                    <div className="consent-card">
+                        <button className="consent-close" onClick={() => setShowAiConsent(false)} aria-label="Cerrar"><X size={18} /></button>
+                        <div className="consent-icon"><ShieldCheck size={23} /></div>
+                        <div id="ai-consent-title" className="consent-title">Antes de usar la reflexión IA</div>
+                        <p className="consent-copy">Al continuar, se enviarán mediante una conexión segura tus {Math.min(notes.length, 15)} notas más recientes al servicio de ANSIOFF y a Google Gemini para crear este resumen.</p>
+                        <p className="consent-copy">La IA buscará temas repetidos y propondrá una idea de autocuidado. No realiza diagnósticos, no determina causas y no sustituye a un profesional.</p>
+                        <div className="consent-note">Tus notas no se envían a Meta, Google Ads ni a herramientas publicitarias.</div>
+                        <div className="consent-actions">
+                            <button className="consent-primary" onClick={acceptAiConsent}>Entiendo y quiero continuar</button>
+                            <button className="consent-secondary" onClick={() => setShowAiConsent(false)}>Ahora no</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -3,17 +3,18 @@
 import { useState, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { supabase } from '@/lib/supabase';
-import { LogIn, UserPlus, Mail, Lock, Loader2, Wind } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, Loader2, Wind, X } from 'lucide-react';
 
 interface AuthScreenProps {
     onAuth: (session?: any, profile?: any) => void;
+    onCancel?: () => void;
 }
 
 const DEMO_EMAIL = 'smitsolutionshelp@gmail.com';
 const DEMO_PASSWORD = 'Zxcv@1234';
 const DEMO_USER_ID = 'app-review-demo';
 
-export default function AuthScreen({ onAuth }: AuthScreenProps) {
+export default function AuthScreen({ onAuth, onCancel }: AuthScreenProps) {
     const [mode, setMode] = useState<'login' | 'signup' | 'forgot' | 'reset'>('login');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -115,6 +116,21 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                     align-items: center;
                     justify-content: flex-start;
                     padding: calc(env(safe-area-inset-top, 0px) + 14px) 18px calc(env(safe-area-inset-bottom, 0px) + 18px);
+                }
+                .auth-close {
+                    position: fixed;
+                    z-index: 10;
+                    top: calc(env(safe-area-inset-top, 0px) + 12px);
+                    right: 16px;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    border: 1px solid rgba(255,255,255,.12);
+                    background: rgba(14,29,46,.9);
+                    color: #ddeef5;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
                 .auth-card {
                     width: 100%;
@@ -296,6 +312,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                 }
             `}</style>
 
+            {onCancel && <button type="button" className="auth-close" onClick={onCancel} aria-label="Cerrar"><X size={20} /></button>}
             <div className="auth-shell">
             <div className="auth-brand animate-in fade-in slide-in-from-top-4 duration-700">
                 {!isStandalone && !isNativeApp && (

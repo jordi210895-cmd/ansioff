@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">ANSIOFF</string>
     <string name="title_activity_main">ANSIOFF</string>
-    <string name="package_name">com.ansioff.app</string>
-    <string name="custom_url_scheme">com.ansioff.app</string>
+    <string name="package_name">app.vercel.app_ansiedad_flame.twa</string>
+    <string name="custom_url_scheme">app.vercel.app_ansiedad_flame.twa</string>
 </resources>

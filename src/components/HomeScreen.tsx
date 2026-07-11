@@ -1,16 +1,17 @@
 'use client';
 
 import React from 'react';
-import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, Clock, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Wind, Volume2, BookOpen, Gamepad2, GraduationCap, Clock, ChevronRight, AlertTriangle, LockKeyhole } from 'lucide-react';
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
     cbtCount?: number;
     trackCount?: number;
     userName?: string;
+    isPremium?: boolean;
 }
 
-export default function HomeScreen({ onNav, cbtCount = 0, trackCount = 0, userName = "Jordi" }: HomeScreenProps) {
+export default function HomeScreen({ onNav, cbtCount = 0, trackCount = 0, userName = "Jordi", isPremium = false }: HomeScreenProps) {
     const today = new Date().toLocaleDateString('es-ES', { weekday: 'long', month: 'short', day: 'numeric' });
 
     return (
@@ -65,7 +66,7 @@ export default function HomeScreen({ onNav, cbtCount = 0, trackCount = 0, userNa
                                     </div>
                                     <div className="flex flex-col justify-center">
                                         <h3 className="text-[16px] font-bold text-[#ddeef5] leading-tight mb-1">Necesito ayuda ahora</h3>
-                                        <p className="text-[rgba(200,225,235,0.55)] text-[12px] font-medium">Asistencia de crisis inmediata</p>
+                                        <p className="text-[rgba(200,225,235,0.55)] text-[12px] font-medium">Herramienta de anclaje inmediato</p>
                                     </div>
                                 </div>
                                 <ChevronRight className="text-[rgba(200,225,235,0.38)] group-hover:text-[#ddeef5] transition-colors shrink-0" size={20} />
@@ -138,6 +139,7 @@ export default function HomeScreen({ onNav, cbtCount = 0, trackCount = 0, userNa
                                 onClick={() => onNav('sc-notes')}
                                 className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center text-center p-4 pb-6 rounded-[24px] hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.98] transition-all group overflow-hidden relative shadow-lg"
                             >
+                                {!isPremium && <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-white/10 bg-[#03080f]/80 px-2 py-1 text-[9px] font-bold text-[rgba(200,225,235,0.65)]"><LockKeyhole size={11} /> Premium</span>}
                                 <div className="w-12 h-12 rounded-[14px] bg-[#6bbf8e]/10 border border-[#6bbf8e]/25 flex items-center justify-center text-[#6bbf8e] mb-3 group-hover:scale-110 group-hover:bg-[#6bbf8e]/25 transition-all duration-300">
                                     <BookOpen size={24} strokeWidth={2} />
                                 </div>
@@ -150,6 +152,7 @@ export default function HomeScreen({ onNav, cbtCount = 0, trackCount = 0, userNa
                                 onClick={() => onNav('sc-games')}
                                 className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center text-center p-4 pb-6 rounded-[24px] hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.98] transition-all group overflow-hidden relative shadow-lg"
                             >
+                                {!isPremium && <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-white/10 bg-[#03080f]/80 px-2 py-1 text-[9px] font-bold text-[rgba(200,225,235,0.65)]"><LockKeyhole size={11} /> Premium</span>}
                                 <div className="w-12 h-12 rounded-[14px] bg-orange-500/10 border border-orange-500/25 flex items-center justify-center text-orange-400 mb-3 group-hover:scale-110 group-hover:bg-orange-500/25 transition-all duration-300">
                                     <Gamepad2 size={24} strokeWidth={2} />
                                 </div>

@@ -6,6 +6,7 @@ import TopBar from './TopBar';
 
 interface EvaluationScreenProps {
     onBack: () => void;
+    onComplete?: () => void;
 }
 
 const QUESTIONS = [
@@ -36,7 +37,7 @@ const SOURCES = [
     },
 ];
 
-export default function EvaluationScreen({ onBack }: EvaluationScreenProps) {
+export default function EvaluationScreen({ onBack, onComplete }: EvaluationScreenProps) {
     const [currentIdx, setCurrentIdx] = useState(0);
     const [totalScore, setTotalScore] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
@@ -49,6 +50,7 @@ export default function EvaluationScreen({ onBack }: EvaluationScreenProps) {
         } else {
             setTotalScore(nextScore);
             setIsFinished(true);
+            onComplete?.();
         }
     };
 

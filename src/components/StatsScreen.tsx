@@ -80,7 +80,7 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <div className="st-title">Progreso</div>
-                        <div className="st-sub">Tu viaje hacia la calma interior</div>
+                        <div className="st-sub">Un resumen de tu práctica en este dispositivo</div>
                     </div>
                     <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
                 </div>
@@ -89,7 +89,7 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
             <div className="lvl-card">
                 <div className="lvl-badge">NIVEL ACTUAL</div>
                 <div className="lvl-name">{level.title}</div>
-                <div className="lvl-pts">Tienes <b>{stats.points}</b> puntos de paz</div>
+                <div className="lvl-pts">Tienes <b>{stats.points}</b> puntos de práctica</div>
 
                 <div className="prog-wrap">
                     <div className="prog-base">
@@ -106,30 +106,30 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
                 <div className="st-box">
                     <div className="sb-ico">🌬️</div>
                     <div className="sb-val">{stats.breathMins}</div>
-                    <div className="sb-lab">Paz respirada</div>
+                    <div className="sb-lab">Minutos de respiración</div>
                 </div>
                 <div className="st-box">
                     <div className="sb-ico">📓</div>
                     <div className="sb-val">{stats.cbtEntries}</div>
-                    <div className="sb-lab">Pensamientos libres</div>
+                    <div className="sb-lab">Registros completados</div>
                 </div>
                 <div className="st-box">
                     <div className="sb-ico">🛡️</div>
                     <div className="sb-val">{stats.sosUses}</div>
-                    <div className="sb-lab">Crisis superadas</div>
+                    <div className="sb-lab">Sesiones SOS completadas</div>
                 </div>
                 <div className="st-box">
                     <div className="sb-ico">🎧</div>
                     <div className="sb-val">{stats.tracksCount || 0}</div>
-                    <div className="sb-lab">Calmas sonoras</div>
+                    <div className="sb-lab">Audios personalizados</div>
                 </div>
             </div>
 
             <div className="streak-card">
                 <div className="str-fire">🔥</div>
                 <div>
-                    <div className="str-t">Racha de 5 días</div>
-                    <div className="str-d">¡Vas por muy buen camino!</div>
+                    <div className="str-t">Racha de {stats.streak} {stats.streak === 1 ? 'día' : 'días'}</div>
+                    <div className="str-d">Cuenta días consecutivos con una actividad completada.</div>
                 </div>
             </div>
         </div>

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getEmergencyContacts, EmergencyContact } from '@/utils/contacts';
 import { Phone, Anchor } from 'lucide-react';
+import { addSosUse } from '@/utils/stats';
 
 interface SOSScreenProps {
     onBack: () => void;
@@ -10,7 +11,7 @@ interface SOSScreenProps {
 }
 
 const groundingSteps = [
-    { id: 'intro', t: 'Pausa y Respira', d: 'No estás en peligro real, es solo una respuesta física intensa.', i: '🌬️', count: 0 },
+    { id: 'intro', t: 'Pausa y respira', d: 'Mira a tu alrededor y avanza a tu ritmo.', i: '🌬️', count: 0 },
     { id: 'see', t: '5 cosas que VES', d: 'Nombra y describe 5 objetos que tengas delante.', i: '👁️', count: 5 },
     { id: 'touch', t: '4 cosas que TOCAS', d: 'Siente las texturas de 4 cosas a tu alcance.', i: '🤝', count: 4 },
     { id: 'hear', t: '3 cosas que OYES', d: 'Presta atención a 3 sonidos distintos.', i: '👂', count: 3 },
@@ -23,6 +24,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
     const [mode, setMode] = useState<'grounding' | 'call'>('grounding');
     const [step, setStep] = useState(0);
     const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+    const hasRecordedCompletion = useRef(false);
 
     useEffect(() => {
         setContacts(getEmergencyContacts());
@@ -141,7 +143,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
             {mode === 'grounding' ? (
                 <div className="sos-main">
                     <div className="sos-hero">{currentStep.i}</div>
-                    <div className="sos-h1">Mantén la calma,<br />esto pasará</div>
+                    <div className="sos-h1">Vamos<br />paso a paso</div>
                     <div className="sos-p">Sigue la técnica 5-4-3-2-1 para anclarte al presente.</div>
 
                     <div className="sos-card">
@@ -188,7 +190,13 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                             disabled={!isStepComplete()}
                             onClick={() => {
                                 if (step < groundingSteps.length - 1) setStep(step + 1);
-                                else if (onFinished) onFinished();
+                                else {
+                                    if (!hasRecordedCompletion.current) {
+                                        addSosUse();
+                                        hasRecordedCompletion.current = true;
+                                    }
+                                    if (onFinished) onFinished();
+                                }
                             }}
                         >
                             {step < groundingSteps.length - 1 ? 'Siguiente paso' : 'Estoy mejor'}

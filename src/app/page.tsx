@@ -22,6 +22,22 @@ import ExposureScreen from '@/components/ExposureScreen';
 import DisclaimerModal from '@/components/DisclaimerModal';
 import AuthScreen from '@/components/AuthScreen';
 import InstallPWA from '@/components/InstallPWA';
+import OnboardingFlow from '@/components/OnboardingFlow';
+import Paywall, { PaywallPlacement } from '@/components/Paywall';
+import PostOnboardingSetup from '@/components/PostOnboardingSetup';
+import { Capacitor } from '@capacitor/core';
+import {
+  attachSubscriptionUser, detachSubscriptionUser, initializeSubscriptions,
+  PaywallProduct, purchaseProduct, restoreSubscriptions, SubscriptionSnapshot,
+} from '@/lib/subscriptions';
+import {
+  completeOnboarding, createPersonalizedPlan, isOnboardingComplete, loadOnboardingState,
+  OnboardingAnswers, PersonalizedPlan,
+} from '@/lib/onboarding';
+import {
+  markGeneralPaywallShown, markRecoveryPaywallShown, PREMIUM_SCREEN_FEATURES,
+  recordFreeAction, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
+} from '@/lib/access';
 
 interface Track {
   id?: number;
@@ -54,6 +70,16 @@ export default function App() {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
+  const [isNativeApp, setIsNativeApp] = useState(false);
+  const [onboardingDone, setOnboardingDone] = useState(true);
+  const [showAuth, setShowAuth] = useState(false);
+  const [resumeSetupAfterAuth, setResumeSetupAfterAuth] = useState(false);
+  const [paywallPlacement, setPaywallPlacement] = useState<PaywallPlacement | null>(null);
+  const [showPostOnboardingSetup, setShowPostOnboardingSetup] = useState(false);
+  const [personalizedPlan, setPersonalizedPlan] = useState<PersonalizedPlan | null>(null);
+  const [subscription, setSubscription] = useState<SubscriptionSnapshot>({
+    status: 'loading', isPremium: false, products: [], managementURL: null,
+  });
 
   const [curScreen, setCurScreen] = useState('home');
   const [prevScreen, setPrevScreen] = useState('home');
@@ -64,46 +90,85 @@ export default function App() {
     { name: 'Respiración Guiada', url: '/audio/audio3.m4a', icon: '🍃', duration: '—' }
   ]);
 
-  // Auth & Trial Logic
+  const isDemo = isDemoSession(session);
+  const hasPremium = Boolean(isDemo || subscription.isPremium || profile?.is_premium);
+
+  // Auth, onboarding and subscription bootstrap
   useEffect(() => {
+    const nativeApp = Capacitor.isNativePlatform() || (process.env.NODE_ENV === 'development' && new URLSearchParams(window.location.search).get('nativePreview') === '1');
+    const onboardingComplete = isOnboardingComplete();
+    setIsNativeApp(nativeApp);
+    setOnboardingDone(!nativeApp || onboardingComplete);
+    const storedAnswers = loadOnboardingState()?.answers;
+    if (storedAnswers) setPersonalizedPlan(createPersonalizedPlan(storedAnswers));
+
+    let active = true;
+    let authReady = false;
+    let subscriptionReady = !nativeApp;
+    const finishBootstrap = () => {
+      if (active && authReady && subscriptionReady) setLoading(false);
+    };
+
     if (localStorage.getItem(DEMO_SESSION_KEY) === 'true') {
       setSession(createDemoSession());
       setProfile(DEMO_PROFILE);
-      setLoading(false);
-      return;
+      completeOnboarding();
+      setOnboardingDone(true);
+      authReady = true;
+      finishBootstrap();
+    } else {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!active) return;
+        setSession(session);
+        if (session) fetchProfile(session.user.id);
+        authReady = true;
+        finishBootstrap();
+      });
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session) fetchProfile(session.user.id);
-      else setLoading(false);
-    });
+    if (nativeApp) {
+      initializeSubscriptions().then((snapshot) => {
+        if (!active) return;
+        setSubscription(snapshot);
+        if (onboardingComplete && snapshot.status === 'expired' && snapshot.products.some((product) => product.winBackOffer) && shouldShowRecoveryPaywall()) {
+          markRecoveryPaywallShown();
+          setPaywallPlacement('recovery');
+        }
+        subscriptionReady = true;
+        finishBootstrap();
+      });
+    }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!active) return;
       setSession(session);
       if (session) fetchProfile(session.user.id);
-      else {
-        setProfile(null);
-        setLoading(false);
-      }
+      else setProfile(null);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const fetchProfile = async (uid: string) => {
     const prof = await getUserProfile(uid);
     setProfile(prof);
-    setLoading(false);
   };
 
   const handleAuth = async (authSession?: any, authProfile?: any) => {
-    setLoading(true);
     if (authSession) {
       localStorage.setItem(DEMO_SESSION_KEY, 'true');
       setSession(authSession);
       setProfile(authProfile || DEMO_PROFILE);
-      setLoading(false);
+      completeOnboarding();
+      setOnboardingDone(true);
+      setShowAuth(false);
+      if (resumeSetupAfterAuth) {
+        setResumeSetupAfterAuth(false);
+        setShowPostOnboardingSetup(true);
+      }
       return;
     }
 
@@ -111,8 +176,23 @@ export default function App() {
     setSession(session);
     if (session) {
       await fetchProfile(session.user.id);
-    } else {
-      setLoading(false);
+      if (isNativeApp) {
+        const nextSubscription = await attachSubscriptionUser(session.user.id);
+        if (nextSubscription) {
+          setSubscription((current) => ({ ...nextSubscription, products: current.products }));
+          if (nextSubscription.status === 'expired' && subscription.products.some((product) => product.winBackOffer) && shouldShowRecoveryPaywall()) {
+            markRecoveryPaywallShown();
+            setPaywallPlacement('recovery');
+          }
+        }
+        completeOnboarding();
+        setOnboardingDone(true);
+      }
+    }
+    setShowAuth(false);
+    if (resumeSetupAfterAuth) {
+      setResumeSetupAfterAuth(false);
+      setShowPostOnboardingSetup(true);
     }
   };
 
@@ -123,12 +203,20 @@ export default function App() {
     } catch (error) {
       console.warn('Supabase sign-out skipped:', error);
     }
+
+    if (isNativeApp) {
+      try {
+        const nextSubscription = await detachSubscriptionUser();
+        if (nextSubscription) setSubscription((current) => ({ ...nextSubscription, products: current.products }));
+      } catch (error) {
+        console.warn('RevenueCat logout skipped:', error);
+      }
+    }
     setSession(null);
     setProfile(null);
     setCurScreen('home');
     setPrevScreen('home');
     setCbtCount(0);
-    setLoading(false);
   };
 
   const clearLocalAppData = async () => {
@@ -181,6 +269,15 @@ export default function App() {
       console.warn('Supabase sign-out skipped:', error);
     }
 
+    if (isNativeApp) {
+      try {
+        const nextSubscription = await detachSubscriptionUser();
+        if (nextSubscription) setSubscription((current) => ({ ...nextSubscription, products: current.products }));
+      } catch (error) {
+        console.warn('RevenueCat account detachment skipped:', error);
+      }
+    }
+
     setSession(null);
     setProfile(null);
     setCurScreen('home');
@@ -189,11 +286,8 @@ export default function App() {
     setLoading(false);
   };
 
-  // Load persistence
+  // Load local persistence for both guests and signed-in users.
   useEffect(() => {
-    if (!session) return;
-
-    // 2. Audio Tracks from IndexedDB
     const loadTracks = async () => {
       try {
         const stored = await db.getAllTracks();
@@ -235,31 +329,23 @@ export default function App() {
     });
 
     loadTracks();
-    
-    // 3. One-time notification prompt for new users
-    const hasPrompted = localStorage.getItem('ansioff_notif_prompted');
-    if (!hasPrompted) {
-      const timer = setTimeout(() => {
-        if (typeof window !== 'undefined' && (window as any).OneSignal) {
-          const OneSignal = (window as any).OneSignal;
-          if (OneSignal.Notifications) {
-            OneSignal.Notifications.requestPermission();
-            localStorage.setItem('ansioff_notif_prompted', 'true');
-          }
-        }
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
 
     if (isDemoSession(session)) {
       setCbtCount(Number(localStorage.getItem('ansioff_demo_cbt_count') || 0));
       return;
     }
 
-    // 4. CBT record count
-    supabase.from('cbt_records').select('id', { count: 'exact', head: true }).then(({ count }) => {
-      if (count !== null) setCbtCount(count);
-    });
+    if (session) {
+      supabase.from('cbt_records').select('id', { count: 'exact', head: true }).then(({ count }) => {
+        if (count !== null) setCbtCount(count);
+      });
+    } else {
+      try {
+        setCbtCount(JSON.parse(localStorage.getItem('ansioff_cbt_entries') || '[]').length);
+      } catch {
+        setCbtCount(0);
+      }
+    }
 
     // 4. Request Persistent Storage to prevent mobile browsers from wiping LocalStorage/IndexedDB
     if (typeof navigator !== 'undefined' && navigator.storage && navigator.storage.persist) {
@@ -268,15 +354,56 @@ export default function App() {
       });
     }
 
-    if (session) {
-      fetchProfile(session.user.id);
-    }
+    if (session) fetchProfile(session.user.id);
   }, [session]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleNav = (id: string) => {
     if (id === curScreen) return;
+    if (isNativeApp && !hasPremium && PREMIUM_SCREEN_FEATURES[id]) {
+      setPaywallPlacement('feature');
+      return;
+    }
     setPrevScreen(curScreen);
     setCurScreen(id);
+  };
+
+  const handleFreeActionCompleted = () => {
+    if (!isNativeApp || hasPremium) return;
+    const actionCount = recordFreeAction();
+    if (shouldShowGeneralPaywall(actionCount)) {
+      markGeneralPaywallShown();
+      window.setTimeout(() => setPaywallPlacement('reminder'), 350);
+    }
+  };
+
+  const handleOnboardingFinished = (answers: OnboardingAnswers, plan: PersonalizedPlan) => {
+    setPersonalizedPlan(plan);
+    setOnboardingDone(true);
+    setPaywallPlacement('onboarding');
+  };
+
+  const handlePurchase = async (product: PaywallProduct, useWinBackOffer: boolean) => {
+    const next = await purchaseProduct(product, useWinBackOffer);
+    setSubscription((current) => ({ ...next, products: current.products }));
+    if (next.isPremium) closePaywall();
+  };
+
+  const handleRestore = async () => {
+    const next = await restoreSubscriptions();
+    setSubscription((current) => ({ ...next, products: current.products }));
+    if (!next.isPremium) throw new Error('No encontramos una suscripción activa para restaurar.');
+    closePaywall();
+  };
+
+  const closePaywall = () => {
+    const shouldOfferSetup = paywallPlacement === 'onboarding' && localStorage.getItem('ansioff_post_onboarding_setup_v1') !== 'done';
+    setPaywallPlacement(null);
+    if (shouldOfferSetup) setShowPostOnboardingSetup(true);
+  };
+
+  const finishPostOnboardingSetup = () => {
+    localStorage.setItem('ansioff_post_onboarding_setup_v1', 'done');
+    setShowPostOnboardingSetup(false);
   };
 
   const goBack = () => {
@@ -327,27 +454,27 @@ export default function App() {
       case 'home':
         return (
           <>
-            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} />
+            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} isPremium={hasPremium} />
           </>
         );
       case 'sounds':
       case 'sc-audio':
-        return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} />;
+        return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} isPremium={hasPremium} onUpgrade={() => setPaywallPlacement('feature')} onPracticeComplete={handleFreeActionCompleted} />;
       case 'notes':
       case 'sc-notes':
         return <NotesScreen onBack={goBack} />;
       case 'crisis':
       case 'sc-sos':
-        return <SOSScreen onBack={goBack} onFinished={() => handleNav('home')} />;
+        return <SOSScreen onBack={goBack} onFinished={() => { handleFreeActionCompleted(); handleNav('home'); }} />;
       case 'breath':
       case 'sc-breath':
-        return <BreathingScreen onBack={goBack} />;
+        return <BreathingScreen onBack={goBack} isPremium={hasPremium} onUpgrade={() => setPaywallPlacement('feature')} onPracticeComplete={handleFreeActionCompleted} />;
       case 'progress':
       case 'sc-stats':
         return <StatsScreen onBack={goBack} />;
       // Modules / Tools Hub
       case 'sc-tools':
-        return <ToolsScreen onBack={goBack} onNav={handleNav} />;
+        return <ToolsScreen onBack={goBack} onNav={handleNav} isPremium={hasPremium} />;
       case 'sc-games':
         return <GamesScreen onBack={goBack} />;
       case 'sc-act':
@@ -355,21 +482,19 @@ export default function App() {
       case 'sc-cbt':
         return <CBTScreen onBack={goBack} />;
       case 'sc-eval':
-        return <EvaluationScreen onBack={goBack} />;
-      case 'sc-stats':
-        return <StatsScreen onBack={goBack} />;
+        return <EvaluationScreen onBack={goBack} onComplete={handleFreeActionCompleted} />;
       case 'sc-support':
         return <SupportScreen onBack={goBack} />;
       case 'sc-night':
         return <NightModeScreen onBack={goBack} onNav={handleNav} />;
       case 'sc-settings':
-        return <SettingsScreen onBack={goBack} profile={profile} onLogout={handleLogout} onDeleteAccount={handleDeleteAccount} />;
+        return <SettingsScreen onBack={goBack} profile={profile} onLogout={handleLogout} onDeleteAccount={session ? handleDeleteAccount : undefined} onLogin={() => setShowAuth(true)} isPremium={hasPremium} subscriptionStatus={subscription.status} managementURL={subscription.managementURL} onUpgrade={() => setPaywallPlacement('feature')} onRestore={handleRestore} />;
       case 'sc-exposure-why':
         return <ExposureScreen onBack={goBack} />;
       default:
         return (
           <>
-            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} />
+            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} isPremium={hasPremium} />
           </>
         );
     }
@@ -381,7 +506,9 @@ export default function App() {
     </div>
   );
 
-  if (!session) return <AuthScreen onAuth={handleAuth} />;
+  if (!isNativeApp && !session) return <AuthScreen onAuth={handleAuth} />;
+  if (showAuth) return <AuthScreen onAuth={handleAuth} onCancel={isNativeApp ? () => setShowAuth(false) : undefined} />;
+  if (isNativeApp && !onboardingDone) return <OnboardingFlow onFinished={handleOnboardingFinished} onLogin={() => setShowAuth(true)} />;
 
   return (
     <div className="app-container">
@@ -397,9 +524,26 @@ export default function App() {
         <span>SOS</span>
       </button>
 
-      <BottomNav activeScreen={curScreen} onNav={handleNav} />
+      <BottomNav activeScreen={curScreen} onNav={handleNav} isPremium={hasPremium} />
       <DisclaimerModal />
       <InstallPWA />
+      <Paywall
+        open={paywallPlacement !== null}
+        placement={paywallPlacement || 'feature'}
+        plan={personalizedPlan}
+        products={subscription.products}
+        loading={subscription.status === 'loading'}
+        error={subscription.error}
+        onClose={closePaywall}
+        onPurchase={handlePurchase}
+        onRestore={handleRestore}
+      />
+      <PostOnboardingSetup
+        open={showPostOnboardingSetup}
+        hasAccount={Boolean(session)}
+        onLogin={() => { setShowPostOnboardingSetup(false); setResumeSetupAfterAuth(true); setShowAuth(true); }}
+        onDone={finishPostOnboardingSetup}
+      />
     </div>
   );
 }

@@ -1,27 +1,38 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert, Bell, Phone, UserRoundPlus, X, ZapOff, Activity, CreditCard, Loader2, LogOut } from 'lucide-react';
+import { Shield, Trash2, Download, ChevronRight, AlertTriangle, Info, ShieldAlert, Bell, Phone, UserRoundPlus, X, ZapOff, Activity, CreditCard, Loader2, LogOut, Cloud, RotateCcw } from 'lucide-react';
 import TopBar from './TopBar';
 import { getStats, STATS_KEYS } from '../utils/stats';
 import { exportClinicalDiaryPDF } from '../utils/exportUtils';
 import { EmergencyContact, getEmergencyContacts, addEmergencyContact, removeEmergencyContact } from '../utils/contacts';
 import { getNeuroSettings, saveNeuroSettings, NeuroUXSettings } from '../utils/neuroux';
 import * as db from '../lib/db';
+import type { SubscriptionStatus } from '@/lib/subscriptions';
+import { Capacitor } from '@capacitor/core';
+import { cancelDailyReminder, getDailyReminderStatus, scheduleDailyReminder } from '@/lib/reminders';
 
 interface SettingsScreenProps {
     onBack: () => void;
     profile?: any;
     onLogout?: () => void;
     onDeleteAccount?: () => Promise<void>;
+    onLogin?: () => void;
+    isPremium: boolean;
+    subscriptionStatus: SubscriptionStatus;
+    managementURL?: string | null;
+    onUpgrade: () => void;
+    onRestore: () => Promise<void>;
 }
 
-export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAccount }: SettingsScreenProps) {
+export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAccount, onLogin, isPremium, subscriptionStatus, managementURL, onUpgrade, onRestore }: SettingsScreenProps) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [showAccountDeleteConfirm, setShowAccountDeleteConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isDeletingAccount, setIsDeletingAccount] = useState(false);
     const [pushEnabled, setPushEnabled] = useState(false);
+    const [reminderTime, setReminderTime] = useState('20:00');
+    const [isRestoring, setIsRestoring] = useState(false);
 
     // NeuroUX settings
     const [neuroSettings, setNeuroSettings] = useState<NeuroUXSettings>({ reduceAnimations: false, breathingSpeed: 'normal' });
@@ -37,7 +48,15 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
         // Load initial contacts
         setContacts(getEmergencyContacts());
 
-        // Check if OneSignal is loaded and get subscription status
+        if (Capacitor.isNativePlatform()) {
+            getDailyReminderStatus().then((status) => {
+                setPushEnabled(status.enabled);
+                setReminderTime(status.time);
+            });
+            return;
+        }
+
+        // The website keeps its existing optional OneSignal flow.
         const checkPushStatus = async () => {
             if (typeof window !== 'undefined' && (window as any).OneSignal) {
                 const OneSignal = (window as any).OneSignal;
@@ -56,6 +75,21 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
     const hasData = stats.points > 0 || stats.sosUses > 0 || stats.breathMins > 0 || stats.cbtEntries > 0;
 
     const handleEnablePush = async () => {
+        if (Capacitor.isNativePlatform()) {
+            try {
+                if (pushEnabled) {
+                    await cancelDailyReminder();
+                    setPushEnabled(false);
+                    return;
+                }
+                const enabled = await scheduleDailyReminder(reminderTime);
+                setPushEnabled(enabled);
+                if (!enabled) alert('Puedes activar las notificaciones de ANSIOFF desde los ajustes del dispositivo.');
+            } catch (error) {
+                alert(error instanceof Error ? error.message : 'No se pudo configurar el recordatorio.');
+            }
+            return;
+        }
         if (typeof window !== 'undefined' && (window as any).OneSignal) {
             const OneSignal = (window as any).OneSignal;
             await OneSignal.Slidedown.promptPush();
@@ -143,6 +177,26 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
         }
     };
 
+    const handleRestoreSubscription = async () => {
+        setIsRestoring(true);
+        try {
+            await onRestore();
+            alert('Suscripción restaurada correctamente.');
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'No se ha podido restaurar la compra.');
+        } finally {
+            setIsRestoring(false);
+        }
+    };
+
+    const handleManageSubscription = () => {
+        if (managementURL) {
+            window.open(managementURL, '_blank', 'noopener,noreferrer');
+            return;
+        }
+        onUpgrade();
+    };
+
     return (
         <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden relative">
             <TopBar title="Ajustes y Privacidad" onBack={onBack} />
@@ -159,12 +213,52 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
 
                     <h2 className="text-2xl font-light text-[#ddeef5] mb-2 font-serif italic">Privacidad desde el Diseño</h2>
                     <p className="font-sans font-light text-[rgba(200,225,235,0.8)] text-sm leading-relaxed mb-4">
-                        Ansioff procesa tu información sensible (diarios, audios y progreso) directamente en tu dispositivo. Tu progreso se guarda localmente para garantizar la máxima confidencialidad.
+                        Tus respuestas del onboarding, notas y progreso se guardan en este dispositivo. Solo cuando solicitas una reflexión IA se procesan tus últimas notas mediante el servicio de ANSIOFF y Gemini, después de informarte y pedir tu consentimiento.
                     </p>
 
                     <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#5aadcf]/10 text-[#5aadcf] rounded-xl text-xs font-sans font-semibold border border-[#5aadcf]/20">
-                        <ShieldAlert size={14} /> 100% Anónimo y Local
+                        <ShieldAlert size={14} /> Datos sensibles bajo tu control
                     </div>
+                </div>
+
+                <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[rgba(200,225,235,0.38)] mb-4 px-1">Cuenta y suscripción</div>
+                <div className="space-y-3 mb-8">
+                    <button
+                        onClick={profile ? undefined : onLogin}
+                        className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center gap-4 border border-[rgba(255,255,255,0.07)] text-left"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-[#5aadcf]/10 border border-[#5aadcf]/20 flex items-center justify-center text-[#5aadcf]">
+                            <Cloud size={20} className="stroke-[1.5]" />
+                        </div>
+                        <div className="flex-1">
+                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">{profile ? 'Cuenta conectada' : 'Usando ANSIOFF como invitado'}</h3>
+                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.55)]">{profile ? 'Tu compra queda vinculada a esta cuenta.' : 'Crea una cuenta cuando quieras para sincronizar tu acceso.'}</p>
+                        </div>
+                        {!profile && <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)]" />}
+                    </button>
+
+                    <button
+                        onClick={isPremium ? handleManageSubscription : onUpgrade}
+                        className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center gap-4 border border-[rgba(255,255,255,0.07)] hover:border-[#5aadcf]/30 transition-colors text-left"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-[#c9a96e]/10 border border-[#c9a96e]/20 flex items-center justify-center text-[#c9a96e]">
+                            <CreditCard size={20} className="stroke-[1.5]" />
+                        </div>
+                        <div className="flex-1">
+                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">{isPremium ? 'ANSIOFF Premium activo' : 'Plan gratuito'}</h3>
+                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.55)]">{subscriptionStatus === 'loading' ? 'Comprobando tus compras...' : isPremium ? 'Gestiona o cancela tu suscripción en la tienda.' : 'Desbloquea todas las herramientas y el seguimiento.'}</p>
+                        </div>
+                        {subscriptionStatus === 'loading' ? <Loader2 size={18} className="animate-spin text-[#5aadcf]" /> : <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)]" />}
+                    </button>
+
+                    <button
+                        onClick={handleRestoreSubscription}
+                        disabled={isRestoring}
+                        className="w-full py-3 px-4 rounded-xl border border-[rgba(255,255,255,0.07)] text-[12px] text-[rgba(200,225,235,0.75)] flex items-center justify-center gap-2 disabled:opacity-60"
+                    >
+                        {isRestoring ? <Loader2 size={15} className="animate-spin" /> : <RotateCcw size={15} />}
+                        Restaurar compras
+                    </button>
                 </div>
 
                 {/* --- CONTACTOS DE EMERGENCIA --- */}
@@ -269,8 +363,7 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                         <div>
                             <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">¿Qué datos guardamos?</h3>
                             <p className="font-sans font-light text-[12px] text-[rgba(200,225,235,0.8)] leading-relaxed">
-                                Actualmente guardamos en el almacenamiento local de tu navegador:
-                                <span className="font-medium text-[#5aadcf]"> {stats.points} puntos de progreso</span> y tus audios personalizados.
+                                En este dispositivo hay <span className="font-medium text-[#5aadcf]"> {stats.points} puntos de práctica</span>, tus notas y audios. RevenueCat recibe la información necesaria para validar compras, nunca tus respuestas, síntomas o notas.
                             </p>
                         </div>
                     </div>
@@ -285,14 +378,29 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                         </div>
                         <div className="flex-1 text-left">
                             <h3 className="font-sans font-medium text-sm text-[#ddeef5] group-hover:text-[#c9a96e] mb-1 transition-colors">
-                                {pushEnabled ? 'Notificaciones Activadas' : 'Habilitar Notificaciones'}
+                                {pushEnabled ? 'Recordatorio diario activado' : 'Activar recordatorio diario'}
                             </h3>
                             <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.5)]">
-                                {pushEnabled ? 'Recibirás consejos push' : 'Recibe recordatorios zen en tu dispositivo'}
+                                {pushEnabled ? `Todos los días a las ${reminderTime}` : 'Una pausa suave a la hora que elijas'}
                             </p>
                         </div>
                         <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)] group-hover:text-[#c9a96e] transition-colors" />
                     </button>
+                    {Capacitor.isNativePlatform() && (
+                        <label className="w-full bg-[rgba(255,255,255,0.025)] p-4 rounded-xl flex items-center justify-between gap-4 border border-[rgba(255,255,255,0.06)]">
+                            <span className="text-[12px] text-[rgba(200,225,235,0.7)]">Hora del recordatorio</span>
+                            <input
+                                type="time"
+                                value={reminderTime}
+                                onChange={async (event) => {
+                                    const nextTime = event.target.value;
+                                    setReminderTime(nextTime);
+                                    if (pushEnabled) await scheduleDailyReminder(nextTime);
+                                }}
+                                className="bg-[#0e1d2e] border border-[rgba(255,255,255,0.1)] rounded-lg px-3 py-2 text-[#ddeef5] text-sm"
+                            />
+                        </label>
+                    )}
 
                     {/* Export Data */}
                     <button
@@ -324,7 +432,7 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                         <ChevronRight size={16} className="text-slate-600 group-hover:text-blue-400 transition-colors" />
                     </button>
 
-                    {onLogout && (
+                    {profile && onLogout && (
                         <button
                             onClick={onLogout}
                             className="w-full bg-[rgba(255,255,255,0.02)] p-4 rounded-xl flex items-center gap-4 border border-[rgba(255,255,255,0.05)] hover:bg-red-500/10 hover:border-red-500/20 transition-all duration-200 group"
@@ -410,7 +518,7 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                         </div>
                     </button>
 
-                    {onDeleteAccount && (
+                    {profile && onDeleteAccount && (
                         <button
                             onClick={() => setShowAccountDeleteConfirm(true)}
                             className="w-full p-5 rounded-2xl flex items-center gap-4 transition-transform duration-200 border shadow-sm bg-[#d97c6a]/10 border-[#d97c6a]/25 hover:bg-[#d97c6a]/15 hover:border-[#d97c6a]/40 hover:-translate-y-0.5 group"
