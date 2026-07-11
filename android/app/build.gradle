@@ -6,7 +6,7 @@ android {
     def releaseKeystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
 
     defaultConfig {
-        applicationId "app.vercel.app_ansiedad_flame.twa"
+        applicationId "com.ansioff.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 15

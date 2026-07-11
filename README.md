@@ -78,7 +78,7 @@ open ios/App/App.xcworkspace
 
 El proyecto iOS usa el bundle `com.ansioff.app.jordi`, la capacidad In-App Purchase y la version `1.1.0`. La subida automatizada esta en `.github/workflows/deploy-ios.yml` y requiere los secretos de firma, App Store Connect y la clave publica iOS de RevenueCat.
 
-Android conserva el paquete historico publicado en Google Play: `app.vercel.app_ansiedad_flame.twa`. No debe cambiarse, aunque la implementacion actual sea Capacitor en lugar de la TWA original.
+Android usa una ficha nueva de Google Play con el paquete `com.ansioff.app`. La ficha antigua `app.vercel.app_ansiedad_flame.twa` no se reutiliza para evitar el bloqueo de la clave de firma anterior.
 
 ```bash
 STATIC_EXPORT=true npm run build
