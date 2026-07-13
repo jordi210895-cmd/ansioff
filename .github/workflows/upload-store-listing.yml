@@ -62,5 +62,8 @@ jobs:
             --screenshots_path fastlane/screenshots \
             --skip_binary_upload true \
             --overwrite_screenshots true \
+            --reject_if_possible true \
+            --submit_for_review true \
+            --automatic_release true \
             --force true \
             --run_precheck_before_submit false
