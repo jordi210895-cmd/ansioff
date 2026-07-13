@@ -25,7 +25,7 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                     padding-bottom:12px;
                 }
                 .home-greeting{margin-top:0;margin-bottom:16px;}
-                .home-stack{gap:18px;}
+                .home-stack{gap:23px;}
                 .home-card{border-radius:26px;}
                 .home-card-inner{border-radius:25px;padding:18px;gap:12px;}
                 .home-sos-title{font-size:21px;line-height:1.15;}
@@ -36,7 +36,7 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                 .home-section-head{margin-bottom:8px;}
                 .breath-card{border-radius:26px;padding:16px 18px;gap:12px;}
                 .breath-bg{border-radius:26px;}
-                .breath-title{font-size:25px;}
+                .breath-title{font-size:30px;}
                 .breath-copy{font-size:13px;line-height:1.38;}
                 .breath-button{padding-top:8px;padding-bottom:8px;}
                 .home-quote-section{margin-bottom:0;}
@@ -49,25 +49,25 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                     }
                     .home-safe-header{padding-top:max(54px,calc(var(--safe-top,0px) + 12px));padding-bottom:11px;}
                     .home-greeting{margin-bottom:15px;}
-                    .home-stack{gap:17px;}
+                    .home-stack{gap:21px;}
                     .home-card-inner{padding:16px;gap:11px;}
                     .home-sos-title{font-size:20px;}
                     .home-section-title{font-size:20px;}
                     .breath-card{padding:15px 16px;gap:11px;}
-                    .breath-title{font-size:24px;}
+                    .breath-title{font-size:29px;}
                     .home-quote{padding:9px 15px;}
                     .home-quote-text{font-size:13.5px;}
                 }
                 @media(max-height:760px){
                     .home-safe-header{padding-top:max(50px,calc(var(--safe-top,0px) + 10px));padding-bottom:10px;}
                     .home-greeting{margin-bottom:13px;}
-                    .home-stack{gap:14px;}
+                    .home-stack{gap:18px;}
                     .home-card-inner{padding:15px;gap:10px;}
                     .home-sos-title{font-size:19px;}
                     .home-sos-copy{font-size:12.5px;line-height:1.35;}
                     .home-section-head{margin-bottom:7px;}
                     .breath-card{padding:14px 15px;gap:10px;}
-                    .breath-title{font-size:23px;}
+                    .breath-title{font-size:28px;}
                     .breath-copy{font-size:12.5px;line-height:1.34;}
                     .home-quote{padding:8px 13px;border-radius:20px;}
                     .home-quote-text{font-size:13px;line-height:1.28;}
@@ -170,7 +170,7 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                                     Alivio del estrés <br /><span className="font-bold tracking-tight not-italic font-sans text-sky-200">Profundo</span>
                                 </h3>
                                 <p className="breath-copy text-[rgba(200,225,235,0.6)]">
-                                    Una sesión corta diseñada para reducir el ritmo cardíaco y calmar la mente activa.
+                                    Una sesión corta diseñada para reducir rápidamente el ritmo cardíaco y calmar la mente activa.
                                 </p>
                             </div>
 

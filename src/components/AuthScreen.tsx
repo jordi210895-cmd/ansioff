@@ -1,9 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { supabase } from '@/lib/supabase';
-import { LogIn, UserPlus, Mail, Lock, Loader2, Wind, X, User } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, Loader2, X, User } from 'lucide-react';
 
 interface AuthScreenProps {
     onAuth: (session?: any, profile?: any) => void;
@@ -254,9 +255,16 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
                     text-align: center;
                 }
                 .auth-logo {
-                    width: 54px;
-                    height: 54px;
+                    width: 64px;
+                    height: 64px;
                     margin: 0 auto 12px;
+                    overflow: hidden;
+                }
+                .auth-logo-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
                 }
                 .auth-footer {
                     width: 100%;
@@ -286,8 +294,8 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
                     color: #ffffff;
                 }
                 .native-auth .auth-logo {
-                    width: 50px;
-                    height: 50px;
+                    width: 60px;
+                    height: 60px;
                     margin-bottom: 10px;
                 }
                 .native-auth .auth-title {
@@ -306,8 +314,8 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
                         margin-bottom: 12px;
                     }
                     .auth-logo {
-                        width: 46px;
-                        height: 46px;
+                        width: 54px;
+                        height: 54px;
                         margin-bottom: 10px;
                         border-radius: 16px;
                     }
@@ -359,8 +367,8 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
                     </div>
                 )}
                 
-                <div className="auth-logo bg-gradient-to-br from-[#5aadcf] to-[#3b82f6] rounded-2xl flex items-center justify-center shadow-xl rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <Wind size={30} className="text-[#03080f]" />
+                <div className="auth-logo rounded-2xl shadow-xl rotate-3 hover:rotate-0 transition-transform duration-500">
+                    <Image className="auth-logo-img" src="/logo.png" alt="ANSIOFF" width={64} height={64} priority />
                 </div>
                 <h1 className="auth-title text-4xl font-extrabold tracking-tight mb-2">Ansioff</h1>
                 {trialOffer && (
