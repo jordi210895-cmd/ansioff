@@ -6,6 +6,8 @@ const PACKAGE_NAME = 'com.ansioff.app';
 const SCOPE = 'https://www.googleapis.com/auth/androidpublisher';
 const LISTING_DIR = path.resolve('store-assets/listing/es-ES');
 const SCREENSHOTS_DIR = path.resolve('store-assets/google-play/phone-screenshots');
+const ICON_PATH = path.resolve('assets/play-store-icon.png');
+const FEATURE_GRAPHIC_PATH = path.resolve('assets/play-feature-graphic.png');
 
 function readText(fileName) {
   return fs.readFileSync(path.join(LISTING_DIR, fileName), 'utf8').trim();
@@ -23,6 +25,33 @@ function listScreenshots() {
     .filter((file) => /\.(jpe?g|png)$/i.test(file))
     .sort()
     .map((file) => path.join(SCREENSHOTS_DIR, file));
+}
+
+async function replaceImage(androidpublisher, editId, language, imageType, imagePath) {
+  if (!fs.existsSync(imagePath)) throw new Error(`Missing ${imageType} file: ${imagePath}`);
+
+  await androidpublisher.edits.images.deleteall({
+    packageName: PACKAGE_NAME,
+    editId,
+    language,
+    imageType,
+  }).catch((error) => {
+    const status = error.response?.status;
+    if (status !== 404) throw error;
+  });
+
+  const mimeType = imagePath.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
+  const { data } = await androidpublisher.edits.images.upload({
+    packageName: PACKAGE_NAME,
+    editId,
+    language,
+    imageType,
+    media: {
+      mimeType,
+      body: fs.createReadStream(imagePath),
+    },
+  });
+  console.log(`Uploaded ${imageType} for ${language}: ${data.image?.url || 'ok'}`);
 }
 
 async function main() {
@@ -72,6 +101,9 @@ async function main() {
       },
     });
     console.log(`Updated listing text for ${language}`);
+
+    await replaceImage(androidpublisher, editId, language, 'icon', ICON_PATH);
+    await replaceImage(androidpublisher, editId, language, 'featureGraphic', FEATURE_GRAPHIC_PATH);
 
     await androidpublisher.edits.images.deleteall({
       packageName: PACKAGE_NAME,
