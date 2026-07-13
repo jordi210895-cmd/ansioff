@@ -74,6 +74,20 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(error.response?.data || error.message);
+  const apiError = error.response?.data?.error;
+  if (apiError) {
+    console.error(`Google Play API error code=${apiError.code || 'unknown'} status=${apiError.status || 'unknown'}`);
+    console.error(`Google Play API message=${apiError.message || error.message}`);
+    for (const detail of apiError.errors || []) {
+      console.error([
+        'Google Play API detail',
+        `domain=${detail.domain || 'unknown'}`,
+        `reason=${detail.reason || 'unknown'}`,
+        `message=${detail.message || 'unknown'}`,
+      ].join(' | '));
+    }
+  } else {
+    console.error(error.message);
+  }
   process.exit(1);
 });
