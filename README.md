@@ -15,18 +15,14 @@ Las respuestas del onboarding no se envian a analitica ni a plataformas publicit
 
 ## Acceso
 
-Gratis:
+Durante los 7 dias iniciales desde el registro:
 
-- Inicio, SOS, soporte y ajustes.
-- Respiracion 4-2-6.
-- Audio "Calma Profunda".
-- Check-in de bienestar.
+- Acceso completo a la app, sin tarjeta.
 
-Premium:
+Despues de esos 7 dias:
 
-- Resto de respiraciones y audios.
-- Diario, reflexion IA, CBT y ACT.
-- Juegos, modo noche, exposicion, estadisticas, exportacion y audios propios.
+- El paywall nativo bloquea el acceso hasta activar una suscripcion o restaurar una compra valida.
+- Las suscripciones se validan con RevenueCat y App Store / Google Play.
 
 El entitlement de RevenueCat es `premium`. El offering es `default` y usa:
 
@@ -35,8 +31,8 @@ El entitlement de RevenueCat es `premium`. El offering es `default` y usa:
 
 En Google Play, los identificadores completos incluyen su plan base:
 
-- `com.ansioff.premium.annual:annual` (39,99 EUR/ano, prueba de 7 dias)
-- `com.ansioff.premium.monthly:monthly` (6,99 EUR/mes)
+- `com.ansioff.premium.annual:annual` (59,99 EUR/ano, prueba de 7 dias)
+- `com.ansioff.premium.monthly:monthly` (8,99 EUR/mes, prueba de 7 dias)
 
 ## Configuracion
 
@@ -105,7 +101,7 @@ cd android
 ./gradlew :app:bundleRelease
 ```
 
-La publicacion automatizada esta en `.github/workflows/deploy-android.yml`. Requiere la cuenta de servicio de Google Play, la clave de subida y la clave publica Android de RevenueCat configuradas como secretos de GitHub.
+La publicacion automatizada esta en `.github/workflows/deploy-android.yml`. Requiere la cuenta de servicio de Google Play, la clave de subida y la clave publica Android de RevenueCat configuradas como secretos de GitHub. Las suscripciones de Google Play se pueden sincronizar con `.github/workflows/configure-android-subscriptions.yml`.
 
 Antes de publicar:
 
