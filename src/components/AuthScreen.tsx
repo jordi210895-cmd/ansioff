@@ -3,19 +3,22 @@
 import { useState, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { supabase } from '@/lib/supabase';
-import { LogIn, UserPlus, Mail, Lock, Loader2, Wind, X } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, Loader2, Wind, X, User } from 'lucide-react';
 
 interface AuthScreenProps {
     onAuth: (session?: any, profile?: any) => void;
+    onTrialSignup?: (userId: string) => void;
     onCancel?: () => void;
+    trialOffer?: boolean;
 }
 
 const DEMO_EMAIL = 'smitsolutionshelp@gmail.com';
 const DEMO_PASSWORD = 'Zxcv@1234';
 const DEMO_USER_ID = 'app-review-demo';
 
-export default function AuthScreen({ onAuth, onCancel }: AuthScreenProps) {
-    const [mode, setMode] = useState<'login' | 'signup' | 'forgot' | 'reset'>('login');
+export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer = false }: AuthScreenProps) {
+    const [mode, setMode] = useState<'login' | 'signup' | 'forgot' | 'reset'>(trialOffer ? 'signup' : 'login');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -32,6 +35,10 @@ export default function AuthScreen({ onAuth, onCancel }: AuthScreenProps) {
         setIsNativeApp(Capacitor.isNativePlatform());
         checkStandalone();
     }, []);
+
+    useEffect(() => {
+        if (trialOffer) setMode('signup');
+    }, [trialOffer]);
 
     // Detect recovery link
     useEffect(() => {
@@ -70,8 +77,20 @@ export default function AuthScreen({ onAuth, onCancel }: AuthScreenProps) {
                 if (error) throw error;
                 onAuth();
             } else if (mode === 'signup') {
-                const { error } = await supabase.auth.signUp({ email, password });
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { name: name.trim() } },
+                });
                 if (error) throw error;
+                if (data.session) {
+                    onAuth();
+                    return;
+                }
+                if (trialOffer && data.user && onTrialSignup) {
+                    onTrialSignup(data.user.id);
+                    return;
+                }
                 setMessage('¡Registro casi completo! Revisa tu email para confirmar tu cuenta.');
                 setMode('login');
             } else if (mode === 'forgot') {
@@ -94,7 +113,7 @@ export default function AuthScreen({ onAuth, onCancel }: AuthScreenProps) {
     };
 
     return (
-        <div className={`auth-root ${isNativeApp ? 'native-auth' : ''} bg-[#03080f] text-[#ddeef5] selection:bg-[#5aadcf]/30`}>
+        <div className={`auth-root ${isNativeApp ? 'native-auth' : ''} ${trialOffer ? 'trial-auth' : ''} bg-[#03080f] text-[#ddeef5] selection:bg-[#5aadcf]/30`}>
             <style jsx>{`
                 .auth-root {
                     position: fixed;
@@ -250,8 +269,21 @@ export default function AuthScreen({ onAuth, onCancel }: AuthScreenProps) {
                     padding-top: max(12px, calc(env(safe-area-inset-top, 0px) - 18px));
                     padding-bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) - 6px));
                 }
+                .trial-auth .auth-shell {
+                    padding-top: max(44px, calc(env(safe-area-inset-top, 0px) + 18px));
+                }
                 .native-auth .auth-brand {
                     margin-bottom: 14px;
+                }
+                .trial-auth .auth-brand {
+                    margin-bottom: 30px;
+                }
+                .trial-auth .trial-heading {
+                    margin-top: 28px;
+                }
+                .trial-auth .trial-subtitle {
+                    margin-top: 14px;
+                    color: #ffffff;
                 }
                 .native-auth .auth-logo {
                     width: 50px;
@@ -331,15 +363,33 @@ export default function AuthScreen({ onAuth, onCancel }: AuthScreenProps) {
                     <Wind size={30} className="text-[#03080f]" />
                 </div>
                 <h1 className="auth-title text-4xl font-extrabold tracking-tight mb-2">Ansioff</h1>
-                <p className="auth-subtitle text-[rgba(200,225,235,0.6)] font-medium">Tu espacio de calma personal</p>
+                {trialOffer && (
+                    <div className="trial-heading max-w-[340px] text-center">
+                        <p className="text-2xl font-bold leading-tight text-[#e5f2f7]">{mode === 'login' ? 'Inicia sesión en ANSIOFF' : 'Regístrate y te regalamos 7 días gratis'}</p>
+                        {mode !== 'login' && <p className="trial-subtitle text-sm font-semibold">Sin tarjeta ni renovaciones automáticas</p>}
+                    </div>
+                )}
             </div>
 
             <div className="auth-card animate-in fade-in zoom-in-95 duration-500 delay-200">
-                <h2 className="text-2xl font-bold mb-8 text-center">
+                {!trialOffer && <h2 className="text-2xl font-bold mb-8 text-center">
                     {mode === 'login' ? 'Bienvenido de nuevo' : mode === 'signup' ? 'Crea tu cuenta' : mode === 'forgot' ? 'Recuperar acceso' : 'Nueva contraseña'}
-                </h2>
+                </h2>}
 
                 <form onSubmit={handleAuth}>
+                    {mode === 'signup' && (
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                placeholder="Nombre"
+                                value={name}
+                                onChange={(event) => setName(event.target.value)}
+                                required
+                            />
+                            <User size={19} className="auth-input-icon" />
+                        </div>
+                    )}
+
                     {mode !== 'reset' && (
                         <div className="input-group">
                             <input
@@ -384,7 +434,7 @@ export default function AuthScreen({ onAuth, onCancel }: AuthScreenProps) {
                         ) : (
                             <>
                                 {mode === 'login' ? <LogIn size={20} /> : mode === 'signup' ? <UserPlus size={20} /> : <Mail size={20} />}
-                                {mode === 'login' ? 'Iniciar Sesión' : mode === 'signup' ? 'Registrarse' : mode === 'forgot' ? 'Enviar enlace' : 'Actualizar contraseña'}
+                                {mode === 'login' ? 'Iniciar sesión' : mode === 'signup' ? (trialOffer ? 'Crear cuenta' : 'Registrarse') : mode === 'forgot' ? 'Enviar enlace' : 'Actualizar contraseña'}
                             </>
                         )}
                     </button>
@@ -425,9 +475,9 @@ export default function AuthScreen({ onAuth, onCancel }: AuthScreenProps) {
                 </div>
             </div>
 
-            <p className="auth-footer text-[rgba(200,225,235,0.3)] text-xs text-center font-medium">
+            {!trialOffer && <p className="auth-footer text-[rgba(200,225,235,0.3)] text-xs text-center font-medium">
                 Tus datos de salud mental están protegidos y encriptados.
-            </p>
+            </p>}
             </div>
         </div>
     );

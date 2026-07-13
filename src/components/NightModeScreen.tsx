@@ -79,7 +79,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                                 </div>
                                 <div>
                                     <h3 className="font-sans font-medium text-[15px] text-[#ddeef5] mb-1">Relajación Física</h3>
-                                    <p className="font-sans font-light text-xs text-[rgba(200,225,235,0.38)] leading-relaxed">3 min. Respiración 4-2-6 y escaneo corporal para aflojar la tensión.</p>
+                                    <p className="font-sans font-light text-xs text-[rgba(200,225,235,0.38)] leading-relaxed">3 repeticiones 4-7-8 y escaneo corporal para aflojar la tensión.</p>
                                 </div>
                             </button>
 
@@ -174,7 +174,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                             </div>
                         </div>
 
-                        <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[#5aadcf]/80 mb-4">Respiración 4 - 2 - 6</div>
+                        <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[#5aadcf]/80 mb-4">Respiración 4 - 7 - 8</div>
                         <h2 className="text-3xl font-light text-[#ddeef5] mb-4 leading-relaxed font-serif italic">
                             Inhala suavemente,<br />exhala la tensión.
                         </h2>
@@ -302,4 +302,3 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
         </div>
     );
 }
-

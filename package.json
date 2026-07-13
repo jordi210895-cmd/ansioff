@@ -5,12 +5,14 @@
     "scripts": {
         "dev": "next dev",
         "build": "NEXT_DEBUG=true next build",
+        "build:mobile": "STATIC_EXPORT=true NEXT_DEBUG=true next build",
         "start": "next start",
         "lint": "eslint .",
         "test": "vitest run"
     },
     "dependencies": {
         "@capacitor/android": "^6.2.1",
+        "@capacitor/app": "^6.0.3",
         "@capacitor/cli": "^6.2.1",
         "@capacitor/core": "^6.2.1",
         "@capacitor/ios": "^6.2.1",

@@ -19,7 +19,6 @@ import SettingsScreen from '@/components/SettingsScreen';
 import * as db from '@/lib/db';
 import { supabase, getUserProfile } from '@/lib/supabase';
 import ExposureScreen from '@/components/ExposureScreen';
-import DisclaimerModal from '@/components/DisclaimerModal';
 import AuthScreen from '@/components/AuthScreen';
 import InstallPWA from '@/components/InstallPWA';
 import OnboardingFlow from '@/components/OnboardingFlow';
@@ -29,15 +28,20 @@ import { Capacitor } from '@capacitor/core';
 import {
   attachSubscriptionUser, detachSubscriptionUser, initializeSubscriptions,
   PaywallProduct, purchaseProduct, restoreSubscriptions, SubscriptionSnapshot,
+  syncSubscriptionUserAttributes,
 } from '@/lib/subscriptions';
+import { trackCompleteRegistration, trackStorePurchaseConversion } from '@/lib/adsTracking';
 import {
   completeOnboarding, createPersonalizedPlan, isOnboardingComplete, loadOnboardingState,
   OnboardingAnswers, PersonalizedPlan,
 } from '@/lib/onboarding';
 import {
-  markGeneralPaywallShown, markRecoveryPaywallShown, PREMIUM_SCREEN_FEATURES,
-  recordFreeAction, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
+  AccountTrialStatus, getAccountTrialStatus, markGeneralPaywallShown, markRecoveryPaywallShown,
+  PREMIUM_SCREEN_FEATURES, recordFreeAction, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
+  startAccountTrial,
 } from '@/lib/access';
+import { registerNativeReviewResumeListener, requestNativeReviewIfDue } from '@/lib/appReview';
+import { registerInactivityLifecycle, scheduleInactivityReminders } from '@/lib/reminders';
 
 interface Track {
   id?: number;
@@ -76,7 +80,11 @@ export default function App() {
   const [resumeSetupAfterAuth, setResumeSetupAfterAuth] = useState(false);
   const [paywallPlacement, setPaywallPlacement] = useState<PaywallPlacement | null>(null);
   const [showPostOnboardingSetup, setShowPostOnboardingSetup] = useState(false);
+  const [trialAuthOffer, setTrialAuthOffer] = useState(false);
   const [personalizedPlan, setPersonalizedPlan] = useState<PersonalizedPlan | null>(null);
+  const [accountTrial, setAccountTrial] = useState<AccountTrialStatus>({
+    active: false, expired: false, startedAt: null, endsAt: null, daysLeft: 0,
+  });
   const [subscription, setSubscription] = useState<SubscriptionSnapshot>({
     status: 'loading', isPremium: false, products: [], managementURL: null,
   });
@@ -84,6 +92,7 @@ export default function App() {
   const [curScreen, setCurScreen] = useState('home');
   const [prevScreen, setPrevScreen] = useState('home');
   const [cbtCount, setCbtCount] = useState(0);
+  const [reviewEntryTick, setReviewEntryTick] = useState(0);
   const [tracks, setTracks] = useState<Track[]>([
     { name: 'Superación Agorafobia', url: '/audio/audio1.m4a', icon: '🧘', duration: '—' },
     { name: 'Calma Profunda', url: '/audio/audio2.m4a', icon: '🌊', duration: '—' },
@@ -91,7 +100,100 @@ export default function App() {
   ]);
 
   const isDemo = isDemoSession(session);
-  const hasPremium = Boolean(isDemo || subscription.isPremium || profile?.is_premium);
+  const currentUserId = session?.user?.id as string | undefined;
+  const hasPaidPremium = Boolean(isDemo || subscription.isPremium || (!isNativeApp && profile?.is_premium));
+  const trialExpiredWithoutPremium = Boolean(isNativeApp && accountTrial.expired && !hasPaidPremium);
+  const hasPremium = Boolean(hasPaidPremium || (isNativeApp && accountTrial.active));
+
+  useEffect(() => {
+    if (hasPaidPremium && paywallPlacement === 'trialExpired') {
+      setPaywallPlacement(null);
+    }
+  }, [hasPaidPremium, paywallPlacement]);
+
+  useEffect(() => {
+    if (!isNativeApp || !onboardingDone || hasPaidPremium) return;
+    const refreshTrial = () => {
+      const nextTrial = getAccountTrialStatus(currentUserId);
+      setAccountTrial(nextTrial);
+      if (nextTrial.expired) {
+        setPaywallPlacement('trialExpired');
+      }
+    };
+    refreshTrial();
+    const timeout = accountTrial.active && accountTrial.endsAt
+      ? window.setTimeout(refreshTrial, Math.max(250, accountTrial.endsAt - Date.now() + 250))
+      : undefined;
+    document.addEventListener('visibilitychange', refreshTrial);
+    window.addEventListener('focus', refreshTrial);
+    return () => {
+      if (timeout) window.clearTimeout(timeout);
+      document.removeEventListener('visibilitychange', refreshTrial);
+      window.removeEventListener('focus', refreshTrial);
+    };
+  }, [accountTrial.active, accountTrial.endsAt, currentUserId, hasPaidPremium, isNativeApp, onboardingDone]);
+
+  useEffect(() => {
+    if (!isNativeApp) return;
+    let active = true;
+    let reviewLifecycle: Awaited<ReturnType<typeof registerNativeReviewResumeListener>> = null;
+
+    registerNativeReviewResumeListener(() => {
+      if (active) setReviewEntryTick((value) => value + 1);
+    }).then((handle) => {
+      if (active) reviewLifecycle = handle;
+      else handle?.remove();
+    }).catch((error) => console.warn('Native review lifecycle skipped:', error));
+
+    return () => {
+      active = false;
+      reviewLifecycle?.remove();
+    };
+  }, [isNativeApp]);
+
+  useEffect(() => {
+    if (!isNativeApp || loading || !onboardingDone || showAuth || paywallPlacement || showPostOnboardingSetup) return;
+    requestNativeReviewIfDue().catch((error) => console.warn('Native review prompt skipped:', error));
+  }, [isNativeApp, loading, onboardingDone, paywallPlacement, reviewEntryTick, showAuth, showPostOnboardingSetup]);
+
+  useEffect(() => {
+    if (!isNativeApp || loading || !onboardingDone) return;
+    let active = true;
+
+    const refreshNativeAccess = async () => {
+      const nextTrial = getAccountTrialStatus(currentUserId);
+      if (active) setAccountTrial(nextTrial);
+
+      try {
+        const nextSubscription = await initializeSubscriptions();
+        if (!active) return;
+        setSubscription((current) => ({
+          ...nextSubscription,
+          products: nextSubscription.products.length ? nextSubscription.products : current.products,
+        }));
+        if (nextSubscription.isPremium) {
+          setPaywallPlacement((current) => current === 'trialExpired' ? null : current);
+        } else if (nextTrial.expired) {
+          setPaywallPlacement('trialExpired');
+        }
+      } catch (error) {
+        console.warn('Subscription refresh skipped:', error);
+        if (active && nextTrial.expired) setPaywallPlacement('trialExpired');
+      }
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') refreshNativeAccess();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', refreshNativeAccess);
+    return () => {
+      active = false;
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', refreshNativeAccess);
+    };
+  }, [currentUserId, isNativeApp, loading, onboardingDone]);
 
   // Auth, onboarding and subscription bootstrap
   useEffect(() => {
@@ -99,10 +201,23 @@ export default function App() {
     const onboardingComplete = isOnboardingComplete();
     setIsNativeApp(nativeApp);
     setOnboardingDone(!nativeApp || onboardingComplete);
+    const storedTrial = getAccountTrialStatus();
+    setAccountTrial(storedTrial);
     const storedAnswers = loadOnboardingState()?.answers;
     if (storedAnswers) setPersonalizedPlan(createPersonalizedPlan(storedAnswers));
+    if (nativeApp && onboardingComplete) {
+      scheduleInactivityReminders(false).catch((error) => console.warn('Inactivity reminders skipped:', error));
+    }
 
     let active = true;
+    let inactivityLifecycle: Awaited<ReturnType<typeof registerInactivityLifecycle>> = null;
+    if (nativeApp) {
+      registerInactivityLifecycle().then((handle) => {
+        if (active) inactivityLifecycle = handle;
+        else handle?.remove();
+      }).catch((error) => console.warn('Notification lifecycle skipped:', error));
+    }
+
     let authReady = false;
     let subscriptionReady = !nativeApp;
     const finishBootstrap = () => {
@@ -120,6 +235,7 @@ export default function App() {
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (!active) return;
         setSession(session);
+        setAccountTrial(getAccountTrialStatus(session?.user?.id));
         if (session) fetchProfile(session.user.id);
         authReady = true;
         finishBootstrap();
@@ -142,19 +258,44 @@ export default function App() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!active) return;
       setSession(session);
+      setAccountTrial(getAccountTrialStatus(session?.user?.id));
       if (session) fetchProfile(session.user.id);
       else setProfile(null);
     });
 
     return () => {
       active = false;
+      inactivityLifecycle?.remove();
       subscription.unsubscribe();
     };
   }, []);
 
   const fetchProfile = async (uid: string) => {
-    const prof = await getUserProfile(uid);
+    let prof = await getUserProfile(uid);
+    if (!prof) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const fallbackName = user.user_metadata?.name || '';
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .insert({ id: uid, name: fallbackName, is_premium: false })
+            .select()
+            .single();
+          prof = !error && data ? data : { id: uid, name: fallbackName, is_premium: false };
+        } catch {
+          prof = { id: uid, name: fallbackName, is_premium: false };
+        }
+      }
+    }
     setProfile(prof);
+    return prof;
+  };
+
+  const activateAccountTrial = (userId?: string) => {
+    const trial = startAccountTrial(userId);
+    setAccountTrial(trial);
+    return trial;
   };
 
   const handleAuth = async (authSession?: any, authProfile?: any) => {
@@ -169,15 +310,21 @@ export default function App() {
         setResumeSetupAfterAuth(false);
         setShowPostOnboardingSetup(true);
       }
+      setTrialAuthOffer(false);
       return;
     }
 
     const { data: { session } } = await supabase.auth.getSession();
     setSession(session);
     if (session) {
-      await fetchProfile(session.user.id);
+      const nextProfile = await fetchProfile(session.user.id);
       if (isNativeApp) {
         const nextSubscription = await attachSubscriptionUser(session.user.id);
+        await syncSubscriptionUserAttributes({
+          appUserID: session.user.id,
+          email: session.user.email,
+          displayName: nextProfile?.name || session.user.user_metadata?.name,
+        }).catch((error) => console.warn('RevenueCat attributes skipped:', error));
         if (nextSubscription) {
           setSubscription((current) => ({ ...nextSubscription, products: current.products }));
           if (nextSubscription.status === 'expired' && subscription.products.some((product) => product.winBackOffer) && shouldShowRecoveryPaywall()) {
@@ -185,11 +332,26 @@ export default function App() {
             setPaywallPlacement('recovery');
           }
         }
+        if (!nextSubscription?.isPremium) activateAccountTrial(session.user.id);
         completeOnboarding();
         setOnboardingDone(true);
       }
     }
     setShowAuth(false);
+    setTrialAuthOffer(false);
+    if (resumeSetupAfterAuth) {
+      setResumeSetupAfterAuth(false);
+      setShowPostOnboardingSetup(true);
+    }
+  };
+
+  const handleTrialSignup = (userId: string) => {
+    activateAccountTrial(userId);
+    trackCompleteRegistration({ method: 'email' }).catch((error) => console.warn('Registration tracking skipped:', error));
+    completeOnboarding();
+    setOnboardingDone(true);
+    setShowAuth(false);
+    setTrialAuthOffer(false);
     if (resumeSetupAfterAuth) {
       setResumeSetupAfterAuth(false);
       setShowPostOnboardingSetup(true);
@@ -214,6 +376,7 @@ export default function App() {
     }
     setSession(null);
     setProfile(null);
+    setAccountTrial(getAccountTrialStatus());
     setCurScreen('home');
     setPrevScreen('home');
     setCbtCount(0);
@@ -280,6 +443,7 @@ export default function App() {
 
     setSession(null);
     setProfile(null);
+    setAccountTrial(getAccountTrialStatus());
     setCurScreen('home');
     setPrevScreen('home');
     setCbtCount(0);
@@ -359,7 +523,22 @@ export default function App() {
 
   const handleNav = (id: string) => {
     if (id === curScreen) return;
-    if (isNativeApp && !hasPremium && PREMIUM_SCREEN_FEATURES[id]) {
+    const currentTrial = isNativeApp ? getAccountTrialStatus(currentUserId) : accountTrial;
+    if (isNativeApp && (
+      currentTrial.active !== accountTrial.active
+      || currentTrial.expired !== accountTrial.expired
+      || currentTrial.endsAt !== accountTrial.endsAt
+      || currentTrial.startedAt !== accountTrial.startedAt
+    )) {
+      setAccountTrial(currentTrial);
+    }
+    const canUsePremiumFeature = hasPaidPremium || (isNativeApp && currentTrial.active);
+    const expiredWithoutPremium = isNativeApp && currentTrial.expired && !hasPaidPremium;
+    if (expiredWithoutPremium && id !== 'sc-settings') {
+      setPaywallPlacement('trialExpired');
+      return;
+    }
+    if (isNativeApp && !canUsePremiumFeature && PREMIUM_SCREEN_FEATURES[id]) {
       setPaywallPlacement('feature');
       return;
     }
@@ -368,7 +547,21 @@ export default function App() {
   };
 
   const handleFreeActionCompleted = () => {
-    if (!isNativeApp || hasPremium) return;
+    if (!isNativeApp) return;
+    const currentTrial = getAccountTrialStatus(currentUserId);
+    if (
+      currentTrial.active !== accountTrial.active
+      || currentTrial.expired !== accountTrial.expired
+      || currentTrial.endsAt !== accountTrial.endsAt
+      || currentTrial.startedAt !== accountTrial.startedAt
+    ) {
+      setAccountTrial(currentTrial);
+    }
+    if (hasPaidPremium || currentTrial.active) return;
+    if (currentTrial.expired) {
+      setPaywallPlacement('trialExpired');
+      return;
+    }
     const actionCount = recordFreeAction();
     if (shouldShowGeneralPaywall(actionCount)) {
       markGeneralPaywallShown();
@@ -385,19 +578,42 @@ export default function App() {
   const handlePurchase = async (product: PaywallProduct, useWinBackOffer: boolean) => {
     const next = await purchaseProduct(product, useWinBackOffer);
     setSubscription((current) => ({ ...next, products: current.products }));
-    if (next.isPremium) closePaywall();
+    trackStorePurchaseConversion({ product, subscription: next, placement: paywallPlacement })
+      .catch((error) => console.warn('Purchase tracking skipped:', error));
+    if (next.isPremium) {
+      const wasOnboarding = paywallPlacement === 'onboarding';
+      setPaywallPlacement(null);
+      if (wasOnboarding) setShowPostOnboardingSetup(true);
+    }
   };
 
   const handleRestore = async () => {
     const next = await restoreSubscriptions();
     setSubscription((current) => ({ ...next, products: current.products }));
     if (!next.isPremium) throw new Error('No encontramos una suscripción activa para restaurar.');
-    closePaywall();
+    const wasOnboarding = paywallPlacement === 'onboarding';
+    setPaywallPlacement(null);
+    if (wasOnboarding) setShowPostOnboardingSetup(true);
+  };
+
+  const handleReloadSubscriptions = async () => {
+    setSubscription((current) => ({ ...current, status: 'loading', error: undefined }));
+    const next = await initializeSubscriptions();
+    setSubscription(next);
+    if (!next.products.length) throw new Error('La tienda todavía no ha publicado los planes para este dispositivo.');
   };
 
   const closePaywall = () => {
-    const shouldOfferSetup = paywallPlacement === 'onboarding' && localStorage.getItem('ansioff_post_onboarding_setup_v1') !== 'done';
+    const currentPlacement = paywallPlacement;
+    if (currentPlacement === 'trialExpired') return;
+    const shouldOfferSetup = currentPlacement === 'onboarding' && localStorage.getItem('ansioff_post_onboarding_setup_v1') !== 'done';
     setPaywallPlacement(null);
+    if (currentPlacement === 'onboarding') {
+      setTrialAuthOffer(true);
+      setResumeSetupAfterAuth(true);
+      setShowAuth(true);
+      return;
+    }
     if (shouldOfferSetup) setShowPostOnboardingSetup(true);
   };
 
@@ -454,7 +670,7 @@ export default function App() {
       case 'home':
         return (
           <>
-            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} isPremium={hasPremium} />
+            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || session?.user?.user_metadata?.name?.split(' ')[0] || ""} isPremium={hasPremium} />
           </>
         );
       case 'sounds':
@@ -468,7 +684,9 @@ export default function App() {
         return <SOSScreen onBack={goBack} onFinished={() => { handleFreeActionCompleted(); handleNav('home'); }} />;
       case 'breath':
       case 'sc-breath':
-        return <BreathingScreen onBack={goBack} isPremium={hasPremium} onUpgrade={() => setPaywallPlacement('feature')} onPracticeComplete={handleFreeActionCompleted} />;
+        return <BreathingScreen onBack={goBack} isPremium={hasPremium} onUpgrade={() => setPaywallPlacement('feature')} onPracticeComplete={handleFreeActionCompleted} initialPatternId="4-7-8" />;
+      case 'sc-breath-426':
+        return <BreathingScreen onBack={goBack} isPremium={hasPremium} onUpgrade={() => setPaywallPlacement('feature')} onPracticeComplete={handleFreeActionCompleted} initialPatternId="4-2-6" />;
       case 'progress':
       case 'sc-stats':
         return <StatsScreen onBack={goBack} />;
@@ -494,7 +712,7 @@ export default function App() {
       default:
         return (
           <>
-            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} isPremium={hasPremium} />
+            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || session?.user?.user_metadata?.name?.split(' ')[0] || ""} isPremium={hasPremium} />
           </>
         );
     }
@@ -507,7 +725,23 @@ export default function App() {
   );
 
   if (!isNativeApp && !session) return <AuthScreen onAuth={handleAuth} />;
-  if (showAuth) return <AuthScreen onAuth={handleAuth} onCancel={isNativeApp ? () => setShowAuth(false) : undefined} />;
+  if (showAuth) return (
+    <AuthScreen
+      onAuth={handleAuth}
+      onTrialSignup={handleTrialSignup}
+      onCancel={isNativeApp ? () => {
+        setShowAuth(false);
+        if (trialAuthOffer) {
+          setTrialAuthOffer(false);
+          setResumeSetupAfterAuth(false);
+          setPaywallPlacement('onboarding');
+          return;
+        }
+        setResumeSetupAfterAuth(false);
+      } : undefined}
+      trialOffer={trialAuthOffer}
+    />
+  );
   if (isNativeApp && !onboardingDone) return <OnboardingFlow onFinished={handleOnboardingFinished} onLogin={() => setShowAuth(true)} />;
 
   return (
@@ -525,7 +759,6 @@ export default function App() {
       </button>
 
       <BottomNav activeScreen={curScreen} onNav={handleNav} isPremium={hasPremium} />
-      <DisclaimerModal />
       <InstallPWA />
       <Paywall
         open={paywallPlacement !== null}
@@ -537,11 +770,10 @@ export default function App() {
         onClose={closePaywall}
         onPurchase={handlePurchase}
         onRestore={handleRestore}
+        onReload={handleReloadSubscriptions}
       />
       <PostOnboardingSetup
         open={showPostOnboardingSetup}
-        hasAccount={Boolean(session)}
-        onLogin={() => { setShowPostOnboardingSetup(false); setResumeSetupAfterAuth(true); setShowAuth(true); }}
         onDone={finishPostOnboardingSetup}
       />
     </div>

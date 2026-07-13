@@ -76,7 +76,7 @@ const MINUTES: Option<DailyMinutes>[] = [
     { value: 15, label: '15 minutos', icon: <Clock3 size={20} /> },
 ];
 
-const MAX_STEP = 8;
+const MAX_STEP = 9;
 
 function QuestionHeader({ eyebrow, title, detail }: { eyebrow: string; title: string; detail?: string }) {
     return (
@@ -120,14 +120,8 @@ function OptionGrid<T extends string | number>({
     );
 }
 
-function getPatternPhases(pattern: PersonalizedPlan['exercisePattern']) {
-    if (pattern === '4-7-8') return [
-        { name: 'Inhala', seconds: 4 }, { name: 'Mantén', seconds: 7 }, { name: 'Exhala', seconds: 8 },
-    ];
-    if (pattern === '4-4-4') return [
-        { name: 'Inhala', seconds: 4 }, { name: 'Mantén', seconds: 4 }, { name: 'Exhala', seconds: 4 },
-    ];
-    return [{ name: 'Inhala', seconds: 4 }, { name: 'Mantén', seconds: 2 }, { name: 'Exhala', seconds: 6 }];
+function getPatternPhases(_pattern: PersonalizedPlan['exercisePattern']) {
+    return [{ name: 'Inhala', seconds: 4 }, { name: 'Mantén', seconds: 7 }, { name: 'Exhala', seconds: 8 }];
 }
 
 export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowProps) {
@@ -142,7 +136,7 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
     const [phaseIndex, setPhaseIndex] = useState(0);
     const [secondsLeft, setSecondsLeft] = useState(phases[0].seconds);
     const [cycle, setCycle] = useState(1);
-    const totalCycles = plan.exercisePattern === '4-7-8' ? 3 : 4;
+    const totalCycles = 3;
 
     useEffect(() => {
         saveOnboardingState(step, answers);
@@ -248,6 +242,18 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                 .breathing-phase{font-size:24px;font-weight:800;margin-bottom:6px;}
                 .breathing-meta{font-size:12px;color:rgba(210,232,240,.52);}
                 .done-mark{width:82px;height:82px;border-radius:50%;background:rgba(110,210,165,.12);color:#78d8ad;display:flex;align-items:center;justify-content:center;margin:22px auto 24px;}
+                .value-intro{font-size:14px;line-height:1.55;color:rgba(210,232,240,.65);margin:0 0 22px;}
+                .value-list{display:grid;gap:2px;margin-bottom:22px;}
+                .value-row{display:grid;grid-template-columns:42px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+                .value-row:last-child{border-bottom:0;}
+                .value-icon{width:40px;height:40px;border-radius:12px;background:rgba(90,173,207,.11);color:#74c7df;display:flex;align-items:center;justify-content:center;}
+                .value-row strong{display:block;font-size:14px;margin:1px 0 4px;}
+                .value-row p{font-size:12px;line-height:1.45;color:rgba(210,232,240,.55);margin:0;}
+                .personal-proof{border-top:1px solid rgba(255,255,255,.09);padding-top:20px;margin-top:4px;}
+                .personal-proof h2{font-size:19px;line-height:1.25;margin:0 0 13px;}
+                .proof-item{display:grid;grid-template-columns:24px 1fr;gap:9px;align-items:start;margin:10px 0;color:#cfe3ea;font-size:12px;line-height:1.45;}
+                .proof-item svg{color:#7ad4ad;margin-top:1px;}
+                .honest-note{font-size:11px;line-height:1.5;color:rgba(210,232,240,.43);margin:18px 0 0;}
                 @keyframes breathePreview{0%,100%{transform:scale(.78)}45%,58%{transform:scale(1)}}
                 @media(max-height:700px){.onboarding-content{padding-top:16px}.welcome-mark{width:60px;height:60px;margin-bottom:18px}.welcome-title{font-size:29px}.benefit-list{gap:10px}.onboarding-shell{padding-top:max(10px,env(safe-area-inset-top));}}
                 @media(prefers-reduced-motion:reduce){.progress-fill,.onboarding-option,.breathing-orb{transition:none;animation:none;}}
@@ -299,14 +305,14 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                     )}
                     {step === 8 && experienceState === 'before' && (
                         <>
-                            <QuestionHeader eyebrow="Tu primera pausa" title="¿Cuánta tensión notas ahora?" detail={`Antes de probar la respiración ${plan.exercisePattern}, marca cómo te sientes. Es solo un registro personal.`} />
+                            <QuestionHeader eyebrow="Tu primera pausa" title="¿Cuánta tensión notas ahora?" detail="Antes de probar 3 repeticiones de respiración 4-7-8, marca cómo te sientes. Es solo un registro personal." />
                             <div className="tension-grid">{Array.from({ length: 11 }, (_, value) => <button key={value} className={beforeTension === value ? 'selected' : ''} onClick={() => setBeforeTension(value)}>{value}</button>)}</div>
                             <div className="tension-labels"><span>Muy poca</span><span>Mucha</span></div>
                         </>
                     )}
                     {step === 8 && experienceState === 'running' && (
                         <div className="breathing-stage">
-                            <QuestionHeader eyebrow={`Ciclo ${cycle} de ${totalCycles}`} title={`Respiración ${plan.exercisePattern}`} detail="Sigue el ritmo sin forzar la respiración." />
+                            <QuestionHeader eyebrow={`Repetición ${cycle} de ${totalCycles}`} title="Respiración 4-7-8" detail="Sigue el ritmo sin forzar la respiración." />
                             <div className="breathing-orb"><strong>{secondsLeft}</strong></div>
                             <div className="breathing-phase">{phases[phaseIndex].name}</div>
                             <div className="breathing-meta">Puedes parar en cualquier momento si no te resulta cómodo.</div>
@@ -322,8 +328,27 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                     {step === 8 && experienceState === 'done' && (
                         <div style={{ textAlign: 'center' }}>
                             <div className="done-mark"><Check size={38} /></div>
-                            <QuestionHeader eyebrow="Primera práctica completada" title="Has completado tu primera pausa" detail="Tu plan seguirá disponible para que vuelvas cuando lo necesites, con o sin suscripción." />
+                            <QuestionHeader eyebrow="Primera práctica completada" title="Has completado tu primera pausa" detail="Ya tienes una primera referencia personal. Ahora descubre todo lo que reunirá tu plan." />
                         </div>
+                    )}
+                    {step === 9 && (
+                        <>
+                            <QuestionHeader eyebrow="Tu Ecosistema de Calma" title="Todo tu apoyo, conectado en un solo lugar" />
+                            <p className="value-intro">ANSIOFF combina recursos para el momento intenso con herramientas para comprender lo que se repite y crear una rutina que quepa en tu día.</p>
+                            <div className="value-list">
+                                <div className="value-row"><div className="value-icon"><Waves size={21} /></div><div><strong>Volver al presente</strong><p>Kit SOS, respiración 4-7-8 y audios para acompañarte cuando necesitas una pausa inmediata.</p></div></div>
+                                <div className="value-row"><div className="value-icon"><BookOpen size={21} /></div><div><strong>Entender lo que se repite</strong><p>Diario, ejercicios CBT y ACT, y reflexión opcional con IA para ordenar temas sin emitir diagnósticos.</p></div></div>
+                                <div className="value-row"><div className="value-icon"><MoonStar size={21} /></div><div><strong>Construir una rutina posible</strong><p>Modo noche, sonidos, check-ins, juegos de atención y recordatorios adaptados a tu ritmo.</p></div></div>
+                                <div className="value-row"><div className="value-icon"><Activity size={21} /></div><div><strong>Observar tu constancia</strong><p>Actividad y progreso para reconocer lo que practicas, sin penalizar los días de descanso.</p></div></div>
+                            </div>
+                            <div className="personal-proof">
+                                <h2>Tu plan ya parte de ti</h2>
+                                <div className="proof-item"><Check size={18} /><span>Has definido qué quieres cuidar primero.</span></div>
+                                <div className="proof-item"><Check size={18} /><span>Has completado 3 repeticiones de respiración 4-7-8.</span></div>
+                                <div className="proof-item"><Check size={18} /><span>Tu rutina está preparada para {answers.dailyMinutes || 5} minutos al día.</span></div>
+                                <p className="honest-note">ANSIOFF no promete eliminar la ansiedad ni sustituye atención profesional. Te ofrece un espacio práctico para parar, registrar y volver a tus herramientas cuando lo necesites.</p>
+                            </div>
+                        </>
                     )}
                 </main>
 
@@ -334,7 +359,8 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                     {step === 8 && experienceState === 'before' && <button className="primary-action" disabled={beforeTension === null} onClick={() => { setPhaseIndex(0); setSecondsLeft(phases[0].seconds); setCycle(1); setExperienceState('running'); }}>Empezar respiración <Wind size={18} /></button>}
                     {step === 8 && experienceState === 'running' && <button className="secondary-action" onClick={() => setExperienceState('after')}>Terminar antes</button>}
                     {step === 8 && experienceState === 'after' && <button className="primary-action" disabled={afterTension === null} onClick={saveFirstCheckIn}>Guardar este check-in</button>}
-                    {step === 8 && experienceState === 'done' && <button className="primary-action" onClick={finish}>Ver mi plan completo <ChevronRight size={18} /></button>}
+                    {step === 8 && experienceState === 'done' && <button className="primary-action" onClick={next}>Descubrir todo lo que incluye <ChevronRight size={18} /></button>}
+                    {step === 9 && <button className="primary-action" onClick={finish}>Ver mis opciones de acceso <ChevronRight size={18} /></button>}
                     {step === 0 && <p className="safety-note">ANSIOFF no sustituye la atención profesional. Si existe peligro inmediato, llama al <a href="tel:112">112</a>.</p>}
                 </div>
             </div>

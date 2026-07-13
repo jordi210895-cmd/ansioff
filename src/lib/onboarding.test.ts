@@ -27,14 +27,14 @@ describe('onboarding personalization', () => {
         expect(plan.steps.map((step) => step.module)).toContain('night');
     });
 
-    it('chooses 4-2-6 for an intense or physical presentation', () => {
+    it('keeps 4-7-8 for an intense or physical presentation', () => {
         const plan = createPersonalizedPlan(answers({ goal: 'calm_now', manifestations: ['breathing_heart'] }));
-        expect(plan.exercisePattern).toBe('4-2-6');
+        expect(plan.exercisePattern).toBe('4-7-8');
         expect(plan.steps[0].module).toBe('sos');
     });
 
-    it('uses 4-4-4 for daily stress without physical signals', () => {
-        expect(createPersonalizedPlan(answers({ goal: 'daily_stress' })).exercisePattern).toBe('4-4-4');
+    it('uses 4-7-8 for daily stress without physical signals', () => {
+        expect(createPersonalizedPlan(answers({ goal: 'daily_stress' })).exercisePattern).toBe('4-7-8');
     });
 
     it('limits multi-select answers to three and allows deselection', () => {

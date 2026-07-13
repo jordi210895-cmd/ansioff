@@ -13,7 +13,7 @@ export default function PrivacyPolicy() {
 
                 <h1 className="text-4xl font-bold text-white mb-8 font-serif">Política de Privacidad</h1>
 
-                <p className="mb-6 text-sm text-slate-400">Última actualización: 10 de julio de 2026</p>
+                <p className="mb-6 text-sm text-slate-400">Última actualización: 12 de julio de 2026</p>
 
                 <div className="space-y-8 leading-relaxed">
                     <section>
@@ -30,6 +30,7 @@ export default function PrivacyPolicy() {
                             <li><strong>Reflexión IA opcional:</strong> si pulsa expresamente la función y acepta el aviso, se envían como máximo las 15 notas más recientes al servicio de ANSIOFF y a Google Gemini para generar un resumen.</li>
                             <li><strong>Compras:</strong> RevenueCat y la tienda correspondiente procesan identificadores de compra, recibos, producto adquirido, estado de suscripción y fechas necesarias para validar el acceso Premium.</li>
                             <li><strong>Notificaciones:</strong> se solicita permiso solo si activa recordatorios. Los recordatorios locales se programan en el dispositivo; cuando se utilicen notificaciones remotas, OneSignal podrá procesar el token de notificación.</li>
+                            <li><strong>Medición publicitaria:</strong> si procede y conforme a la configuración de consentimiento aplicable, se pueden registrar eventos comerciales genéricos como registro, inicio de prueba, suscripción, renovación o cancelación técnica de suscripción.</li>
                         </ul>
                     </section>
 
@@ -42,8 +43,9 @@ export default function PrivacyPolicy() {
                             <li>Validar compras, restaurar suscripciones y habilitar funciones Premium.</li>
                             <li>Generar una reflexión IA únicamente cuando la solicita y consiente.</li>
                             <li>Programar recordatorios cuando los activa.</li>
+                            <li>Medir campañas y mejorar la atribución publicitaria usando eventos comerciales genéricos, sin enviar contenido de bienestar.</li>
                         </ul>
-                        <p className="mt-4">Las respuestas sobre síntomas, desencadenantes, notas y puntuaciones no se envían a Meta, Google Ads ni a plataformas publicitarias. Si en el futuro se habilita analítica, los eventos de embudo serán genéricos y requerirán consentimiento cuando corresponda.</p>
+                        <p className="mt-4">Las respuestas sobre síntomas, desencadenantes, notas, audios, check-ins y puntuaciones no se envían a Meta, Google Ads ni a plataformas publicitarias. Los eventos de embudo publicitario, cuando estén habilitados, son genéricos y requieren consentimiento cuando corresponda.</p>
                     </section>
 
                     <section>
@@ -54,6 +56,7 @@ export default function PrivacyPolicy() {
                             <li><strong>Google Gemini:</strong> procesamiento puntual de las notas enviadas voluntariamente para generar la reflexión IA.</li>
                             <li><strong>RevenueCat:</strong> validación y gestión técnica del estado de las suscripciones.</li>
                             <li><strong>Apple App Store y Google Play:</strong> cobro, recibos, renovación y cancelación de las compras realizadas en sus tiendas.</li>
+                            <li><strong>Google Ads / Google Analytics y Meta Ads:</strong> medición de eventos comerciales genéricos de embudo y suscripción, cuando estén configurados y conforme al consentimiento aplicable.</li>
                             <li><strong>OneSignal:</strong> notificaciones remotas cuando esta función esté habilitada y autorizada.</li>
                         </ul>
                     </section>

@@ -84,22 +84,22 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                 .sc-t{font-size:17px;font-weight:800;color:var(--text);margin-bottom:2px;}
                 .sc-d{font-size:13px;color:var(--text2);line-height:1.4;}
 
-                .grounding-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;width:100%;}
+                .grounding-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;width:100%;position:relative;z-index:10;}
                 .g-input{
                     background:rgba(255,255,255,0.03);border:1px solid var(--border);
                     border-radius:14px;padding:12px 14px;color:var(--text);
-                    font-size:14px;outline:none;transition:var(--t);
+                    font-size:14px;outline:none;transition:var(--t);position:relative;z-index:10;
                 }
-                .g-input:focus{border-color:rgba(244,63,94,0.4);background:rgba(255,255,255,0.06);}
+                .g-input:focus{border-color:rgba(244,63,94,0.4);background:rgba(255,255,255,0.06);z-index:11;}
                 .g-input::placeholder{color:var(--text3);}
 
                 .sos-write{
                     width:100%;min-height:160px;background:rgba(255,255,255,0.03);
                     border:1px solid var(--border);border-radius:20px;padding:16px;
                     color:var(--text);font-family:inherit;font-size:15px;line-height:1.6;
-                    resize:none;outline:none;transition:var(--t);margin-top:8px;
+                    resize:none;outline:none;transition:var(--t);margin-top:8px;position:relative;z-index:10;
                 }
-                .sos-write:focus{border-color:rgba(244,63,94,0.4);background:rgba(255,255,255,0.06);}
+                .sos-write:focus{border-color:rgba(244,63,94,0.4);background:rgba(255,255,255,0.06);z-index:11;}
 
                 .sos-nav{margin-top:20px;display:flex;gap:12px;width:100%;}
                 .sbtn-sec{flex:1;background:var(--glass);border:1px solid var(--border);color:var(--text2);padding:16px;border-radius:var(--rad);font-size:14px;font-weight:700;cursor:pointer;transition:var(--t);}
@@ -164,7 +164,6 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                                         placeholder={`${idx + 1}º elemento...`}
                                         value={val}
                                         onChange={(e) => handleInputChange(currentStep.id, idx, e.target.value)}
-                                        autoFocus={idx === 0}
                                     />
                                 ))}
                             </div>
@@ -176,7 +175,6 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                                 placeholder="Escribe aquí lo que tienes en mente..."
                                 value={writing}
                                 onChange={(e) => setWriting(e.target.value)}
-                                autoFocus
                             />
                         )}
                     </div>

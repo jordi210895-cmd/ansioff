@@ -1,4 +1,4 @@
-export const ONBOARDING_VERSION = 1;
+export const ONBOARDING_VERSION = 2;
 export const ONBOARDING_STORAGE_KEY = 'ansioff_onboarding_v1';
 export const ONBOARDING_COMPLETE_KEY = 'ansioff_onboarding_complete_v1';
 
@@ -76,7 +76,7 @@ export interface PlanStep {
 export interface PersonalizedPlan {
     title: string;
     summary: string;
-    exercisePattern: '4-2-6' | '4-7-8' | '4-4-4';
+    exercisePattern: '4-7-8';
     steps: PlanStep[];
 }
 
@@ -135,17 +135,14 @@ export function createPersonalizedPlan(answers: OnboardingAnswers): Personalized
     const goal = answers.goal || 'daily_stress';
     const trigger = firstLabel(answers.triggers, TRIGGER_LABELS, 'el día a día');
     const impact = firstLabel(answers.impacts, IMPACT_LABELS, 'tu bienestar diario');
-    const physical = answers.manifestations.some((item) => item === 'breathing_heart' || item === 'physical_tension');
 
-    let exercisePattern: PersonalizedPlan['exercisePattern'] = '4-4-4';
-    if (goal === 'sleep_better' || answers.manifestations.includes('sleep')) exercisePattern = '4-7-8';
-    else if (goal === 'calm_now' || physical) exercisePattern = '4-2-6';
+    const exercisePattern: PersonalizedPlan['exercisePattern'] = '4-7-8';
 
     const nowStep: PlanStep = goal === 'sleep_better'
         ? { stage: 'Ahora', title: 'Preparar el descanso', description: 'Una respiración lenta para bajar el ritmo antes de dormir.', module: 'breathing_478' }
-        : goal === 'calm_now' || physical
-            ? { stage: 'Ahora', title: 'Recuperar el presente', description: 'SOS y respiración guiada cuando el malestar suba.', module: 'sos' }
-            : { stage: 'Ahora', title: 'Crear una pausa', description: 'Respiración en caja para volver a lo que tienes delante.', module: 'breathing_444' };
+        : goal === 'calm_now'
+            ? { stage: 'Ahora', title: 'Calmar el momento intenso', description: 'SOS y respiración 4-7-8 para volver al presente sin forzar.', module: 'sos' }
+            : { stage: 'Ahora', title: 'Crear una pausa', description: 'Respiración 4-7-8 para bajar el ritmo y recuperar margen.', module: 'breathing_478' };
 
     const understandStep: PlanStep = goal === 'slow_thoughts' || answers.manifestations.includes('racing_thoughts')
         ? { stage: 'Comprender', title: 'Ordenar pensamientos', description: 'Registro guiado para observarlos con más perspectiva.', module: 'cbt' }

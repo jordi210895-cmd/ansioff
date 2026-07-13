@@ -52,6 +52,24 @@ Variables nativas principales:
 
 El endpoint de IA necesita `GEMINI_API_KEY` unicamente en el servidor. Stripe conserva el flujo web existente y usa sus variables de servidor.
 
+### Medicion de conversiones
+
+La app dispara conversiones de tienda hacia Google Ads al activar una prueba o suscripcion. La cuenta revisada usa:
+
+- `NEXT_PUBLIC_GOOGLE_ADS_ID=AW-18311870973`
+- `NEXT_PUBLIC_GOOGLE_ADS_PURCHASE_LABEL=m1EWCN-z4s0cEP3z45tE`
+- `NEXT_PUBLIC_GOOGLE_ADS_TRIAL_LABEL=m1EWCN-z4s0cEP3z45tE`
+
+El webhook `POST /api/revenuecat-webhook` acepta eventos de RevenueCat y los reenvia, si hay credenciales, a Meta CAPI y GA4 Measurement Protocol. Variables necesarias:
+
+- `REVENUECAT_WEBHOOK_AUTH_TOKEN`
+- `META_PIXEL_ID`
+- `META_ACCESS_TOKEN`
+- `GA4_MEASUREMENT_ID` o `GA4_FIREBASE_APP_ID`
+- `GA4_API_SECRET`
+
+Solo se envian eventos comerciales genericos: registro, inicio de prueba, suscripcion/renovacion y compra. No se envian notas, respuestas de onboarding, sintomas, audios ni check-ins a plataformas publicitarias.
+
 ## Desarrollo
 
 ```bash

@@ -9,33 +9,41 @@ interface BreathingScreenProps {
     isPremium: boolean;
     onUpgrade: () => void;
     onPracticeComplete?: () => void;
+    initialPatternId?: string;
 }
 
 const patterns = [
     {
-        id: '4-2-6', name: 'Alivio del estrés profundo', meta: '5 min · Principiante', label: 'Estrés', free: true,
+        id: '4-2-6', name: 'Alivio del estrés profundo', meta: '5 min · Principiante', label: 'Estrés', free: true, cycles: null,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 2, c: 'var(--c3)' }, { n: 'Exhala', d: 6, c: 'var(--p2)' }],
     },
     {
-        id: '4-7-8', name: 'Respiración para el sueño', meta: '8 min · Avanzado', label: 'Sueño', free: false,
+        id: '4-7-8', name: 'Respiración 4-7-8', meta: '3 repeticiones · Principiante', label: 'Calma', free: true, cycles: 3,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
     },
     {
-        id: '4-4-4', name: 'Respiración cuadrada', meta: '4 min · Intermedio', label: 'Enfoque', free: false,
-        phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 4, c: 'var(--c3)' }, { n: 'Exhala', d: 4, c: 'var(--p2)' }],
+        id: '4-7-8-calm', name: 'Calma para momentos intensos', meta: '3 repeticiones · Premium', label: 'SOS', free: false, cycles: 3,
+        phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
+    },
+    {
+        id: '4-7-8-focus', name: 'Pausa para pensamientos repetitivos', meta: '3 repeticiones · Premium', label: 'Enfoque', free: false, cycles: 3,
+        phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
     },
 ];
 
-export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracticeComplete }: BreathingScreenProps) {
-    const [patternId, setPatternId] = useState(patterns[0].id);
+export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracticeComplete, initialPatternId = '4-7-8' }: BreathingScreenProps) {
+    const initialPattern = patterns.find((item) => item.id === initialPatternId) || patterns[1];
+    const [patternId, setPatternId] = useState(initialPattern.id);
     const [running, setRunning] = useState(false);
     const [pi, setPi] = useState(0);
-    const [cnt, setCnt] = useState(patterns[0].phases[0].d);
+    const [cnt, setCnt] = useState(initialPattern.phases[0].d);
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
     const [recordedMinutes, setRecordedMinutes] = useState(0);
+    const [cycle, setCycle] = useState(1);
     const hasCompletedPractice = useRef(false);
     const pattern = patterns.find((item) => item.id === patternId) || patterns[0];
     const phases = pattern.phases;
+    const totalCycles = pattern.cycles;
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -46,13 +54,24 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
                     setCnt(cnt - 1);
                 } else {
                     const nextPi = (pi + 1) % phases.length;
+                    if (nextPi === 0 && totalCycles !== null && cycle >= totalCycles) {
+                        setRunning(false);
+                        setPi(0);
+                        setCnt(phases[0].d);
+                        if (!hasCompletedPractice.current) {
+                            hasCompletedPractice.current = true;
+                            onPracticeComplete?.();
+                        }
+                        return;
+                    }
+                    if (nextPi === 0) setCycle((value) => value + 1);
                     setPi(nextPi);
                     setCnt(phases[nextPi].d);
                 }
             }, 1000);
         }
         return () => clearTimeout(timer);
-    }, [running, cnt, pi, phases]);
+    }, [cycle, running, cnt, pi, phases, onPracticeComplete]);
 
     useEffect(() => {
         const completedMinutes = Math.floor(elapsedSeconds / 60);
@@ -77,6 +96,7 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
         setPatternId(nextPattern.id);
         setPi(0);
         setCnt(nextPattern.phases[0].d);
+        setCycle(1);
     };
 
     return (
@@ -168,7 +188,7 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
             </div>
             <div className="br-body">
                 <div className="br-name">{pattern.name}</div>
-                <div className="br-meta">Técnica {phases.map(p => p.d).join(' · ')} &nbsp;·&nbsp; Principiante</div>
+                <div className="br-meta">Técnica {phases.map(p => p.d).join(' · ')} &nbsp;·&nbsp; {totalCycles === null ? 'Principiante' : `${cycle} de ${totalCycles}`}</div>
                 <div className="orb-wrap" onClick={toggleBreath}>
                     <div className="ow-ring"></div><div className="ow-ring"></div><div className="ow-ring"></div>
                     <div className="ow-glow"></div><div className="ow-core"></div><div className="ow-spec"></div>

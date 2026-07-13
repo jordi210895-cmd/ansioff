@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-    GENERAL_PAYWALL_INTERVAL_MS, markGeneralPaywallShown, markRecoveryPaywallShown,
+    ACCOUNT_TRIAL_DURATION_MS, GENERAL_PAYWALL_INTERVAL_MS, getAccountTrialStatus,
+    markGeneralPaywallShown, markRecoveryPaywallShown,
     MAX_RECOVERY_IMPRESSIONS, PREMIUM_SCREEN_FEATURES, recordFreeAction,
     RECOVERY_INTERVAL_MS, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
+    startAccountTrial,
 } from './access';
 
 class MemoryStorage {
@@ -52,5 +54,40 @@ describe('premium access and commercial cadence', () => {
             vi.advanceTimersByTime(RECOVERY_INTERVAL_MS);
         }
         expect(shouldShowRecoveryPaywall()).toBe(false);
+    });
+
+    it('unlocks the account trial for seven days and then expires it', () => {
+        const started = startAccountTrial('user-1');
+        expect(started.active).toBe(true);
+        expect(started.daysLeft).toBe(7);
+
+        vi.advanceTimersByTime(ACCOUNT_TRIAL_DURATION_MS - 1000);
+        expect(getAccountTrialStatus().active).toBe(true);
+
+        vi.advanceTimersByTime(1000);
+        const expired = getAccountTrialStatus();
+        expect(expired.active).toBe(false);
+        expect(expired.expired).toBe(true);
+    });
+
+    it('scopes account trials by registered user on the same device', () => {
+        startAccountTrial('user-1');
+        vi.advanceTimersByTime(ACCOUNT_TRIAL_DURATION_MS);
+        expect(getAccountTrialStatus('user-1').expired).toBe(true);
+        expect(getAccountTrialStatus('user-2').active).toBe(false);
+
+        const secondUserTrial = startAccountTrial('user-2');
+        expect(secondUserTrial.active).toBe(true);
+        expect(secondUserTrial.startedAt).toBe(Date.now());
+        expect(getAccountTrialStatus('user-1').active).toBe(false);
+    });
+
+    it('does not restart the same registered user trial after it expires', () => {
+        startAccountTrial('user-1');
+        vi.advanceTimersByTime(ACCOUNT_TRIAL_DURATION_MS);
+
+        const restarted = startAccountTrial('user-1');
+        expect(restarted.active).toBe(false);
+        expect(restarted.expired).toBe(true);
     });
 });

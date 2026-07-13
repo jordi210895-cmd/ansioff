@@ -1,6 +1,6 @@
 import { Capacitor } from '@capacitor/core';
 import { INTRO_ELIGIBILITY_STATUS, LOG_LEVEL, Purchases } from '@revenuecat/purchases-capacitor';
-import type { CustomerInfo, PurchasesPackage, PurchasesWinBackOffer } from '@revenuecat/purchases-capacitor';
+import type { CustomerInfo, PurchasesPackage, PurchasesStoreProduct, PurchasesWinBackOffer } from '@revenuecat/purchases-capacitor';
 
 export const PREMIUM_ENTITLEMENT = 'premium';
 
@@ -19,7 +19,8 @@ export interface PaywallProduct {
     winBackPrice?: string;
     winBackDiscountPercent?: number;
     winBackPeriodLabel?: string;
-    revenueCatPackage: PurchasesPackage;
+    revenueCatPackage?: PurchasesPackage;
+    storeProduct: PurchasesStoreProduct;
 }
 
 export interface SubscriptionSnapshot {
@@ -37,12 +38,25 @@ const EMPTY_SNAPSHOT: SubscriptionSnapshot = {
     managementURL: null,
 };
 
+// RevenueCat public SDK keys. They are safe to ship in the app bundle; RevenueCat
+// uses them only to identify the app, not to authorize dashboard/API changes.
+const PUBLIC_REVENUECAT_IOS_API_KEY = 'appl_pbZRIgVVKhuFeVtASQgliQSUjcD';
+const PUBLIC_REVENUECAT_ANDROID_API_KEY = 'goog_XhetlfAMMNtvDWQuAGbMDiPZkya';
+const IOS_PRODUCT_IDENTIFIERS = ['com.ansioff.premium.annual', 'com.ansioff.premium.monthly'];
+const ANDROID_PRODUCT_IDENTIFIERS = ['com.ansioff.premium.annual:annual', 'com.ansioff.premium.monthly:monthly'];
+
 let configured = false;
+
+type SubscriptionUserAttributes = {
+    appUserID?: string;
+    email?: string | null;
+    displayName?: string | null;
+};
 
 function getApiKey() {
     const platform = Capacitor.getPlatform();
-    if (platform === 'ios') return process.env.NEXT_PUBLIC_REVENUECAT_IOS_API_KEY;
-    if (platform === 'android') return process.env.NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY;
+    if (platform === 'ios') return process.env.NEXT_PUBLIC_REVENUECAT_IOS_API_KEY || PUBLIC_REVENUECAT_IOS_API_KEY;
+    if (platform === 'android') return process.env.NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY || PUBLIC_REVENUECAT_ANDROID_API_KEY;
     return undefined;
 }
 
@@ -128,13 +142,47 @@ async function loadProducts(packages: PurchasesPackage[]) {
             price: item.product.priceString,
             priceValue: item.product.price,
             monthlyEquivalent: isAnnual ? item.product.pricePerMonthString : undefined,
-            trialLabel: trialEligible ? formatTrial(item.product.introPrice) || 'Prueba gratis disponible' : undefined,
+            trialLabel: trialEligible ? formatTrial(item.product.introPrice) || '7 días gratis' : undefined,
             trialEligible,
             winBackOffer,
             winBackPrice: winBackOffer?.priceString,
             winBackDiscountPercent,
             winBackPeriodLabel: formatWinBackPeriod(winBackOffer),
             revenueCatPackage: item,
+            storeProduct: item.product,
+        };
+    }).sort((a, b) => a.kind === 'annual' ? -1 : b.kind === 'annual' ? 1 : 0);
+}
+
+async function loadDirectProducts(products: PurchasesStoreProduct[]) {
+    const supported = products.filter((item) => item.identifier.includes('annual') || item.identifier.includes('monthly'));
+    let eligibility: Record<string, { status: INTRO_ELIGIBILITY_STATUS }> = {};
+    if (Capacitor.getPlatform() === 'ios' && supported.length) {
+        try {
+            eligibility = await Purchases.checkTrialOrIntroductoryPriceEligibility({
+                productIdentifiers: supported.map((item) => item.identifier),
+            });
+        } catch {
+            eligibility = {};
+        }
+    }
+
+    return supported.map<PaywallProduct>((item) => {
+        const isAnnual = item.identifier.includes('annual');
+        const introStatus = eligibility[item.identifier]?.status;
+        const trialEligible = Capacitor.getPlatform() === 'android'
+            ? Boolean(item.defaultOption?.freePhase)
+            : introStatus === INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_ELIGIBLE;
+        return {
+            id: item.identifier,
+            kind: isAnnual ? 'annual' : 'monthly',
+            title: isAnnual ? 'Anual' : 'Mensual',
+            price: item.priceString,
+            priceValue: item.price,
+            monthlyEquivalent: isAnnual ? item.pricePerMonthString : undefined,
+            trialLabel: trialEligible ? formatTrial(item.introPrice) || '7 días gratis' : undefined,
+            trialEligible,
+            storeProduct: item,
         };
     }).sort((a, b) => a.kind === 'annual' ? -1 : b.kind === 'annual' ? 1 : 0);
 }
@@ -149,13 +197,25 @@ export async function initializeSubscriptions(): Promise<SubscriptionSnapshot> {
             if (process.env.NODE_ENV !== 'production') await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
             await Purchases.configure({ apiKey });
             configured = true;
+            if (Capacitor.getPlatform() === 'ios') {
+                Purchases.enableAdServicesAttributionTokenCollection().catch(() => {
+                    // iOS attribution tokens are best-effort; purchases must never depend on ad attribution.
+                });
+            }
         }
-        const [{ customerInfo }, offerings] = await Promise.all([
-            Purchases.getCustomerInfo(),
-            Purchases.getOfferings(),
-        ]);
-        const packages = offerings.current?.availablePackages || [];
-        return snapshotFromCustomer(customerInfo, await loadProducts(packages));
+        const { customerInfo } = await Purchases.getCustomerInfo();
+        try {
+            const offerings = await Purchases.getOfferings();
+            const packages = offerings.current?.availablePackages || [];
+            if (packages.length) return snapshotFromCustomer(customerInfo, await loadProducts(packages));
+        } catch {
+            // A direct StoreKit lookup keeps purchases available while RevenueCat refreshes an offering.
+        }
+
+        const productIdentifiers = Capacitor.getPlatform() === 'ios' ? IOS_PRODUCT_IDENTIFIERS : ANDROID_PRODUCT_IDENTIFIERS;
+        const { products } = await Purchases.getProducts({ productIdentifiers });
+        if (!products.length) throw new Error('La tienda todavía no ha publicado los planes de ANSIOFF.');
+        return snapshotFromCustomer(customerInfo, await loadDirectProducts(products));
     } catch (error) {
         return { ...EMPTY_SNAPSHOT, error: error instanceof Error ? error.message : 'No se pudieron cargar las suscripciones.' };
     }
@@ -163,11 +223,12 @@ export async function initializeSubscriptions(): Promise<SubscriptionSnapshot> {
 
 export async function purchaseProduct(product: PaywallProduct, useWinBackOffer = false): Promise<SubscriptionSnapshot> {
     const result = useWinBackOffer && product.winBackOffer
-        ? await Purchases.purchasePackageWithWinBackOffer({
-            aPackage: product.revenueCatPackage,
-            winBackOffer: product.winBackOffer,
-        })
-        : await Purchases.purchasePackage({ aPackage: product.revenueCatPackage });
+        ? product.revenueCatPackage
+            ? await Purchases.purchasePackageWithWinBackOffer({ aPackage: product.revenueCatPackage, winBackOffer: product.winBackOffer })
+            : await Purchases.purchaseProductWithWinBackOffer({ product: product.storeProduct, winBackOffer: product.winBackOffer })
+        : product.revenueCatPackage
+            ? await Purchases.purchasePackage({ aPackage: product.revenueCatPackage })
+            : await Purchases.purchaseStoreProduct({ product: product.storeProduct });
     if (!result) throw new Error('La App Store no pudo iniciar la compra. Vuelve a intentarlo.');
     const { customerInfo } = result;
     const snapshot = snapshotFromCustomer(customerInfo, [product]);
@@ -184,6 +245,21 @@ export async function attachSubscriptionUser(appUserID: string) {
     if (!configured) return null;
     const result = await Purchases.logIn({ appUserID });
     return snapshotFromCustomer(result.customerInfo);
+}
+
+export async function syncSubscriptionUserAttributes({ appUserID, email, displayName }: SubscriptionUserAttributes) {
+    if (!configured) return;
+    const attributes: Record<string, string> = {
+        app_source: 'ansioff',
+        app_platform: Capacitor.getPlatform(),
+    };
+    if (appUserID) attributes.ansioff_user_id = appUserID;
+
+    await Promise.all([
+        email ? Purchases.setEmail({ email }) : Promise.resolve(),
+        displayName ? Purchases.setDisplayName({ displayName }) : Promise.resolve(),
+        Object.keys(attributes).length ? Purchases.setAttributes(attributes) : Promise.resolve(),
+    ]);
 }
 
 export async function detachSubscriptionUser() {
