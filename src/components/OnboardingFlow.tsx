@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import {
     Activity, ArrowLeft, BedDouble, BookOpen, Brain, BriefcaseBusiness,
@@ -214,7 +215,8 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                 .primary-action{width:100%;min-height:56px;border:0;border-radius:16px;background:#5aadcf;color:#031018;font:inherit;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;}
                 .primary-action:disabled{opacity:.35;cursor:default;}
                 .secondary-action{width:100%;min-height:44px;border:0;background:transparent;color:#89a5b3;font:inherit;font-size:13px;font-weight:650;cursor:pointer;margin-top:6px;}
-                .welcome-mark{width:76px;height:76px;border-radius:22px;background:#0d2534;border:1px solid rgba(90,173,207,.3);display:flex;align-items:center;justify-content:center;color:#77cbe4;margin:8px 0 28px;box-shadow:0 18px 50px rgba(25,121,153,.18);}
+                .welcome-mark{width:112px;height:112px;border-radius:28px;background:#0d2554;border:1px solid rgba(90,173,207,.26);display:flex;align-items:center;justify-content:center;margin:4px 0 24px;box-shadow:0 18px 50px rgba(25,121,153,.2);overflow:hidden;}
+                .welcome-logo-img{width:100%;height:100%;object-fit:cover;display:block;}
                 .welcome-title{font-size:35px;line-height:1.12;font-weight:780;letter-spacing:0;margin-bottom:14px;max-width:450px;}
                 .welcome-copy{font-size:16px;line-height:1.6;color:rgba(210,232,240,.68);margin-bottom:28px;}
                 .benefit-list{display:grid;gap:14px;margin-bottom:26px;}
@@ -255,7 +257,7 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                 .proof-item svg{color:#7ad4ad;margin-top:1px;}
                 .honest-note{font-size:11px;line-height:1.5;color:rgba(210,232,240,.43);margin:18px 0 0;}
                 @keyframes breathePreview{0%,100%{transform:scale(.78)}45%,58%{transform:scale(1)}}
-                @media(max-height:700px){.onboarding-content{padding-top:16px}.welcome-mark{width:60px;height:60px;margin-bottom:18px}.welcome-title{font-size:29px}.benefit-list{gap:10px}.onboarding-shell{padding-top:max(10px,env(safe-area-inset-top));}}
+                @media(max-height:700px){.onboarding-content{padding-top:16px}.welcome-mark{width:88px;height:88px;margin-bottom:16px}.welcome-title{font-size:29px}.benefit-list{gap:10px}.onboarding-shell{padding-top:max(10px,env(safe-area-inset-top));}}
                 @media(prefers-reduced-motion:reduce){.progress-fill,.onboarding-option,.breathing-orb{transition:none;animation:none;}}
             `}</style>
 
@@ -273,7 +275,9 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                 <main className="onboarding-content">
                     {step === 0 && (
                         <>
-                            <div className="welcome-mark"><Wind size={36} /></div>
+                            <div className="welcome-mark">
+                                <Image className="welcome-logo-img" src="/logo.png" alt="ANSIOFF" width={112} height={112} priority />
+                            </div>
                             <h1 className="welcome-title">Un espacio para calmar el momento y entender lo que se repite.</h1>
                             <p className="welcome-copy">Prepararemos una experiencia sencilla según lo que necesitas hoy. No es una evaluación médica.</p>
                             <div className="benefit-list">
