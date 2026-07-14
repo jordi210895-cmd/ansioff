@@ -261,7 +261,7 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                     </button>
                 </div>
 
-                {/* --- CONTACTOS DE EMERGENCIA --- */}
+                {/* --- CONTACTOS RÁPIDOS --- */}
                 <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[rgba(200,225,235,0.38)] mb-4 px-1 flex justify-between items-center">
                     <span>Contactos Rápidos</span>
                     {!isAddingContact && (
@@ -275,7 +275,7 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                     {contacts.length === 0 && !isAddingContact && (
                         <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] border-dashed p-6 rounded-2xl text-center">
                             <p className="font-sans font-light text-[13px] text-[rgba(200,225,235,0.5)] mb-3">
-                                No tienes contactos configurados para el botón de llamada rápida en crisis.
+                                No tienes contactos configurados para llamada rápida.
                             </p>
                             <button onClick={() => setIsAddingContact(true)} className="text-[#5aadcf] font-sans text-sm font-medium hover:underline">
                                 Añadir mi primer contacto
@@ -317,7 +317,7 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                                 />
                                 <input
                                     type="text"
-                                    placeholder="Rol Clínico / Etiqueta (Ej: Psicólogo) - Opcional"
+                                    placeholder="Etiqueta (Ej: Familia, Amistad) - Opcional"
                                     className="w-full bg-[#03080f] border border-[rgba(255,255,255,0.1)] rounded-xl px-4 py-3 text-sm text-white placeholder-[rgba(255,255,255,0.3)] outline-none focus:border-[#5aadcf]"
                                     value={newContactRole}
                                     onChange={e => setNewContactRole(e.target.value)}
@@ -363,7 +363,7 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                         <div>
                             <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">¿Qué datos guardamos?</h3>
                             <p className="font-sans font-light text-[12px] text-[rgba(200,225,235,0.8)] leading-relaxed">
-                                En este dispositivo hay <span className="font-medium text-[#5aadcf]"> {stats.points} puntos de práctica</span>, tus notas y audios. RevenueCat recibe la información necesaria para validar compras, nunca tus respuestas, síntomas o notas.
+                                En este dispositivo hay <span className="font-medium text-[#5aadcf]"> {stats.points} puntos de práctica</span>, tus notas y audios. RevenueCat recibe la información necesaria para validar compras, nunca tus respuestas personales ni tus notas.
                             </p>
                         </div>
                     </div>
@@ -488,12 +488,12 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                             </div>
                             <div className="text-left">
                                 <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">
-                                    Velocidad Guía Respiración
+                                    Velocidad de ritmos guiados
                                 </h3>
                                 <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.5)]">
-                                    {neuroSettings.breathingSpeed === 'slow' ? 'Lenta (Mucha hiperventilación)' :
+                                    {neuroSettings.breathingSpeed === 'slow' ? 'Lenta' :
                                         neuroSettings.breathingSpeed === 'normal' ? 'Normal (Recomendada)' :
-                                            'Rápida (Poca ansiedad)'}
+                                            'Rápida'}
                                 </p>
                             </div>
                         </div>

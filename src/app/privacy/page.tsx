@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
                 <div className="space-y-8 leading-relaxed">
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-4">1. Introducción</h2>
-                        <p>Esta Política explica qué datos utiliza ANSIOFF, dónde se guardan y cuándo se comparten con un proveedor. ANSIOFF es una herramienta de bienestar y autocuidado; no es un servicio de diagnóstico, tratamiento ni atención de emergencias.</p>
+                        <p>Esta Política explica qué datos utiliza ANSIOFF, dónde se guardan y cuándo se comparten con un proveedor. ANSIOFF es una herramienta de diario personal, pausas guiadas y organización cotidiana.</p>
                     </section>
 
                     <section>
@@ -43,9 +43,9 @@ export default function PrivacyPolicy() {
                             <li>Validar compras, restaurar suscripciones y habilitar funciones Premium.</li>
                             <li>Generar una reflexión IA únicamente cuando la solicita y consiente.</li>
                             <li>Programar recordatorios cuando los activa.</li>
-                            <li>Medir campañas y mejorar la atribución publicitaria usando eventos comerciales genéricos, sin enviar contenido de bienestar.</li>
+                            <li>Medir campañas y mejorar la atribución publicitaria usando eventos comerciales genéricos, sin enviar contenido de diario personal.</li>
                         </ul>
-                        <p className="mt-4">Las respuestas sobre síntomas, desencadenantes, notas, audios, check-ins y puntuaciones no se envían a Meta, Google Ads ni a plataformas publicitarias. Los eventos de embudo publicitario, cuando estén habilitados, son genéricos y requieren consentimiento cuando corresponda.</p>
+                        <p className="mt-4">Las respuestas del onboarding, notas, audios, check-ins y puntuaciones no se envían a Meta, Google Ads ni a plataformas publicitarias. Los eventos de embudo publicitario, cuando estén habilitados, son genéricos y requieren consentimiento cuando corresponda.</p>
                     </section>
 
                     <section>

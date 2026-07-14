@@ -112,7 +112,7 @@ async function main() {
           benefits: [
             'Herramientas inmediatas',
             'Diario y reflexión IA',
-            'Respiración y autocuidado',
+            'Pausas, diario y rutinas',
             'Constancia flexible',
           ],
           description: product.description,

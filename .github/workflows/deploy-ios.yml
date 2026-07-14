@@ -24,7 +24,7 @@ jobs:
           STATIC_EXPORT: 'true'
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://sthyhbxdwsnbewxmiyla.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
-          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL || 'https://app-ansiedad-flame.vercel.app' }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL || 'https://ansioff.com' }}
           NEXT_PUBLIC_REVENUECAT_IOS_API_KEY: ${{ secrets.NEXT_PUBLIC_REVENUECAT_IOS_API_KEY }}
           NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY: ${{ secrets.NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY }}
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || 'stripe_secret_placeholder' }}

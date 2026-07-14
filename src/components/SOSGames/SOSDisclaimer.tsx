@@ -15,9 +15,7 @@ export default function SOSDisclaimer({ onAccept, onCancel }: SOSDisclaimerProps
             </div>
             <h2 className="text-[32px] font-serif text-[#e8f4f8] mb-4">Anclaje al Presente</h2>
             <p className="text-white/50 text-[15px] leading-relaxed mb-12 max-w-xs">
-                Usa este ejercicio como una pausa de atención cuando notes tensión intensa. Respira profundo y siente tu peso sobre la silla.
-                <br /><br />
-                No sustituye ayuda profesional ni servicios de emergencia.
+                Usa este ejercicio como una pausa de atención cuando quieras parar un momento. Siente tu peso sobre la silla y avanza a tu ritmo.
             </p>
             <div className="flex flex-col gap-4 w-full max-w-xs">
                 <button

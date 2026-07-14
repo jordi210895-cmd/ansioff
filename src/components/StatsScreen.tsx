@@ -106,7 +106,7 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
                 <div className="st-box">
                     <div className="sb-ico">🌬️</div>
                     <div className="sb-val">{stats.breathMins}</div>
-                    <div className="sb-lab">Minutos de respiración</div>
+                    <div className="sb-lab">Minutos de ritmos guiados</div>
                 </div>
                 <div className="st-box">
                     <div className="sb-ico">📓</div>
@@ -116,7 +116,7 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
                 <div className="st-box">
                     <div className="sb-ico">🛡️</div>
                     <div className="sb-val">{stats.sosUses}</div>
-                    <div className="sb-lab">Sesiones SOS completadas</div>
+                    <div className="sb-lab">Pausas guiadas completadas</div>
                 </div>
                 <div className="st-box">
                     <div className="sb-ico">🎧</div>

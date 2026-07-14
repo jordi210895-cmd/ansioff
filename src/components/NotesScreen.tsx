@@ -90,7 +90,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
             let data: any;
 
             if (Capacitor.isNativePlatform()) {
-                const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://app-ansiedad-flame.vercel.app';
+                const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://ansioff.com';
                 const response = await CapacitorHttp.post({
                     url: `${apiBaseUrl}/api/analyze`,
                     headers: { 'Content-Type': 'application/json' },
@@ -235,7 +235,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                 <div>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{ fontSize: '18px' }}>💡</div>
-                        <div className="nt-ai-txt">La <b>IA de reflexión</b> puede resumir tus notas recientes y ayudarte a detectar temas repetidos. No ofrece diagnóstico ni consejo médico.</div>
+                        <div className="nt-ai-txt">La <b>IA de reflexión</b> puede resumir tus notas recientes y ayudarte a detectar temas repetidos de escritura.</div>
                     </div>
                     {notes.length > 0 && (
                         <button className="ai-btn" onClick={requestNotesAnalysis} disabled={isAnalyzing}>
@@ -310,7 +310,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                         <div className="consent-icon"><ShieldCheck size={23} /></div>
                         <div id="ai-consent-title" className="consent-title">Antes de usar la reflexión IA</div>
                         <p className="consent-copy">Al continuar, se enviarán mediante una conexión segura tus {Math.min(notes.length, 15)} notas más recientes al servicio de ANSIOFF y a Google Gemini para crear este resumen.</p>
-                        <p className="consent-copy">La IA buscará temas repetidos y propondrá una idea de autocuidado. No realiza diagnósticos, no determina causas y no sustituye a un profesional.</p>
+                        <p className="consent-copy">La IA buscará temas repetidos y propondrá una idea sencilla para organizar tus próximas pausas o registros.</p>
                         <div className="consent-note">Tus notas no se envían a Meta, Google Ads ni a herramientas publicitarias.</div>
                         <div className="consent-actions">
                             <button className="consent-primary" onClick={acceptAiConsent}>Entiendo y quiero continuar</button>

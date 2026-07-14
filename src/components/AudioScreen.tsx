@@ -20,7 +20,7 @@ interface AudioScreenProps {
     onPracticeComplete?: () => void;
 }
 
-const isFreeTrack = (track?: Track) => track?.name.trim().toLowerCase() === 'calma profunda';
+const isFreeTrack = (track?: Track) => track?.name.trim().toLowerCase() === 'sonido profundo';
 
 export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack, trackCount, isPremium, onUpgrade, onPracticeComplete }: AudioScreenProps) {
     const [curIdx, setCurIdx] = useState(() => {
@@ -281,7 +281,7 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <div className="snd-title">Sonidos</div>
-                        <div className="snd-sub">Para calmar la mente y el cuerpo</div>
+                        <div className="snd-sub">Para acompañar tus pausas y tu foco</div>
                     </div>
                     <div onClick={onBack} className="snd-back" aria-label="Volver">‹</div>
                 </div>
@@ -292,7 +292,7 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
                 <div className="pl-tag">{isPlaying ? 'Reproduciendo ahora' : 'En pausa'}</div>
                 <div className="pl-row">
                     <div className="pl-art">{currentTrack?.icon}</div>
-                    <div><div className="pl-name">{currentTrack?.name}</div><div className="pl-type">RELAJACIÓN GUIADA</div></div>
+                    <div><div className="pl-name">{currentTrack?.name}</div><div className="pl-type">AUDIO GUIADO</div></div>
                     <div className="pl-dur">{currentTrack?.duration}</div>
                 </div>
                 <div className="wave">
@@ -328,7 +328,7 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
             </div>
 
             <div className="snd-cats">
-                <div className="cat-pill on">Todos</div><div className="cat-pill">Meditación</div><div className="cat-pill">Frecuencias</div>
+                <div className="cat-pill on">Todos</div><div className="cat-pill">Foco</div><div className="cat-pill">Frecuencias</div>
             </div>
 
             <div className="snd-list">

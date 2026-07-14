@@ -2,9 +2,20 @@ name: Upload Store Listing
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Store listing target'
+        required: true
+        default: 'google-play'
+        type: choice
+        options:
+          - google-play
+          - app-store
+          - all
 
 jobs:
   google-play:
+    if: ${{ inputs.target == 'google-play' || inputs.target == 'all' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -27,6 +38,7 @@ jobs:
         run: node scripts/upload-google-play-store-listing.mjs
 
   app-store:
+    if: ${{ inputs.target == 'app-store' || inputs.target == 'all' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

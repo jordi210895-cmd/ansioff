@@ -112,7 +112,7 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                 {/* Main Content Container */}
                 <div className="home-stack w-full flex flex-col">
 
-                    {/* 1. SOS Button Area */}
+                    {/* 1. Guided pause area */}
                     <section className="text-left">
                         <div
                             className="home-card w-full relative overflow-hidden p-px bg-gradient-to-br from-red-500/30 via-rose-500/10 to-red-500/20 border border-red-500/20 shadow-2xl shadow-red-950/20"
@@ -121,18 +121,18 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                                 <div className="flex flex-col gap-2">
                                     <h3 className="home-sos-title font-bold text-[#ddeef5] tracking-tight flex items-center gap-2">
                                         <AlertTriangle className="home-sos-inline-icon shrink-0" strokeWidth={2.2} />
-                                        <span>Necesito ayuda ahora</span>
+                                        <span>Necesito una pausa</span>
                                     </h3>
                                     <p className="home-sos-copy text-[rgba(200,225,235,0.6)]">
-                                        Si estás experimentando una crisis de ansiedad, pánico o sobreestimulación, activa el kit de calma inmediata.
+                                        Si necesitas parar un momento, activa una guía breve para observar tu entorno y avanzar paso a paso.
                                     </p>
                                 </div>
 
                                 <button
-                                    onClick={() => onNav('sc-sos')}
+                                    onClick={() => onNav('sc-pause')}
                                     className="home-sos-button w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-full px-6 font-bold text-xs tracking-wider transition-all shadow-lg shadow-red-950/30 active:scale-[0.98] flex items-center justify-center gap-2"
                                 >
-                                    ACTIVAR KIT SOS <ChevronRight size={14} />
+                                    ACTIVAR PAUSA GUIADA <ChevronRight size={14} />
                                 </button>
 
                                 {/* Decorative background glow */}
@@ -144,7 +144,7 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                     {/* 2. Featured Breathing Card */}
                     <section>
                         <div className="home-section-head flex items-center justify-between px-1">
-                            <h2 className="home-section-title font-medium font-serif italic text-[#ddeef5] tracking-tight leading-none">Respiración guiada</h2>
+                            <h2 className="home-section-title font-medium font-serif italic text-[#ddeef5] tracking-tight leading-none">Pausa guiada</h2>
                             <button onClick={() => onNav('sc-breath')} className="text-xs text-[#5aadcf] font-bold hover:underline transition-all">Ver todos</button>
                         </div>
 
@@ -167,10 +167,10 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                                     </div>
                                 </div>
                                 <h3 className="breath-title font-light text-[#ddeef5] leading-tight font-serif italic">
-                                    Alivio del estrés <br /><span className="font-bold tracking-tight not-italic font-sans text-sky-200">Profundo</span>
+                                    Vuelve a tu ritmo <br /><span className="font-bold tracking-tight not-italic font-sans text-sky-200">Paso a paso</span>
                                 </h3>
                                 <p className="breath-copy text-[rgba(200,225,235,0.6)]">
-                                    Una sesión corta diseñada para reducir rápidamente el ritmo cardíaco y calmar la mente activa.
+                                    Una sesión corta diseñada para crear una pausa, ordenar ideas y volver a lo que estabas haciendo.
                                 </p>
                             </div>
 
@@ -191,7 +191,7 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                             {/* Decorative quotes */}
                             <div className="absolute top-2 left-4 text-[#5aadcf]/10 text-6xl font-serif">&quot;</div>
                             <p className="home-quote-text relative z-10 italic text-[#ddeef5]/90 font-light font-serif">
-                                Tus sentimientos son válidos, pero no son tu destino. Respira y confía en el proceso.
+                                Haz una pausa, vuelve a tu ritmo y continúa con lo importante.
                             </p>
                             <div className="absolute bottom-[-1rem] right-4 text-[#5aadcf]/10 text-6xl font-serif rotate-180">&quot;</div>
                         </div>

@@ -22,7 +22,7 @@ export interface ReminderMessage {
 
 const REENGAGEMENT_MESSAGES = [
     { title: 'Te echamos de menos', body: 'Vuelve a ANSIOFF y haz una pausa breve de 1 minuto.' },
-    { title: 'Tu espacio de calma sigue aquí', body: 'Respira 4-7-8 o registra cómo estás hoy.' },
+    { title: 'Tu espacio de pausa sigue aquí', body: 'Usa un ritmo 4-7-8 o registra cómo va tu día.' },
     { title: 'Un check-in pequeño puede ayudar', body: 'Entra cuando puedas y retoma tu rutina sin presión.' },
     { title: 'Volvemos poco a poco', body: 'Tienes tus herramientas listas para cuando las necesites.' },
 ];

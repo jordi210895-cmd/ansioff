@@ -13,7 +13,7 @@ export default function SupportPage() {
           <h1 className="mt-3 text-4xl font-bold text-white">Ayuda y contacto de ANSIOFF</h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">
             Si tienes dudas sobre la app, problemas de acceso, eliminación de datos o necesitas ayuda
-            para utilizar las herramientas de calma, puedes contactar con el equipo de soporte.
+            para utilizar el diario, los sonidos o las rutinas, puedes contactar con el equipo de soporte.
           </p>
         </header>
 
@@ -41,22 +41,6 @@ export default function SupportPage() {
               Politica de privacidad
             </Link>
           </p>
-        </section>
-
-        <section className="mt-6 rounded-lg border border-rose-400/20 bg-rose-400/10 p-6">
-          <h2 className="text-xl font-semibold text-white">Ayuda urgente</h2>
-          <p className="mt-3 text-slate-200">
-            ANSIOFF no sustituye atencion medica, psicologica ni servicios de emergencia. Si estas en
-            peligro inmediato o necesitas ayuda urgente, llama a emergencias.
-          </p>
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-            <a className="rounded-md bg-rose-300 px-4 py-3 text-center font-semibold text-slate-950" href="tel:112">
-              Llamar al 112
-            </a>
-            <a className="rounded-md border border-white/15 px-4 py-3 text-center font-semibold text-white" href="tel:024">
-              Linea 024
-            </a>
-          </div>
         </section>
 
         <p className="mt-8 text-sm text-slate-500">Ultima actualizacion: 2 de julio de 2026.</p>

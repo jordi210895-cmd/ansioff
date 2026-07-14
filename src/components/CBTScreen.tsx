@@ -182,7 +182,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                                 <h2 className="text-3xl font-light mb-4 pl-1 font-serif italic text-[#ddeef5]">¿Qué estás pensando ahora?</h2>
                                 <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] mb-8 leading-relaxed px-1">
-                                    Escribe un pensamiento que te esté generando malestar. Intenta ser concreto y úsalo solo como ejercicio personal de reflexión.
+                                    Escribe un pensamiento que se esté repitiendo. Intenta ser concreto y úsalo solo como ejercicio personal de reflexión.
                                 </p>
                                 <textarea
                                     className="w-full bg-[#0e1d2e]/50 backdrop-blur-sm border border-[rgba(255,255,255,0.07)] focus:border-[#5aadcf]/50 rounded-[24px] p-6 text-[#ddeef5] font-sans text-[15px] min-h-[160px] outline-none transition-colors placeholder:text-[rgba(200,225,235,0.2)] shadow-inner leading-relaxed"

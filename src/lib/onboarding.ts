@@ -102,29 +102,29 @@ export function toggleLimitedSelection<T>(current: T[], value: T, max = 3) {
 }
 
 const GOAL_LABELS: Record<OnboardingGoal, string> = {
-    calm_now: 'calmar los momentos intensos',
+    calm_now: 'crear una pausa rápida',
     slow_thoughts: 'dar espacio a tus pensamientos',
     sleep_better: 'descansar mejor',
-    daily_stress: 'bajar el estrés del día a día',
+    daily_stress: 'ordenar el día a día',
     understand_patterns: 'entender lo que se repite',
 };
 
 const TRIGGER_LABELS: Record<Trigger, string> = {
     work_study: 'el trabajo o los estudios',
     relationships: 'las relaciones',
-    health: 'las sensaciones relacionadas con tu salud',
+    health: 'la energía del día',
     uncertainty: 'la incertidumbre',
     digital_environment: 'el entorno y las pantallas',
     unclear: 'situaciones que todavía no identificas',
 };
 
 const IMPACT_LABELS: Record<Impact, string> = {
-    sleep: 'el sueño',
+    sleep: 'la rutina nocturna',
     focus: 'la concentración',
     relationships: 'las relaciones',
     energy: 'la energía',
     enjoyment: 'el disfrute del día',
-    body: 'el cuerpo y la respiración',
+    body: 'las pausas del día',
 };
 
 function firstLabel<T extends string>(values: T[], labels: Record<T, string>, fallback: string) {
@@ -134,15 +134,15 @@ function firstLabel<T extends string>(values: T[], labels: Record<T, string>, fa
 export function createPersonalizedPlan(answers: OnboardingAnswers): PersonalizedPlan {
     const goal = answers.goal || 'daily_stress';
     const trigger = firstLabel(answers.triggers, TRIGGER_LABELS, 'el día a día');
-    const impact = firstLabel(answers.impacts, IMPACT_LABELS, 'tu bienestar diario');
+    const impact = firstLabel(answers.impacts, IMPACT_LABELS, 'tu rutina diaria');
 
     const exercisePattern: PersonalizedPlan['exercisePattern'] = '4-7-8';
 
     const nowStep: PlanStep = goal === 'sleep_better'
-        ? { stage: 'Ahora', title: 'Preparar el descanso', description: 'Una respiración lenta para bajar el ritmo antes de dormir.', module: 'breathing_478' }
+        ? { stage: 'Ahora', title: 'Preparar el descanso', description: 'Un ritmo lento para cerrar el día antes de dormir.', module: 'breathing_478' }
         : goal === 'calm_now'
-            ? { stage: 'Ahora', title: 'Calmar el momento intenso', description: 'SOS y respiración 4-7-8 para volver al presente sin forzar.', module: 'sos' }
-            : { stage: 'Ahora', title: 'Crear una pausa', description: 'Respiración 4-7-8 para bajar el ritmo y recuperar margen.', module: 'breathing_478' };
+            ? { stage: 'Ahora', title: 'Crear una pausa rápida', description: 'Guía 5-4-3-2-1 y ritmo 4-7-8 para volver al presente sin forzar.', module: 'sos' }
+            : { stage: 'Ahora', title: 'Crear una pausa', description: 'Ritmo 4-7-8 para parar un momento y recuperar margen.', module: 'breathing_478' };
 
     const understandStep: PlanStep = goal === 'slow_thoughts' || answers.manifestations.includes('racing_thoughts')
         ? { stage: 'Comprender', title: 'Ordenar pensamientos', description: 'Registro guiado para observarlos con más perspectiva.', module: 'cbt' }

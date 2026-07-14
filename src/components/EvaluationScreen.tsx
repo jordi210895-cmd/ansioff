@@ -10,30 +10,30 @@ interface EvaluationScreenProps {
 }
 
 const QUESTIONS = [
-    'Sensación de hormigueo o entumecimiento',
-    'Sensación de calor / sofocos',
-    'Temblor en las piernas',
-    'Incapacidad para relajarse',
-    'Miedo a que ocurra lo peor',
-    'Sensación de mareo o inestabilidad',
-    'Palpitaciones o taquicardia',
-    'Nerviosismo excesivo',
-    'Sensación de ahogo o dificultad para respirar',
-    'Miedo a perder el control'
+    'Me ha costado concentrarme',
+    'He tenido demasiadas cosas en la cabeza',
+    'Me ha costado empezar una tarea',
+    'Me ha costado parar y descansar',
+    'He dado muchas vueltas a una idea',
+    'He sentido el día desordenado',
+    'He tenido poca energía',
+    'He aplazado algo importante',
+    'He necesitado una pausa',
+    'He querido cerrar mejor el día'
 ];
 
 const SOURCES = [
     {
-        name: 'WHO - Doing What Matters in Times of Stress',
-        url: 'https://www.who.int/publications/i/item/9789240003927',
+        name: 'Google Play - User Data',
+        url: 'https://support.google.com/googleplay/android-developer/answer/10144311',
     },
     {
-        name: 'NIMH - Anxiety Disorders',
-        url: 'https://www.nimh.nih.gov/health/topics/anxiety-disorders',
+        name: 'ANSIOFF - Privacidad',
+        url: '/privacy',
     },
     {
-        name: 'NHS Inform - Anxiety self-help guide',
-        url: 'https://www.nhsinform.scot/illnesses-and-conditions/mental-health/mental-health-self-help-guides/anxiety-self-help-guide/',
+        name: 'ANSIOFF - Soporte',
+        url: '/support',
     },
 ];
 
@@ -56,25 +56,25 @@ export default function EvaluationScreen({ onBack, onComplete }: EvaluationScree
 
     const getResult = () => {
         if (totalScore <= 10) return {
-            t: 'Malestar bajo',
+            t: 'Carga baja',
             c: 'text-emerald-400',
             bg: 'bg-emerald-500/10',
             border: 'border-emerald-500/20',
-            d: 'Has registrado pocas molestias en este check-in. Puedes usar la respiración guiada o el diario si quieres seguir observando cómo te sientes.'
+            d: 'Has registrado poca carga en este check-in. Puedes usar un ritmo guiado o el diario si quieres seguir observando tu día.'
         };
         if (totalScore <= 20) return {
-            t: 'Malestar medio',
+            t: 'Carga media',
             c: 'text-amber-400',
             bg: 'bg-amber-500/10',
             border: 'border-amber-500/20',
-            d: 'Has registrado varias molestias. Esta pantalla no ofrece diagnóstico; puede ayudarte a decidir si quieres hacer una pausa, respirar o escribir en tu diario.'
+            d: 'Has registrado varias señales de carga. Esta pantalla puede ayudarte a decidir si quieres hacer una pausa, usar un ritmo guiado o escribir en tu diario.'
         };
         return {
-            t: 'Malestar alto',
+            t: 'Carga alta',
             c: 'text-rose-400',
             bg: 'bg-rose-500/10',
             border: 'border-rose-500/20',
-            d: 'Has registrado muchas molestias. Considera hablar con un profesional de salud si esto te preocupa, y contacta con emergencias si hay peligro inmediato.'
+            d: 'Has registrado mucha carga. Puedes hacer una pausa breve, escribir lo que está pasando o dejar esta revisión para otro momento.'
         };
     };
 
@@ -90,14 +90,14 @@ export default function EvaluationScreen({ onBack, onComplete }: EvaluationScree
                                 <BookOpen size={14} /> Aviso
                             </div>
                             <p className="font-sans font-light text-[12px] text-[rgba(200,225,235,0.76)] leading-relaxed">
-                                Este check-in es solo una herramienta personal de seguimiento. No diagnostica, no mide una condición médica y no sustituye el consejo de un médico, psicólogo u otro profesional de salud.
+                                Este check-in es solo una herramienta personal de seguimiento para observar hábitos, energía y foco durante la semana.
                             </p>
                         </div>
 
                         <div className="flex justify-between items-center mb-6">
                             <div className="flex items-center gap-2">
                                 <ClipboardCheck size={14} className="text-[#5aadcf]" />
-                                <span className="font-sans font-bold text-[10px] text-[#5aadcf] tracking-widest uppercase">Check-in de bienestar</span>
+                                <span className="font-sans font-bold text-[10px] text-[#5aadcf] tracking-widest uppercase">Check-in personal</span>
                             </div>
                             <span className="font-sans font-medium text-[10px] text-[rgba(200,225,235,0.38)]">{currentIdx + 1} / {QUESTIONS.length}</span>
                         </div>
@@ -110,7 +110,7 @@ export default function EvaluationScreen({ onBack, onComplete }: EvaluationScree
                         </div>
 
                         <h2 className="text-2xl font-light mb-10 leading-relaxed font-serif text-[#ddeef5]">
-                            En la última semana, ¿cuánto has notado esta sensación?<br />
+                            En la última semana, ¿cuánto has notado esto?<br />
                             <span className="text-[#5aadcf] mt-6 block italic">"{QUESTIONS[currentIdx]}"</span>
                         </h2>
 
@@ -156,7 +156,7 @@ export default function EvaluationScreen({ onBack, onComplete }: EvaluationScree
                                 <BookOpen size={14} /> Fuentes y límites
                             </div>
                             <p className="font-sans font-light text-[12px] text-[rgba(200,225,235,0.76)] leading-relaxed mb-4">
-                                Las preguntas se inspiran en material educativo sobre estrés, ansiedad y recursos de autoayuda. No son una escala clínica validada dentro de ANSIOFF y no deben usarse para tomar decisiones médicas.
+                                Las preguntas son una guía personal para revisar hábitos, foco y rutinas. No generan una puntuación oficial: solo sirven para observar tendencias propias.
                             </p>
                             <div className="space-y-2">
                                 {SOURCES.map((source) => (

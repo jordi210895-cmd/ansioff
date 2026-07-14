@@ -7,11 +7,11 @@ const SCOPE = 'https://www.googleapis.com/auth/androidpublisher';
 const ICON_PATH = path.resolve('assets/play-store-icon.png');
 const FALLBACK_LISTING = {
   title: 'Ansioff',
-  shortDescription: 'Respira, calma la mente y crea rutinas de autocuidado.',
+  shortDescription: 'Diario, sonidos y rutinas para crear pausas y ordenar tus ideas.',
   fullDescription: [
-    'ANSIOFF reúne herramientas de respiración, calma inmediata, diario y rutinas de autocuidado para ayudarte a crear pausas sencillas durante el día.',
+    'ANSIOFF reúne diario personal, sonidos, pausas guiadas y rutinas para ayudarte a ordenar ideas durante el día.',
     '',
-    'La aplicación no sustituye atención médica, psicológica ni servicios de emergencia. Si existe peligro inmediato, contacta con los servicios de emergencia de tu zona.',
+    'Es una herramienta de organización personal e informativa para crear pausas, escribir y seguir hábitos cotidianos.',
   ].join('\n'),
 };
 

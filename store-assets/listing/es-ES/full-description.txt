@@ -1,37 +1,37 @@
-Ansioff es una app para ansiedad y autocuidado emocional creada para acompañarte cuando necesitas una pausa.
+Ansioff es una app de diario personal, pausas guiadas y rutinas sencillas para ordenar tus ideas durante el día.
 
-Reúne herramientas sencillas para respirar, calmar la mente, escribir lo que sientes y volver a tus rutinas de bienestar cuando el día se complica.
+Reúne herramientas breves para escribir, escuchar sonidos, crear hábitos y volver a una tarea cuando necesitas un momento de pausa.
 
 Qué puedes hacer con Ansioff:
 
-Kit SOS para momentos difíciles
-Accede a una guía paso a paso cuando sientas ansiedad, pánico o sobreestimulación. El Kit SOS te ayuda a volver al presente con respiración, anclaje y pequeñas acciones de calma.
+Pausas guiadas
+Sigue pasos sencillos como 5-4-3-2-1 para observar tu entorno, centrar la atención y avanzar a tu ritmo.
 
-Respiración guiada
-Practica ejercicios como 4-2-6 y 4-7-8 con una guía visual clara. Puedes usar sesiones breves para reducir el ritmo, crear una pausa y recuperar sensación de control.
+Ritmos guiados
+Practica ritmos visuales breves como 4-2-6 y 4-7-8. Úsalos como pausas personales de concentración para volver a tu tarea.
 
 Sonidos para volver a ti
-Escucha audios de relajación, respiración y calma. Usa sonidos guiados cuando necesites bajar revoluciones, concentrarte o preparar una rutina de descanso.
+Escucha audios y paisajes sonoros para acompañar tus rutinas de foco, escritura o descanso.
 
-Diario emocional
-Escribe tus pensamientos y registra cómo te sientes. El diario te ayuda a liberar carga mental, observar patrones y entender qué temas se repiten en tu día a día.
+Diario personal
+Escribe pensamientos, ideas y notas privadas. Usa el diario para liberar carga mental y observar temas que se repiten.
 
 Reflexión con IA
-La IA de reflexión puede resumir tus notas recientes y ayudarte a detectar temas repetidos. No ofrece diagnóstico ni consejo médico; funciona como apoyo para ordenar ideas.
+La IA de reflexión puede resumir tus notas recientes y ayudarte a encontrar patrones de escritura. Tú decides cuándo usarla.
 
 Progreso y constancia
-Consulta minutos de respiración, registros completados, sesiones SOS y rachas de práctica. Ansioff premia la constancia sin penalizar los descansos.
+Consulta minutos de práctica, registros completados, audios escuchados y rachas. Ansioff premia la constancia sin penalizar los descansos.
 
 Ansioff puede ayudarte si buscas:
 
-Una app para ansiedad con herramientas prácticas.
-Respiración guiada para momentos de estrés.
-Un diario emocional para entender patrones.
-Sonidos de calma y relajación.
-Rutinas de mindfulness y autocuidado.
-Apoyo rápido cuando aparece una crisis de ansiedad.
+Una app de diario y reflexión.
+Rutinas breves para crear pausas.
+Sonidos para concentrarte o desconectar.
+Un espacio privado para escribir.
+Seguimiento de hábitos personales.
+Herramientas para organizar tu día.
 
-Ansioff no sustituye atención médica, psicológica ni servicios de emergencia. Si sientes que puedes hacerte daño, que otra persona está en peligro o que necesitas ayuda urgente, contacta con los servicios de emergencia de tu zona o con un profesional cualificado.
+Ansioff es una herramienta de organización personal e informativa para crear pausas, escribir y seguir hábitos cotidianos.
 
 Privacidad: https://ansioff.com/privacy
 Soporte: https://ansioff.com/support

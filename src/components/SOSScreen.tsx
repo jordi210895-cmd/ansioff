@@ -1,8 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { getEmergencyContacts, EmergencyContact } from '@/utils/contacts';
-import { Phone, Anchor } from 'lucide-react';
+import { useState, useRef } from 'react';
 import { addSosUse } from '@/utils/stats';
 
 interface SOSScreenProps {
@@ -21,14 +19,8 @@ const groundingSteps = [
 ];
 
 export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
-    const [mode, setMode] = useState<'grounding' | 'call'>('grounding');
     const [step, setStep] = useState(0);
-    const [contacts, setContacts] = useState<EmergencyContact[]>([]);
     const hasRecordedCompletion = useRef(false);
-
-    useEffect(() => {
-        setContacts(getEmergencyContacts());
-    }, []);
     const [inputs, setInputs] = useState<Record<string, string[]>>({
         see: ['', '', '', '', ''],
         touch: ['', '', '', ''],
@@ -53,13 +45,13 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
     };
 
     return (
-        <div id="crisis" className="screen active">
+        <div id="guided-pause" className="screen active">
             <style jsx>{`
                 .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:120px;}
                 .screen::-webkit-scrollbar{display:none;}
 
-                #crisis .aurora-1{background:radial-gradient(circle,rgba(244,63,94,0.65),transparent 70%);top:-100px;left:-60px;}
-                #crisis .aurora-2{background:radial-gradient(circle,rgba(245,158,11,0.3),transparent 70%);bottom:0;right:-80px;}
+                #guided-pause .aurora-1{background:radial-gradient(circle,rgba(244,63,94,0.65),transparent 70%);top:-100px;left:-60px;}
+                #guided-pause .aurora-2{background:radial-gradient(circle,rgba(245,158,11,0.3),transparent 70%);bottom:0;right:-80px;}
 
                 .sos-top{padding:24px 26px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5;}
                 .sos-badge{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);border-radius:var(--radp);padding:6px 14px;color:var(--r2);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;}
@@ -124,24 +116,14 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
             <div className="sos-top">
                 <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
                 <div className="flex bg-[rgba(255,255,255,0.05)] p-1.5 rounded-2xl border border-white/10 shadow-inner">
-                    <button 
-                        onClick={() => setMode('grounding')}
-                        className={`flex-1 px-8 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-[0.15em] transition-all duration-300 ${mode === 'grounding' ? 'bg-[#f43f5e] text-white shadow-xl shadow-red-500/30 scale-[1.02]' : 'text-white/30 hover:text-white/50'}`}
-                    >
-                        Anclaje
-                    </button>
-                    <button 
-                        onClick={() => setMode('call')}
-                        className={`flex-1 px-8 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-[0.15em] transition-all duration-300 ${mode === 'call' ? 'bg-[#f43f5e] text-white shadow-xl shadow-red-500/30 scale-[1.02]' : 'text-white/30 hover:text-white/50'}`}
-                    >
-                        Llamada
-                    </button>
+                    <div className="px-8 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-[0.15em] bg-[#f43f5e] text-white shadow-xl shadow-red-500/30 scale-[1.02]">
+                        Pausa guiada
+                    </div>
                 </div>
                 <div style={{ width: 36 }}></div>
             </div>
 
-            {mode === 'grounding' ? (
-                <div className="sos-main">
+            <div className="sos-main">
                     <div className="sos-hero">{currentStep.i}</div>
                     <div className="sos-h1">Vamos<br />paso a paso</div>
                     <div className="sos-p">Sigue la técnica 5-4-3-2-1 para anclarte al presente.</div>
@@ -200,52 +182,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                             {step < groundingSteps.length - 1 ? 'Siguiente paso' : 'Estoy mejor'}
                         </button>
                     </div>
-                </div>
-            ) : (
-                <div className="sos-main" style={{ justifyContent: 'flex-start', paddingTop: '20px' }}>
-                    <div className="sos-h1" style={{ marginBottom: '24px' }}>Contactos de Ayuda</div>
-                    <div className="flex flex-col gap-4 w-full">
-                        {contacts.length > 0 ? (
-                            contacts.map(c => (
-                                <a key={c.id} href={`tel:${c.phone}`} className="sos-card" style={{ textDecoration: 'none' }}>
-                                    <div className="sc-top">
-                                        <div className="sc-num" style={{ background: 'linear-gradient(135deg, #f43f5e, #fb7185)' }}>
-                                            <Phone size={18} />
-                                        </div>
-                                        <div style={{ flex: 1 }}>
-                                            <div className="sc-t">{c.name}</div>
-                                            <div className="sc-d">{c.role}</div>
-                                        </div>
-                                        <div className="text-[#f43f5e] font-bold text-xs uppercase tracking-widest">Llamar</div>
-                                    </div>
-                                </a>
-                            ))
-                        ) : (
-                            <div className="sos-card" style={{ textAlign: 'center', opacity: 0.7 }}>
-                                <p className="sc-d">No tienes contactos de emergencia guardados.</p>
-                                <button 
-                                    className="sbtn-sec" 
-                                    style={{ marginTop: '12px' }}
-                                    onClick={() => onBack()} // Navigate back to settings
-                                >
-                                    Configurar en Ajustes
-                                </button>
-                            </div>
-                        )}
-
-                        <div className="sos-card" style={{ marginTop: '20px', background: 'rgba(244,63,94,0.05)', borderColor: 'rgba(244,63,94,0.2)' }}>
-                            <div className="sc-top">
-                                <div className="sc-num" style={{ background: '#f43f5e' }}>!</div>
-                                <div>
-                                    <div className="sc-t">Servicios de Emergencia</div>
-                                    <div className="sc-d">Llamada directa al 112 (España)</div>
-                                </div>
-                                <a href="tel:112" className="sbtn-pri" style={{ padding: '8px 16px', boxShadow: 'none' }}>112</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            </div>
         </div>
     );
 }

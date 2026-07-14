@@ -74,7 +74,7 @@ export default function GamesScreen({ onBack }: GamesScreenProps) {
                             <HelpCircle size={16} /> ¿Para qué sirven estos juegos?
                         </div>
                         <p className="text-slate-200/40 text-xs leading-relaxed">
-                            Estos ejercicios son recursos de concentración. Pueden ayudarte a poner la atención en una tarea concreta durante momentos de tensión, pero no son tratamiento médico ni sustituyen ayuda profesional.
+                            Estos ejercicios son recursos de concentración. Pueden ayudarte a poner la atención en una tarea concreta durante unos minutos y crear una pausa sencilla.
                         </p>
                     </div>
                 </div>

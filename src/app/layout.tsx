@@ -10,8 +10,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "ANSIOFF - Tu calma en el bolsillo",
-  description: "Herramientas de apoyo para respiración, calma y bienestar emocional.",
+  title: "ANSIOFF - Diario y pausas",
+  description: "Diario personal, sonidos y rutinas para ordenar ideas y crear pausas.",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

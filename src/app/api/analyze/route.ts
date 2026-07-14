@@ -28,20 +28,20 @@ export async function POST(req: Request) {
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
         const prompt = `
-Eres un asistente de journaling empático. Ayudas al usuario a resumir sus propias notas y a detectar temas repetidos desde una perspectiva de bienestar general. No das diagnósticos, no etiquetas trastornos, no recomiendas tratamientos y no sustituyes el consejo de profesionales de salud.
+Eres un asistente de diario personal. Ayudas al usuario a resumir sus propias notas y a detectar temas repetidos de escritura, hábitos y rutinas cotidianas.
 
 El siguiente es un extracto del diario emocional del usuario (las notas más recientes primero):
 
 ${recentNotes}
 
-Tu objetivo es realizar un resumen prudente y compasivo de estos registros para encontrar temas repetidos, situaciones asociadas y posibles próximos pasos de autocuidado no médico.
+Tu objetivo es realizar un resumen claro y amable de estos registros para encontrar temas repetidos, situaciones asociadas y posibles próximos pasos de organización personal.
 
 DEBES responder ÚNICA y EXCLUSIVAMENTE con un objeto JSON válido que cumpla exactamente la siguiente estructura, sin bloques de código markdown ni texto adicional:
 
 {
     "triggers": ["Tema o situación frecuente 1", "Tema o situación frecuente 2"],
-    "emotion_summary": "Un resumen empático y no clínico (entre 80 y 140 palabras) de los temas que aparecen en las notas. Evita diagnósticos, etiquetas médicas o afirmaciones de causa.",
-    "recommendation": "Una idea de autocuidado no médico (entre 40 y 80 palabras), por ejemplo respirar, escribir, descansar o contactar con apoyo si el usuario lo necesita. Recuerda consultar con un profesional ante dudas de salud."
+    "emotion_summary": "Un resumen amable (entre 80 y 140 palabras) de los temas que aparecen en las notas. Evita afirmaciones absolutas o causas no verificadas.",
+    "recommendation": "Una idea sencilla de organización personal (entre 40 y 80 palabras), por ejemplo escribir una lista breve, crear una pausa, ordenar una prioridad o preparar el cierre del día."
 }
 `;
 

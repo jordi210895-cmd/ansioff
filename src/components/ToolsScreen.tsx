@@ -15,17 +15,17 @@ const premiumToolIds = new Set(['sc-cbt', 'sc-act', 'notes', 'sc-games', 'sc-nig
 
 const moduleCategories = [
     {
-        title: 'Autocuidado',
+        title: 'Herramientas',
         tools: [
-            { id: 'crisis', name: 'Kit SOS', sub: 'Anclaje rápido 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
+            { id: 'pause', name: 'Pausa guiada', sub: 'Anclaje 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
             { id: 'sc-cbt', name: 'Pensamientos', sub: 'Registro y reflexión', icon: <Brain />, color: 'var(--p)' },
             { id: 'sc-act', name: 'Aceptación', sub: 'Ejercicios guiados', icon: <Heart />, color: 'var(--p2)' },
         ]
     },
     {
-        title: 'Bienestar',
+        title: 'Rutinas',
         tools: [
-            { id: 'breath', name: 'Respiración', sub: 'Patrones guiados', icon: <Wind />, color: 'var(--c)' },
+            { id: 'breath', name: 'Ritmos guiados', sub: 'Patrones visuales', icon: <Wind />, color: 'var(--c)' },
             { id: 'sounds', name: 'Audios relax', sub: 'Paisajes sonoros', icon: <Music />, color: 'var(--c2)' },
             { id: 'notes', name: 'Diario', sub: 'Escritura consciente', icon: <PenLine />, color: 'var(--em)' },
         ]
@@ -35,8 +35,8 @@ const moduleCategories = [
         tools: [
             { id: 'sc-games', name: 'Juegos', sub: 'Atención y pausa', icon: <Gamepad2 />, color: 'var(--am)' },
             { id: 'sc-eval', name: 'Check-in', sub: 'Seguimiento personal', icon: <FileText />, color: 'var(--p3)' },
-            { id: 'sc-night', name: 'Modo Noche', sub: 'Higiene del sueño', icon: <Moon />, color: 'var(--c3)' },
-            { id: 'sc-exposure-why', name: 'Mis Motivos', sub: 'Exposición y mejora', icon: <Target />, color: 'var(--r2)' },
+            { id: 'sc-night', name: 'Modo Noche', sub: 'Rutina nocturna', icon: <Moon />, color: 'var(--c3)' },
+            { id: 'sc-exposure-why', name: 'Mis Motivos', sub: 'Objetivos personales', icon: <Target />, color: 'var(--r2)' },
         ]
     }
 ];

@@ -4,9 +4,9 @@ export const dynamic = 'force-static';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: "ANSIOFF - Tu calma en el bolsillo",
+        name: "ANSIOFF - Diario y pausas",
         short_name: "ANSIOFF",
-        description: "Herramientas de apoyo para respiración, calma y bienestar emocional.",
+        description: "Diario personal, sonidos y rutinas para ordenar ideas y crear pausas.",
         start_url: "/",
         display: "standalone",
         background_color: "#040208",

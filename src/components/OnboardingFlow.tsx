@@ -27,38 +27,38 @@ interface Option<T extends string | number> {
 }
 
 const GOALS: Option<OnboardingGoal>[] = [
-    { value: 'calm_now', label: 'Calmar un momento intenso', icon: <Waves size={20} /> },
+    { value: 'calm_now', label: 'Crear una pausa rápida', icon: <Waves size={20} /> },
     { value: 'slow_thoughts', label: 'Frenar pensamientos repetitivos', icon: <Brain size={20} /> },
-    { value: 'sleep_better', label: 'Dormir mejor', icon: <MoonStar size={20} /> },
-    { value: 'daily_stress', label: 'Gestionar el estrés diario', icon: <BriefcaseBusiness size={20} /> },
+    { value: 'sleep_better', label: 'Preparar una rutina nocturna', icon: <MoonStar size={20} /> },
+    { value: 'daily_stress', label: 'Ordenar el día a día', icon: <BriefcaseBusiness size={20} /> },
     { value: 'understand_patterns', label: 'Entender mis patrones', icon: <Sparkles size={20} /> },
 ];
 
 const MANIFESTATIONS: Option<Manifestation>[] = [
-    { value: 'breathing_heart', label: 'Palpitaciones o respiración acelerada', icon: <Activity size={20} /> },
-    { value: 'physical_tension', label: 'Tensión, mareo o molestias físicas', icon: <Waves size={20} /> },
+    { value: 'breathing_heart', label: 'Me cuesta volver a una tarea', icon: <Activity size={20} /> },
+    { value: 'physical_tension', label: 'Necesito soltar carga mental', icon: <Waves size={20} /> },
     { value: 'racing_thoughts', label: 'Pensamientos difíciles de frenar', icon: <Brain size={20} /> },
-    { value: 'avoidance', label: 'Necesidad de evitar o escapar', icon: <ChevronRight size={20} /> },
-    { value: 'sleep', label: 'Dificultad para dormir', icon: <MoonStar size={20} /> },
+    { value: 'avoidance', label: 'Me cuesta empezar o continuar', icon: <ChevronRight size={20} /> },
+    { value: 'sleep', label: 'Quiero cerrar mejor el día', icon: <MoonStar size={20} /> },
     { value: 'unclear', label: 'No identifico una señal clara', icon: <CircleHelp size={20} /> },
 ];
 
 const TRIGGERS: Option<Trigger>[] = [
     { value: 'work_study', label: 'Trabajo o estudios', icon: <BriefcaseBusiness size={20} /> },
     { value: 'relationships', label: 'Relaciones o situaciones sociales', icon: <HeartHandshake size={20} /> },
-    { value: 'health', label: 'Salud o sensaciones físicas', icon: <Activity size={20} /> },
+    { value: 'health', label: 'Sensaciones o energía del día', icon: <Activity size={20} /> },
     { value: 'uncertainty', label: 'Dinero o incertidumbre', icon: <CloudMoon size={20} /> },
     { value: 'digital_environment', label: 'Pantallas, noticias o entorno', icon: <Sparkles size={20} /> },
     { value: 'unclear', label: 'No encuentro un desencadenante claro', icon: <CircleHelp size={20} /> },
 ];
 
 const IMPACTS: Option<Impact>[] = [
-    { value: 'sleep', label: 'El sueño', icon: <BedDouble size={20} /> },
+    { value: 'sleep', label: 'La rutina nocturna', icon: <BedDouble size={20} /> },
     { value: 'focus', label: 'La concentración', icon: <Brain size={20} /> },
     { value: 'relationships', label: 'Las relaciones', icon: <HeartHandshake size={20} /> },
     { value: 'energy', label: 'La energía', icon: <Activity size={20} /> },
     { value: 'enjoyment', label: 'Disfrutar del día', icon: <Sparkles size={20} /> },
-    { value: 'body', label: 'El cuerpo y la respiración', icon: <Wind size={20} /> },
+    { value: 'body', label: 'Las pausas del día', icon: <Wind size={20} /> },
 ];
 
 const COPING_OPTIONS: Option<Coping>[] = [
@@ -278,20 +278,20 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                             <div className="welcome-mark">
                                 <Image className="welcome-logo-img" src="/logo.png" alt="ANSIOFF" width={112} height={112} priority />
                             </div>
-                            <h1 className="welcome-title">Un espacio para calmar el momento y entender lo que se repite.</h1>
-                            <p className="welcome-copy">Prepararemos una experiencia sencilla según lo que necesitas hoy. No es una evaluación médica.</p>
+                            <h1 className="welcome-title">Un espacio para crear pausas y entender lo que se repite.</h1>
+                            <p className="welcome-copy">Prepararemos una experiencia sencilla según lo que necesitas hoy. Es una guía personal para configurar la app.</p>
                             <div className="benefit-list">
-                                <div className="benefit-row"><Waves /><div><strong>Apoyo inmediato</strong><p>Respiración y anclaje cuando el malestar aumenta.</p></div></div>
+                                <div className="benefit-row"><Waves /><div><strong>Pausa rápida</strong><p>Guías breves cuando necesitas parar y volver a tu ritmo.</p></div></div>
                                 <div className="benefit-row"><BookOpen /><div><strong>Herramientas prácticas</strong><p>Diario, ejercicios y rutinas para tu día a día.</p></div></div>
                                 <div className="benefit-row"><ShieldCheck /><div><strong>Privacidad clara</strong><p>Tus respuestas de personalización permanecen en este dispositivo.</p></div></div>
                             </div>
                         </>
                     )}
                     {step === 1 && <><QuestionHeader eyebrow="Tu prioridad" title="¿Qué necesitas primero?" detail="Elige la opción que más se acerque a lo que buscas hoy." /><OptionGrid options={GOALS} selected={answers.goal} onSelect={(goal) => setAnswers((value) => ({ ...value, goal }))} /></>}
-                    {step === 2 && <><QuestionHeader eyebrow="Cómo aparece" title="¿Cómo suele aparecer el malestar en ti?" detail="Puedes elegir hasta tres opciones. Esto no genera ningún diagnóstico." /><OptionGrid multi options={MANIFESTATIONS} selected={answers.manifestations} onSelect={(item) => setAnswers((value) => ({ ...value, manifestations: toggleLimitedSelection(value.manifestations, item) }))} /></>}
+                    {step === 2 && <><QuestionHeader eyebrow="Cómo aparece" title="¿Qué suele interrumpir tu ritmo?" detail="Puedes elegir hasta tres opciones. Esto solo ajusta la experiencia." /><OptionGrid multi options={MANIFESTATIONS} selected={answers.manifestations} onSelect={(item) => setAnswers((value) => ({ ...value, manifestations: toggleLimitedSelection(value.manifestations, item) }))} /></>}
                     {step === 3 && <><QuestionHeader eyebrow="Situaciones" title="¿Qué suele desencadenarlo?" detail="Elige hasta tres. También está bien si todavía no lo tienes claro." /><OptionGrid multi options={TRIGGERS} selected={answers.triggers} onSelect={(item) => setAnswers((value) => ({ ...value, triggers: toggleLimitedSelection(value.triggers, item) }))} /></>}
                     {step === 4 && <><QuestionHeader eyebrow="Impacto cotidiano" title="¿Dónde lo notas más?" detail="Marca las áreas que más te gustaría cuidar." /><OptionGrid multi options={IMPACTS} selected={answers.impacts} onSelect={(item) => setAnswers((value) => ({ ...value, impacts: toggleLimitedSelection(value.impacts, item) }))} /></>}
-                    {step === 5 && <><QuestionHeader eyebrow="Lo que haces ahora" title="¿Qué haces normalmente cuando aumenta?" detail="No hay respuestas buenas o malas. Elige hasta tres." /><OptionGrid multi options={COPING_OPTIONS} selected={answers.coping} onSelect={(item) => setAnswers((value) => ({ ...value, coping: toggleLimitedSelection(value.coping, item) }))} /></>}
+                    {step === 5 && <><QuestionHeader eyebrow="Lo que haces ahora" title="¿Qué haces normalmente cuando pierdes el ritmo?" detail="No hay respuestas buenas o malas. Elige hasta tres." /><OptionGrid multi options={COPING_OPTIONS} selected={answers.coping} onSelect={(item) => setAnswers((value) => ({ ...value, coping: toggleLimitedSelection(value.coping, item) }))} /></>}
                     {step === 6 && <><QuestionHeader eyebrow="Una rutina posible" title="¿Cuánto tiempo puedes dedicarte?" detail="Crearemos un plan que quepa en tu día, sin penalizar los descansos." /><OptionGrid options={MINUTES} selected={answers.dailyMinutes} onSelect={(dailyMinutes) => setAnswers((value) => ({ ...value, dailyMinutes }))} /></>}
                     {step === 7 && (
                         <>
@@ -309,14 +309,14 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                     )}
                     {step === 8 && experienceState === 'before' && (
                         <>
-                            <QuestionHeader eyebrow="Tu primera pausa" title="¿Cuánta tensión notas ahora?" detail="Antes de probar 3 repeticiones de respiración 4-7-8, marca cómo te sientes. Es solo un registro personal." />
+                            <QuestionHeader eyebrow="Tu primera pausa" title="¿Cuánta carga notas ahora?" detail="Antes de probar 3 repeticiones de ritmo 4-7-8, marca cómo te sientes. Es solo un registro personal." />
                             <div className="tension-grid">{Array.from({ length: 11 }, (_, value) => <button key={value} className={beforeTension === value ? 'selected' : ''} onClick={() => setBeforeTension(value)}>{value}</button>)}</div>
                             <div className="tension-labels"><span>Muy poca</span><span>Mucha</span></div>
                         </>
                     )}
                     {step === 8 && experienceState === 'running' && (
                         <div className="breathing-stage">
-                            <QuestionHeader eyebrow={`Repetición ${cycle} de ${totalCycles}`} title="Respiración 4-7-8" detail="Sigue el ritmo sin forzar la respiración." />
+                            <QuestionHeader eyebrow={`Repetición ${cycle} de ${totalCycles}`} title="Ritmo 4-7-8" detail="Sigue el ritmo sin forzarte." />
                             <div className="breathing-orb"><strong>{secondsLeft}</strong></div>
                             <div className="breathing-phase">{phases[phaseIndex].name}</div>
                             <div className="breathing-meta">Puedes parar en cualquier momento si no te resulta cómodo.</div>
@@ -324,7 +324,7 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                     )}
                     {step === 8 && experienceState === 'after' && (
                         <>
-                            <QuestionHeader eyebrow="Después de la pausa" title="¿Cuánta tensión notas ahora?" detail="No pasa nada si no ha cambiado. La práctica sirve para observar, no para aprobar un resultado." />
+                            <QuestionHeader eyebrow="Después de la pausa" title="¿Cuánta carga notas ahora?" detail="No pasa nada si no ha cambiado. La práctica sirve para observar, no para aprobar un resultado." />
                             <div className="tension-grid">{Array.from({ length: 11 }, (_, value) => <button key={value} className={afterTension === value ? 'selected' : ''} onClick={() => setAfterTension(value)}>{value}</button>)}</div>
                             <div className="tension-labels"><span>Muy poca</span><span>Mucha</span></div>
                         </>
@@ -337,20 +337,20 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                     )}
                     {step === 9 && (
                         <>
-                            <QuestionHeader eyebrow="Tu Ecosistema de Calma" title="Todo tu apoyo, conectado en un solo lugar" />
-                            <p className="value-intro">ANSIOFF combina recursos para el momento intenso con herramientas para comprender lo que se repite y crear una rutina que quepa en tu día.</p>
+                            <QuestionHeader eyebrow="Tu ecosistema de pausas" title="Tus herramientas, conectadas en un solo lugar" />
+                            <p className="value-intro">ANSIOFF combina pausas breves, diario personal y rutinas sencillas para comprender lo que se repite y crear un hábito que quepa en tu día.</p>
                             <div className="value-list">
-                                <div className="value-row"><div className="value-icon"><Waves size={21} /></div><div><strong>Volver al presente</strong><p>Kit SOS, respiración 4-7-8 y audios para acompañarte cuando necesitas una pausa inmediata.</p></div></div>
-                                <div className="value-row"><div className="value-icon"><BookOpen size={21} /></div><div><strong>Entender lo que se repite</strong><p>Diario, ejercicios CBT y ACT, y reflexión opcional con IA para ordenar temas sin emitir diagnósticos.</p></div></div>
+                                <div className="value-row"><div className="value-icon"><Waves size={21} /></div><div><strong>Volver al presente</strong><p>Pausas guiadas, ritmo 4-7-8 y audios para acompañarte cuando necesitas parar un momento.</p></div></div>
+                                <div className="value-row"><div className="value-icon"><BookOpen size={21} /></div><div><strong>Entender lo que se repite</strong><p>Diario, ejercicios de escritura y reflexión opcional con IA para ordenar temas personales.</p></div></div>
                                 <div className="value-row"><div className="value-icon"><MoonStar size={21} /></div><div><strong>Construir una rutina posible</strong><p>Modo noche, sonidos, check-ins, juegos de atención y recordatorios adaptados a tu ritmo.</p></div></div>
                                 <div className="value-row"><div className="value-icon"><Activity size={21} /></div><div><strong>Observar tu constancia</strong><p>Actividad y progreso para reconocer lo que practicas, sin penalizar los días de descanso.</p></div></div>
                             </div>
                             <div className="personal-proof">
                                 <h2>Tu plan ya parte de ti</h2>
                                 <div className="proof-item"><Check size={18} /><span>Has definido qué quieres cuidar primero.</span></div>
-                                <div className="proof-item"><Check size={18} /><span>Has completado 3 repeticiones de respiración 4-7-8.</span></div>
+                                <div className="proof-item"><Check size={18} /><span>Has completado 3 repeticiones de ritmo 4-7-8.</span></div>
                                 <div className="proof-item"><Check size={18} /><span>Tu rutina está preparada para {answers.dailyMinutes || 5} minutos al día.</span></div>
-                                <p className="honest-note">ANSIOFF no promete eliminar la ansiedad ni sustituye atención profesional. Te ofrece un espacio práctico para parar, registrar y volver a tus herramientas cuando lo necesites.</p>
+                                <p className="honest-note">ANSIOFF te ofrece un espacio práctico para parar, registrar y volver a tus herramientas cuando lo necesites.</p>
                             </div>
                         </>
                     )}
@@ -360,12 +360,12 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                     {step === 0 && <button className="primary-action" onClick={next}>Crear mi plan <ChevronRight size={18} /></button>}
                     {step >= 1 && step <= 6 && <button className="primary-action" disabled={!canContinue} onClick={next}>Continuar <ChevronRight size={18} /></button>}
                     {step === 7 && <button className="primary-action" onClick={next}>Probar mi primera pausa <Wind size={18} /></button>}
-                    {step === 8 && experienceState === 'before' && <button className="primary-action" disabled={beforeTension === null} onClick={() => { setPhaseIndex(0); setSecondsLeft(phases[0].seconds); setCycle(1); setExperienceState('running'); }}>Empezar respiración <Wind size={18} /></button>}
+                    {step === 8 && experienceState === 'before' && <button className="primary-action" disabled={beforeTension === null} onClick={() => { setPhaseIndex(0); setSecondsLeft(phases[0].seconds); setCycle(1); setExperienceState('running'); }}>Empezar ritmo <Wind size={18} /></button>}
                     {step === 8 && experienceState === 'running' && <button className="secondary-action" onClick={() => setExperienceState('after')}>Terminar antes</button>}
                     {step === 8 && experienceState === 'after' && <button className="primary-action" disabled={afterTension === null} onClick={saveFirstCheckIn}>Guardar este check-in</button>}
                     {step === 8 && experienceState === 'done' && <button className="primary-action" onClick={next}>Descubrir todo lo que incluye <ChevronRight size={18} /></button>}
                     {step === 9 && <button className="primary-action" onClick={finish}>Ver mis opciones de acceso <ChevronRight size={18} /></button>}
-                    {step === 0 && <p className="safety-note">ANSIOFF no sustituye la atención profesional. Si existe peligro inmediato, llama al <a href="tel:112">112</a>.</p>}
+                    {step === 0 && <p className="safety-note">ANSIOFF es una herramienta de organización personal y uso cotidiano.</p>}
                 </div>
             </div>
         </div>

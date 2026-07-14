@@ -94,9 +94,9 @@ export default function App() {
   const [cbtCount, setCbtCount] = useState(0);
   const [reviewEntryTick, setReviewEntryTick] = useState(0);
   const [tracks, setTracks] = useState<Track[]>([
-    { name: 'Superación Agorafobia', url: '/audio/audio1.m4a', icon: '🧘', duration: '—' },
-    { name: 'Calma Profunda', url: '/audio/audio2.m4a', icon: '🌊', duration: '—' },
-    { name: 'Respiración Guiada', url: '/audio/audio3.m4a', icon: '🍃', duration: '—' }
+    { name: 'Pausa de enfoque', url: '/audio/audio1.m4a', icon: '🧘', duration: '—' },
+    { name: 'Sonido profundo', url: '/audio/audio2.m4a', icon: '🌊', duration: '—' },
+    { name: 'Guía de ritmo', url: '/audio/audio3.m4a', icon: '🍃', duration: '—' }
   ]);
 
   const isDemo = isDemoSession(session);
@@ -679,8 +679,8 @@ export default function App() {
       case 'notes':
       case 'sc-notes':
         return <NotesScreen onBack={goBack} />;
-      case 'crisis':
-      case 'sc-sos':
+      case 'pause':
+      case 'sc-pause':
         return <SOSScreen onBack={goBack} onFinished={() => { handleFreeActionCompleted(); handleNav('home'); }} />;
       case 'breath':
       case 'sc-breath':
@@ -753,9 +753,9 @@ export default function App() {
         </div>
       </main>
 
-      <button className="sos-fab" onClick={() => handleNav('crisis')}>
+      <button className="sos-fab" onClick={() => handleNav('pause')}>
         <div className="sos-fab-pulse"></div>
-        <span>SOS</span>
+        <span>Pausa</span>
       </button>
 
       <BottomNav activeScreen={curScreen} onNav={handleNav} isPremium={hasPremium} />

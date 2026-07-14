@@ -484,7 +484,7 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
             </div>
 
             {!trialOffer && <p className="auth-footer text-[rgba(200,225,235,0.3)] text-xs text-center font-medium">
-                Tus datos de salud mental están protegidos y encriptados.
+                Tus datos personales están protegidos y encriptados.
             </p>}
             </div>
         </div>

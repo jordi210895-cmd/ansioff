@@ -14,19 +14,19 @@ interface BreathingScreenProps {
 
 const patterns = [
     {
-        id: '4-2-6', name: 'Alivio del estrés profundo', meta: '5 min · Principiante', label: 'Estrés', free: true, cycles: null,
+        id: '4-2-6', chip: '4·2·6', name: 'Pausa 4-2-6', meta: '5 min · Principiante', label: 'Pausa', free: true, cycles: null,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 2, c: 'var(--c3)' }, { n: 'Exhala', d: 6, c: 'var(--p2)' }],
     },
     {
-        id: '4-7-8', name: 'Respiración 4-7-8', meta: '3 repeticiones · Principiante', label: 'Calma', free: true, cycles: 3,
+        id: '4-7-8', chip: '4·7·8', name: 'Ritmo 4-7-8', meta: '3 repeticiones · Principiante', label: 'Ritmo', free: true, cycles: 3,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
     },
     {
-        id: '4-7-8-calm', name: 'Calma para momentos intensos', meta: '3 repeticiones · Premium', label: 'SOS', free: false, cycles: 3,
+        id: '4-7-8-calm', chip: '4·7·8', name: 'Pausa profunda', meta: '3 repeticiones · Premium', label: 'Guía', free: false, cycles: 3,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
     },
     {
-        id: '4-7-8-focus', name: 'Pausa para pensamientos repetitivos', meta: '3 repeticiones · Premium', label: 'Enfoque', free: false, cycles: 3,
+        id: '4-7-8-focus', chip: '4·7·8', name: 'Pausa para pensamientos repetitivos', meta: '3 repeticiones · Premium', label: 'Enfoque', free: false, cycles: 3,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
     },
 ];
@@ -183,7 +183,7 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
             <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div><div className="aurora-3"></div></div>
             <div className="br-hd">
                 <div className="br-back" onClick={onBack}>‹</div>
-                <div className="br-hd-title">Respiración</div>
+                <div className="br-hd-title">Ritmos guiados</div>
                 <div style={{ width: 36 }}></div>
             </div>
             <div className="br-body">
@@ -198,7 +198,7 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
                 <div className="rchips">
                     {patterns.map((item) => (
                         <div key={item.id} className={`rchip ${patternId === item.id ? 'on' : ''} ${!isPremium && !item.free ? 'locked' : ''}`} onClick={() => selectPattern(item)}>
-                            <div className="rcp-n">{item.id.replaceAll('-', '·')}</div>
+                            <div className="rcp-n">{item.chip}</div>
                             <div className="rcp-l">{!isPremium && !item.free ? 'Premium' : item.label}</div>
                         </div>
                     ))}

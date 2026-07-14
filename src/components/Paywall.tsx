@@ -118,13 +118,13 @@ export default function Paywall({ open, placement, plan, products, loading = fal
     };
 
     const headline = placement === 'recovery'
-        ? 'Recupera tu espacio de calma'
+        ? 'Recupera tu espacio de pausa'
         : placement === 'trialExpired'
             ? 'Tus 7 días gratis han terminado'
         : plan?.title || 'Tu plan completo está preparado';
     const subtitle = placement === 'trialExpired'
         ? 'Para seguir usando todas las herramientas, elige Premium mensual o anual.'
-        : 'Combina apoyo inmediato, reflexión y rutinas para volver cuando lo necesites.';
+        : 'Combina pausas guiadas, reflexión y rutinas para volver cuando lo necesites.';
 
     return (
         <div className="paywall-root" role="dialog" aria-modal="true" aria-labelledby="paywall-title">
@@ -171,9 +171,9 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 </div>
                 <div className="benefits">
                     {[
-                        'Herramientas inmediatas cuando sube el malestar.',
+                        'Herramientas breves para crear una pausa.',
                         'Diario y reflexión IA para encontrar temas repetidos.',
-                        'Rutinas de respiración, sueño y autocuidado.',
+                        'Rutinas de foco, noche y organización personal.',
                         'Actividad y constancia sin penalizar los descansos.',
                     ].map((benefit) => <div className="benefit" key={benefit}><span className="benefit-icon"><Check size={15} /></span><span>{benefit}</span></div>)}
                 </div>

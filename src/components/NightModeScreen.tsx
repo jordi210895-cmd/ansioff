@@ -9,7 +9,7 @@ interface NightModeScreenProps {
     onNav?: (screen: string) => void;
 }
 
-type NightState = 'menu' | 'panic_menu' | 'ground' | 'light' | 'routine_relax' | 'routine_unload' | 'hygiene_alert';
+type NightState = 'menu' | 'night_wakeup' | 'ground' | 'light' | 'routine_relax' | 'routine_unload' | 'hygiene_alert';
 
 export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps) {
     const [view, setView] = useState<NightState>('menu');
@@ -114,14 +114,14 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                             <div className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.07)]">
                                 <button
                                     className="w-full bg-[#d97c6a]/10 p-5 rounded-2xl border border-[#d97c6a]/20 text-left hover:bg-[#d97c6a]/15 hover:border-[#d97c6a]/30 transition-transform duration-200 hover:-translate-y-0.5 group flex items-center gap-4 shadow-sm"
-                                    onClick={() => setView('panic_menu')}
+                                    onClick={() => setView('night_wakeup')}
                                 >
                                     <div className="w-10 h-10 rounded-full bg-[#d97c6a]/20 flex items-center justify-center text-[#d97c6a] shrink-0">
                                         <ShieldAlert size={20} className="stroke-[1.5]" />
                                     </div>
                                     <div>
-                                        <h3 className="font-sans font-semibold text-[13px] text-[#d97c6a] mb-0.5">Crisis Nocturna</h3>
-                                        <p className="font-sans font-light text-[11px] text-[#d97c6a]/70">Si te has despertado con pánico</p>
+                                        <h3 className="font-sans font-semibold text-[13px] text-[#d97c6a] mb-0.5">Despertar nocturno</h3>
+                                        <p className="font-sans font-light text-[11px] text-[#d97c6a]/70">Si te has despertado y quieres volver a tu rutina</p>
                                     </div>
                                 </button>
                             </div>
@@ -174,7 +174,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                             </div>
                         </div>
 
-                        <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[#5aadcf]/80 mb-4">Respiración 4 - 7 - 8</div>
+                        <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[#5aadcf]/80 mb-4">Ritmo 4 - 7 - 8</div>
                         <h2 className="text-3xl font-light text-[#ddeef5] mb-4 leading-relaxed font-serif italic">
                             Inhala suavemente,<br />exhala la tensión.
                         </h2>
@@ -233,12 +233,12 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                 )}
 
 
-                {/* --- ORIGINAL PANIC RESCUES --- */}
-                {view === 'panic_menu' && (
+                {/* --- RUTINA DE DESPERTAR NOCTURNO --- */}
+                {view === 'night_wakeup' && (
                     <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 flex flex-col items-center justify-center text-center min-h-[60vh]">
-                        <h2 className="text-3xl font-light text-[#ddeef5] mb-4 font-serif italic">¿Te has despertado con pánico?</h2>
+                        <h2 className="text-3xl font-light text-[#ddeef5] mb-4 font-serif italic">¿Te has despertado de noche?</h2>
                         <p className="font-sans font-light text-[13px] text-[rgba(200,225,235,0.38)] leading-relaxed mb-10 max-w-xs mx-auto">
-                            Es natural. Por la noche el miedo parece más grande, pero sigues a salvo hoy. No enciendas luces fuertes.
+                            Puedes crear un entorno suave, bajar estímulos y volver poco a poco a tu rutina nocturna.
                         </p>
 
                         <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">
@@ -284,7 +284,7 @@ export default function NightModeScreen({ onBack, onNav }: NightModeScreenProps)
                         <div className="relative z-10 text-center p-8">
                             <div className="flex items-center justify-center gap-2 text-orange-200/40 font-medium italic text-sm mb-4">
                                 <Sparkles size={16} />
-                                Luz cálida para calmar...
+                                Luz cálida para acompañarte...
                             </div>
                             <div className="text-orange-200/20 text-[10px] uppercase tracking-widest font-bold">Inhala y exhala con la luz</div>
 
