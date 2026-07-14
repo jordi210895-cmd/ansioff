@@ -85,6 +85,7 @@ async function main() {
   const { data: commit } = await androidpublisher.edits.commit({
     packageName: PACKAGE_NAME,
     editId,
+    changesNotSentForReview: true,
   });
   console.log(`Committed edit ${commit.id || editId}`);
 }

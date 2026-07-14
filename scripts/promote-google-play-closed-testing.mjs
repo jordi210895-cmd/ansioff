@@ -94,7 +94,7 @@ async function main() {
   const { data: commit } = await androidpublisher.edits.commit({
     packageName: PACKAGE_NAME,
     editId,
-    changesNotSentForReview: false,
+    changesNotSentForReview: true,
   });
   console.log(`Committed closed-testing edit ${commit.id || editId}`);
 }
