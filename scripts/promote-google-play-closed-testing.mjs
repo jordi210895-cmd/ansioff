@@ -4,7 +4,7 @@ const PACKAGE_NAME = process.env.GOOGLE_PLAY_PACKAGE_NAME || 'com.ansioff.app';
 const SCOPE = 'https://www.googleapis.com/auth/androidpublisher';
 const SOURCE_TRACK = process.env.GOOGLE_PLAY_SOURCE_TRACK || 'internal';
 const TARGET_TRACK_OVERRIDE = process.env.GOOGLE_PLAY_TARGET_TRACK;
-const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'completed';
+const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'draft';
 const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.0 - prueba cerrada';
 const RELEASE_NOTES = process.env.GOOGLE_PLAY_RELEASE_NOTES || [
   'Primera versión de ANSIOFF para Android.',
