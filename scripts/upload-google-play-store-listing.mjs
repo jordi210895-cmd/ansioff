@@ -131,11 +131,24 @@ async function main() {
     }
   }
 
-  const { data: commit } = await androidpublisher.edits.commit({
-    packageName: PACKAGE_NAME,
-    editId,
-    changesNotSentForReview: true,
-  });
+  let commit;
+  try {
+    ({ data: commit } = await androidpublisher.edits.commit({
+      packageName: PACKAGE_NAME,
+      editId,
+      changesNotSentForReview: true,
+    }));
+  } catch (error) {
+    const message = error.response?.data?.error?.message || error.message || '';
+    if (!message.includes('changesNotSentForReview must not be set')) {
+      throw error;
+    }
+    console.log('Play Console auto-sends listing changes for review; committing without changesNotSentForReview.');
+    ({ data: commit } = await androidpublisher.edits.commit({
+      packageName: PACKAGE_NAME,
+      editId,
+    }));
+  }
   console.log(`Committed edit ${commit.id || editId}`);
 }
 
