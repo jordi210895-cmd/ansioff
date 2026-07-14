@@ -14,9 +14,9 @@ PSL_SUPPORT_DATA_DELETION_BY_USER,DATA_DELETION_NO,,SINGLE_CHOICE,¿Ofreces a lo
 PSL_SUPPORT_DATA_DELETION_BY_USER,DATA_DELETION_NO_AUTO_DELETED,,SINGLE_CHOICE,"¿Ofreces a los usuarios alguna forma de solicitar que se eliminen sus datos?/No, pero los datos de usuario se eliminan automáticamente en un plazo de 90 días"
 PSL_DATA_DELETION_URL,,https://app-ansiedad-flame.vercel.app/support,MAYBE_REQUIRED,URL de eliminación de datos
 PSL_DATA_COLLECTION_COMPLIES_FAMILY_POLICY,,,OPTIONAL,"Responde a esta pregunta solo si has indicado que el grupo de edad objetivo de tu aplicación incluye niños o si has aceptado participar en el programa Diseñado para Familias. Si alguna de las cuestiones anteriores se aplican a tu caso, debes cumplir la Política de Familias de Google Play (https://support.google.com/googleplay/android-developer/answer/9893335). ¿Quieres informar a los usuarios sobre este compromiso en la sección Seguridad de los datos de tu ficha de Play Store?"
-PSL_INDEPENDENTLY_VALIDATED,,false,OPTIONAL,"¿Tu aplicación ha completado correctamente una revisión de seguridad independiente, según el marco de evaluación de seguridad para aplicaciones móviles (MASA)? Responde ""Sí"" únicamente si la revisión está en regla."
-PSL_UPI_BADGE_OPT_IN,,false,OPTIONAL,¿Quieres mostrar esta insignia en tu ficha de Play Store?
-PSL_HAS_OUTSIDE_APP_ACCOUNTS,,false,OPTIONAL,¿Pueden los usuarios iniciar sesión en tu aplicación con cuentas creadas fuera de la aplicación?
+PSL_INDEPENDENTLY_VALIDATED,,,OPTIONAL,"¿Tu aplicación ha completado correctamente una revisión de seguridad independiente, según el marco de evaluación de seguridad para aplicaciones móviles (MASA)? Responde ""Sí"" únicamente si la revisión está en regla."
+PSL_UPI_BADGE_OPT_IN,,,OPTIONAL,¿Quieres mostrar esta insignia en tu ficha de Play Store?
+PSL_HAS_OUTSIDE_APP_ACCOUNTS,,,OPTIONAL,¿Pueden los usuarios iniciar sesión en tu aplicación con cuentas creadas fuera de la aplicación?
 PSL_OUTSIDE_APP_ACCOUNT_TYPES,PSL_LOGIN_WITH_OUTSIDE_APP_ID,,MULTIPLE_CHOICE,"¿Cómo se crean esas cuentas?/Identificación fuera de la aplicación (por ejemplo, vinculación de SIM, suscripción a un servicio)"
 PSL_OUTSIDE_APP_ACCOUNT_TYPES,PSL_LOGIN_THROUGH_EMPLOYMENT_OR_ENTERPRISE_ACCOUNT,,MULTIPLE_CHOICE,¿Cómo se crean esas cuentas?/En el trabajo o mediante cuentas de empresa
 PSL_OUTSIDE_APP_ACCOUNT_TYPES,PSL_OUTSIDE_APP_ACCOUNT_TYPE_OTHER,,MULTIPLE_CHOICE,¿Cómo se crean esas cuentas?/Otro
