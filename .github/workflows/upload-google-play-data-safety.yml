@@ -1,0 +1,27 @@
+name: Upload Google Play Data Safety
+
+on:
+  workflow_dispatch:
+
+jobs:
+  google-play-data-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm install googleapis@latest --no-save
+
+      - name: Upload Google Play Data safety declaration
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: node scripts/upload-google-play-data-safety.mjs
