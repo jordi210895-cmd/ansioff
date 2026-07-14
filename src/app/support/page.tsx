@@ -41,9 +41,24 @@ export default function SupportPage() {
               Politica de privacidad
             </Link>
           </p>
+          <p className="mt-4 text-slate-300">
+            Si quieres solicitar la eliminación de tu cuenta o de tus datos, utiliza estas páginas:
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-300">
+            <li>
+              <Link className="font-medium text-blue-300 underline" href="/delete-account">
+                Eliminación de cuenta
+              </Link>
+            </li>
+            <li>
+              <Link className="font-medium text-blue-300 underline" href="/delete-data">
+                Eliminación de datos
+              </Link>
+            </li>
+          </ul>
         </section>
 
-        <p className="mt-8 text-sm text-slate-500">Ultima actualizacion: 2 de julio de 2026.</p>
+        <p className="mt-8 text-sm text-slate-500">Última actualización: 14 de julio de 2026.</p>
       </div>
     </main>
   );

@@ -68,7 +68,7 @@ export default function PrivacyPolicy() {
 
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-4">6. Derechos del usuario</h2>
-                        <p>Puede borrar los datos locales, eliminar su cuenta, retirar permisos de notificación y dejar de utilizar la reflexión IA desde Ajustes. También puede restaurar o gestionar su suscripción desde la tienda. Para ejercer los derechos de acceso, rectificación, oposición, limitación o supresión, puede contactarnos.</p>
+                        <p>Puede borrar los datos locales, eliminar su cuenta, retirar permisos de notificación y dejar de utilizar la reflexión IA desde Ajustes. También puede restaurar o gestionar su suscripción desde la tienda. Para ejercer los derechos de acceso, rectificación, oposición, limitación o supresión, puede contactarnos o usar las páginas públicas de <Link className="text-blue-500 underline" href="/delete-account">eliminación de cuenta</Link> y <Link className="text-blue-500 underline" href="/delete-data">eliminación de datos</Link>.</p>
                     </section>
 
                     <section>
