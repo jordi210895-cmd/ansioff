@@ -95,7 +95,7 @@ console.log('APP');
 console.log(JSON.stringify(itemSummary(app), null, 2));
 
 const versions = await optional('APP_STORE_VERSIONS_ERROR', () =>
-  request(`/v1/apps/${appId}/appStoreVersions?filter[platform]=IOS&include=appStoreVersionSubmission,build&sort=-createdDate&limit=5`),
+  request(`/v1/apps/${appId}/appStoreVersions?filter[platform]=IOS&include=appStoreVersionSubmission,build&limit=10`),
 );
 if (versions) {
   console.log('APP_STORE_VERSIONS');
