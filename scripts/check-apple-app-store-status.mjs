@@ -95,13 +95,49 @@ console.log('APP');
 console.log(JSON.stringify(itemSummary(app), null, 2));
 
 const versions = await optional('APP_STORE_VERSIONS_ERROR', () =>
-  request(`/v1/apps/${appId}/appStoreVersions?filter[platform]=IOS&include=appStoreVersionSubmission,build&limit=10`),
+  request(`/v1/apps/${appId}/appStoreVersions?filter[platform]=IOS&include=appStoreVersionSubmission,build,appStoreReviewDetail&limit=10`),
 );
 if (versions) {
   console.log('APP_STORE_VERSIONS');
   console.log(JSON.stringify({
     data: versions.data?.map(itemSummary),
     included: versions.included?.map(itemSummary),
+  }, null, 2));
+
+  for (const version of versions.data || []) {
+    const versionId = version.id;
+    const reviewDetail = await optional(`APP_STORE_REVIEW_DETAIL_ERROR version=${versionId}`, () =>
+      request(`/v1/appStoreVersions/${versionId}/appStoreReviewDetail`),
+    );
+    if (reviewDetail) {
+      console.log(`APP_STORE_REVIEW_DETAIL version=${versionId}`);
+      console.log(JSON.stringify({
+        data: itemSummary(reviewDetail.data),
+        included: reviewDetail.included?.map(itemSummary),
+      }, null, 2));
+    }
+
+    const submission = await optional(`APP_STORE_VERSION_SUBMISSION_ERROR version=${versionId}`, () =>
+      request(`/v1/appStoreVersions/${versionId}/appStoreVersionSubmission`),
+    );
+    if (submission) {
+      console.log(`APP_STORE_VERSION_SUBMISSION version=${versionId}`);
+      console.log(JSON.stringify({
+        data: itemSummary(submission.data),
+        included: submission.included?.map(itemSummary),
+      }, null, 2));
+    }
+  }
+}
+
+const reviewSubmissions = await optional('REVIEW_SUBMISSIONS_ERROR', () =>
+  request(`/v1/apps/${appId}/reviewSubmissions?include=items&limit=20`),
+);
+if (reviewSubmissions) {
+  console.log('REVIEW_SUBMISSIONS');
+  console.log(JSON.stringify({
+    data: reviewSubmissions.data?.map(itemSummary),
+    included: reviewSubmissions.included?.map(itemSummary),
   }, null, 2));
 }
 
