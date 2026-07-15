@@ -59,8 +59,8 @@ function ensureGoogleTag() {
     if (typeof window === 'undefined' || !GOOGLE_ADS_ID) return Promise.resolve();
     if (!googleTagPromise) {
         window.dataLayer = window.dataLayer || [];
-        window.gtag = window.gtag || function gtag() {
-            window.dataLayer?.push(arguments);
+        window.gtag = window.gtag || function gtag(...args: unknown[]) {
+            window.dataLayer?.push(args);
         };
         window.gtag('js', new Date());
         window.gtag('config', GOOGLE_ADS_ID);

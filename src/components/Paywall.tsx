@@ -50,7 +50,7 @@ export default function Paywall({ open, placement, plan, products, loading = fal
         if (!open) return;
         setSelectedKind(monthly ? 'monthly' : annual ? 'annual' : 'monthly');
         setActionError('');
-    }, [annual?.id, monthly?.id, open]);
+    }, [annual, monthly, open]);
 
     const selected = selectedKind === 'monthly' ? monthly : annual;
     const storeName = Capacitor.getPlatform() === 'android' ? 'Play Store' : Capacitor.getPlatform() === 'ios' ? 'App Store' : 'la tienda';
@@ -145,9 +145,9 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 .plan.selected{border-color:#5aadcf;background:linear-gradient(180deg,rgba(90,173,207,.2),rgba(90,173,207,.07));box-shadow:0 0 0 1px rgba(90,173,207,.22),0 18px 38px rgba(25,95,125,.2);}
                 .plan-badge{position:absolute;top:-10px;right:10px;background:#5aadcf;color:#031018;border-radius:999px;padding:4px 8px;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.03em;}
                 .plan-name{font-size:13px;font-weight:850;margin-bottom:10px;letter-spacing:.02em;}
-                .plan-trial{font-size:11px;color:#9be7c6;font-weight:900;line-height:1.25;margin-bottom:12px;}
-                .plan-price{font-size:22px;font-weight:900;line-height:1.05;color:#f1fbff;}
+                .plan-price{font-size:28px;font-weight:950;line-height:1.02;color:#f1fbff;margin-bottom:6px;letter-spacing:-.03em;}
                 .plan-period{font-size:11px;color:rgba(210,232,240,.58);margin-top:5px;}
+                .plan-trial{font-size:11px;color:#9be7c6;font-weight:800;line-height:1.25;margin-top:12px;}
                 .plan-saving{font-size:10px;line-height:1.35;color:#79d4ed;font-weight:800;margin-top:10px;}
                 .store-pill{display:flex;align-items:center;justify-content:center;gap:8px;width:max-content;max-width:100%;margin:2px auto 10px;padding:8px 13px;border:1px solid rgba(210,232,240,.18);border-radius:999px;color:rgba(210,232,240,.72);font-size:12px;font-weight:700;}
                 .purchase{width:100%;min-height:58px;border:0;border-radius:16px;background:#5aadcf;color:#031018;font:inherit;font-size:15px;font-weight:850;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;}
@@ -156,10 +156,10 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 .terms{font-size:10px;line-height:1.5;color:rgba(210,232,240,.44);text-align:center;margin:8px auto 4px;max-width:420px;}
                 .text-action{width:100%;min-height:38px;border:0;background:transparent;color:#8ca8b5;font:inherit;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;margin:2px 0 8px;}
                 .text-action strong{color:#85d0e5;}
-                .legal{display:flex;justify-content:center;gap:18px;margin-top:auto;padding-top:8px;font-size:10px;}
-                .legal a{color:rgba(210,232,240,.5);}
+                .legal{display:flex;justify-content:center;gap:12px;margin:6px 0 12px;font-size:12px;font-weight:800;flex-wrap:wrap;}
+                .legal a{color:#9bdcef;text-decoration:underline;text-underline-offset:3px;}
                 .error{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);color:#fda4af;padding:11px 13px;border-radius:12px;font-size:12px;line-height:1.4;margin-bottom:12px;}
-                @media(max-height:740px){.hero{padding-top:4px;padding-bottom:14px}.hero-mark{width:52px;height:52px;margin-bottom:12px}h1{font-size:26px}.subtitle{font-size:13px}.benefits{gap:8px;padding-bottom:14px}.plan{min-height:128px;padding:14px 12px}.plan-price{font-size:20px}.paywall-shell{padding-top:max(8px,env(safe-area-inset-top));}}
+                @media(max-height:740px){.hero{padding-top:4px;padding-bottom:14px}.hero-mark{width:52px;height:52px;margin-bottom:12px}h1{font-size:26px}.subtitle{font-size:13px}.benefits{gap:8px;padding-bottom:14px}.plan{min-height:128px;padding:14px 12px}.plan-price{font-size:24px}.paywall-shell{padding-top:max(8px,env(safe-area-inset-top));}}
             `}</style>
             <div className="paywall-shell">
                 {placement !== 'trialExpired' && <button className="close" onClick={onClose} aria-label={placement === 'onboarding' ? 'Cerrar y crear cuenta para probar gratis' : 'Cerrar'}><X size={20} /></button>}
@@ -186,9 +186,9 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                             <button key={option.kind} className={`plan ${selectedPlan ? 'selected' : ''}`} onClick={() => setSelectedKind(option.kind)} role="radio" aria-checked={selectedPlan}>
                                 {option.badge && <span className="plan-badge">{option.badge}</span>}
                                 <div className="plan-name">{option.title}</div>
-                                <div className="plan-trial">Prueba gratuita de 7 días</div>
                                 <div className="plan-price">{placement === 'recovery' && option.product?.winBackPrice ? option.product.winBackPrice : option.price}</div>
                                 <div className="plan-period">{placement === 'recovery' && option.product?.winBackPeriodLabel ? option.product.winBackPeriodLabel : option.period}</div>
+                                <div className="plan-trial">Prueba gratuita de 7 días</div>
                                 {option.savings && <div className="plan-saving">{option.savings}</div>}
                             </button>
                         );
@@ -199,6 +199,10 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                     {busy === 'restore' ? <Loader2 className="animate-spin" size={15} /> : <RefreshCw size={15} />}
                     Ya tengo un plan. <strong>Restaurar compra</strong>
                 </button>
+                <div className="legal" aria-label="Enlaces legales de la suscripción">
+                    <a href="https://ansioff.com/privacy" target="_blank" rel="noreferrer">Política de privacidad</a>
+                    <a href="https://ansioff.com/terms" target="_blank" rel="noreferrer">Términos de uso (EULA)</a>
+                </div>
                 <button className="purchase" onClick={purchase} disabled={busy !== null || loading}>
                     {busy === 'purchase' ? <Loader2 className="animate-spin" size={19} /> : <Sparkles size={18} />}
                     {placement === 'recovery' ? 'Recuperar ANSIOFF Premium' : 'Probar por 0 €'}
@@ -207,7 +211,6 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 <p className="terms">{placement === 'recovery'
                     ? 'La oferta y su elegibilidad proceden de la tienda. Después del periodo mostrado, la suscripción se renueva al precio ordinario indicado.'
                     : `Al tocar “Probar por 0 €”, se abrirá ${storeName} con el plan ${selectedKind === 'annual' ? 'anual' : 'mensual'}. Sin cargo durante 7 días. Después, ${selectedPrice} ${selectedKind === 'annual' ? 'al año' : 'al mes'}, con renovación automática. Puedes cancelar antes de que termine la prueba desde las suscripciones de tu cuenta.`}</p>
-                <div className="legal"><a href="/privacy" target="_blank">Privacidad</a><a href="https://ansioff.com/terms" target="_blank" rel="noreferrer">Términos</a></div>
             </div>
         </div>
     );

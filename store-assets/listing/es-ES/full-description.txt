@@ -34,4 +34,5 @@ Herramientas para organizar tu día.
 Ansioff es una herramienta de organización personal e informativa para crear pausas, escribir y seguir hábitos cotidianos.
 
 Privacidad: https://app-ansiedad-flame.vercel.app/privacy
+Términos de uso (EULA): https://app-ansiedad-flame.vercel.app/terms
 Soporte: https://app-ansiedad-flame.vercel.app/support
