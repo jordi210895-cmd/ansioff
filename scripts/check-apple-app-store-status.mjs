@@ -139,6 +139,29 @@ if (reviewSubmissions) {
     data: reviewSubmissions.data?.map(itemSummary),
     included: reviewSubmissions.included?.map(itemSummary),
   }, null, 2));
+
+  const reviewSubmissionItemIds = [
+    ...(reviewSubmissions.included || [])
+      .filter((item) => item.type === 'reviewSubmissionItems')
+      .map((item) => item.id),
+    ...(reviewSubmissions.data || [])
+      .flatMap((submission) => submission.relationships?.items?.data || [])
+      .filter((item) => item.type === 'reviewSubmissionItems')
+      .map((item) => item.id),
+  ];
+  const uniqueReviewSubmissionItemIds = [...new Set(reviewSubmissionItemIds)];
+  for (const itemId of uniqueReviewSubmissionItemIds) {
+    const detail = await optional(`REVIEW_SUBMISSION_ITEM_ERROR item=${itemId}`, () =>
+      request(`/v1/reviewSubmissionItems/${encodeURIComponent(itemId)}`),
+    );
+    if (detail) {
+      console.log(`REVIEW_SUBMISSION_ITEM item=${itemId}`);
+      console.log(JSON.stringify({
+        data: itemSummary(detail.data),
+        included: detail.included?.map(itemSummary),
+      }, null, 2));
+    }
+  }
 }
 
 const subscriptionGroups = await optional('SUBSCRIPTION_GROUPS_ERROR', () =>
