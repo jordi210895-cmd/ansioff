@@ -60,6 +60,8 @@ export default function Paywall({ open, placement, plan, products, loading = fal
     const annualSavingsValue = Math.max(0, yearlyMonthlyCost - annualPriceValue);
     const annualSavingsPercent = yearlyMonthlyCost > 0 ? Math.max(0, Math.round((annualSavingsValue / yearlyMonthlyCost) * 100)) : 0;
     const selectedPrice = selected?.price || (selectedKind === 'annual' ? formatEuro(FALLBACK_ANNUAL_PRICE) : formatEuro(FALLBACK_MONTHLY_PRICE));
+    const selectedPeriod = selectedKind === 'annual' ? 'al año' : 'al mes';
+    const selectedPlanName = selectedKind === 'annual' ? 'anual' : 'mensual';
     const planOptions: Array<{
         kind: PlanKind;
         product?: PaywallProduct;
@@ -94,7 +96,7 @@ export default function Paywall({ open, placement, plan, products, loading = fal
         try {
             if (!selected) {
                 await onReload();
-                setActionError('La pasarela está terminando de cargar los planes. Vuelve a tocar “Probar por 0 €” en unos segundos.');
+                setActionError('La pasarela está terminando de cargar los planes. Vuelve a tocar el botón de continuar en unos segundos.');
                 return;
             }
             await onPurchase(selected, placement === 'recovery');
@@ -145,21 +147,25 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 .plan.selected{border-color:#5aadcf;background:linear-gradient(180deg,rgba(90,173,207,.2),rgba(90,173,207,.07));box-shadow:0 0 0 1px rgba(90,173,207,.22),0 18px 38px rgba(25,95,125,.2);}
                 .plan-badge{position:absolute;top:-10px;right:10px;background:#5aadcf;color:#031018;border-radius:999px;padding:4px 8px;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.03em;}
                 .plan-name{font-size:13px;font-weight:850;margin-bottom:10px;letter-spacing:.02em;}
-                .plan-price{font-size:28px;font-weight:950;line-height:1.02;color:#f1fbff;margin-bottom:6px;letter-spacing:-.03em;}
+                .plan-price{font-size:30px;font-weight:950;line-height:1.02;color:#f1fbff;margin-bottom:6px;letter-spacing:-.04em;}
                 .plan-period{font-size:11px;color:rgba(210,232,240,.58);margin-top:5px;}
-                .plan-trial{font-size:11px;color:#9be7c6;font-weight:800;line-height:1.25;margin-top:12px;}
+                .plan-trial{font-size:10px;color:rgba(155,231,198,.82);font-weight:750;line-height:1.25;margin-top:12px;}
                 .plan-saving{font-size:10px;line-height:1.35;color:#79d4ed;font-weight:800;margin-top:10px;}
-                .store-pill{display:flex;align-items:center;justify-content:center;gap:8px;width:max-content;max-width:100%;margin:2px auto 10px;padding:8px 13px;border:1px solid rgba(210,232,240,.18);border-radius:999px;color:rgba(210,232,240,.72);font-size:12px;font-weight:700;}
-                .purchase{width:100%;min-height:58px;border:0;border-radius:16px;background:#5aadcf;color:#031018;font:inherit;font-size:15px;font-weight:850;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;}
+                .billing-summary{border:1px solid rgba(90,173,207,.34);background:linear-gradient(180deg,rgba(90,173,207,.18),rgba(90,173,207,.075));border-radius:20px;padding:16px 14px;margin:0 0 12px;text-align:center;box-shadow:0 18px 38px rgba(0,0,0,.2);}
+                .billing-label{font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#83d8ef;margin-bottom:6px;}
+                .billing-price{font-size:42px;line-height:1;font-weight:950;color:#f7fdff;letter-spacing:-.055em;}
+                .billing-period{font-size:15px;font-weight:850;color:#dff4fa;margin-top:4px;}
+                .billing-trial{font-size:11px;line-height:1.45;color:rgba(210,232,240,.58);margin-top:8px;}
+                .store-pill{display:flex;align-items:center;justify-content:center;gap:8px;width:max-content;max-width:100%;margin:2px auto 8px;padding:8px 13px;border:1px solid rgba(210,232,240,.18);border-radius:999px;color:rgba(210,232,240,.72);font-size:12px;font-weight:700;}
+                .purchase{width:100%;min-height:58px;border:0;border-radius:16px;background:#5aadcf;color:#031018;font:inherit;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;}
                 .purchase:disabled{opacity:.45;cursor:default;}
-                .no-pay{display:flex;align-items:center;justify-content:center;gap:7px;margin:12px 0 4px;color:rgba(229,242,247,.76);font-size:13px;font-weight:800;}
                 .terms{font-size:10px;line-height:1.5;color:rgba(210,232,240,.44);text-align:center;margin:8px auto 4px;max-width:420px;}
                 .text-action{width:100%;min-height:38px;border:0;background:transparent;color:#8ca8b5;font:inherit;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;margin:2px 0 8px;}
                 .text-action strong{color:#85d0e5;}
                 .legal{display:flex;justify-content:center;gap:12px;margin:6px 0 12px;font-size:12px;font-weight:800;flex-wrap:wrap;}
                 .legal a{color:#9bdcef;text-decoration:underline;text-underline-offset:3px;}
                 .error{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);color:#fda4af;padding:11px 13px;border-radius:12px;font-size:12px;line-height:1.4;margin-bottom:12px;}
-                @media(max-height:740px){.hero{padding-top:4px;padding-bottom:14px}.hero-mark{width:52px;height:52px;margin-bottom:12px}h1{font-size:26px}.subtitle{font-size:13px}.benefits{gap:8px;padding-bottom:14px}.plan{min-height:128px;padding:14px 12px}.plan-price{font-size:24px}.paywall-shell{padding-top:max(8px,env(safe-area-inset-top));}}
+                @media(max-height:740px){.hero{padding-top:4px;padding-bottom:14px}.hero-mark{width:52px;height:52px;margin-bottom:12px}h1{font-size:26px}.subtitle{font-size:13px}.benefits{gap:8px;padding-bottom:14px}.plan{min-height:128px;padding:14px 12px}.plan-price{font-size:25px}.billing-summary{padding:13px 12px}.billing-price{font-size:36px}.paywall-shell{padding-top:max(8px,env(safe-area-inset-top));}}
             `}</style>
             <div className="paywall-shell">
                 {placement !== 'trialExpired' && <button className="close" onClick={onClose} aria-label={placement === 'onboarding' ? 'Cerrar y crear cuenta para probar gratis' : 'Cerrar'}><X size={20} /></button>}
@@ -194,6 +200,12 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                         );
                     })}
                 </div>
+                <div className="billing-summary" aria-label={`Importe de suscripción ${selectedPrice} ${selectedPeriod}`}>
+                    <div className="billing-label">Importe de suscripción</div>
+                    <div className="billing-price">{selectedPrice}</div>
+                    <div className="billing-period">{selectedPeriod}</div>
+                    <div className="billing-trial">Prueba gratuita de 7 días antes del primer cobro. Renovación automática, cancelable desde tu cuenta de {storeName}.</div>
+                </div>
                 <div className="store-pill"><ShieldCheck size={15} /> Asegurado con {storeName}</div>
                 <button className="text-action" onClick={restore} disabled={busy !== null}>
                     {busy === 'restore' ? <Loader2 className="animate-spin" size={15} /> : <RefreshCw size={15} />}
@@ -205,12 +217,11 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 </div>
                 <button className="purchase" onClick={purchase} disabled={busy !== null || loading}>
                     {busy === 'purchase' ? <Loader2 className="animate-spin" size={19} /> : <Sparkles size={18} />}
-                    {placement === 'recovery' ? 'Recuperar ANSIOFF Premium' : 'Probar por 0 €'}
+                    {placement === 'recovery' ? `Continuar con ${selectedPrice}` : `Continuar con ${selectedPrice} ${selectedPeriod}`}
                 </button>
-                {placement !== 'recovery' && <div className="no-pay"><Check size={17} /> No hay pago ahora</div>}
                 <p className="terms">{placement === 'recovery'
                     ? 'La oferta y su elegibilidad proceden de la tienda. Después del periodo mostrado, la suscripción se renueva al precio ordinario indicado.'
-                    : `Al tocar “Probar por 0 €”, se abrirá ${storeName} con el plan ${selectedKind === 'annual' ? 'anual' : 'mensual'}. Sin cargo durante 7 días. Después, ${selectedPrice} ${selectedKind === 'annual' ? 'al año' : 'al mes'}, con renovación automática. Puedes cancelar antes de que termine la prueba desde las suscripciones de tu cuenta.`}</p>
+                    : `Al tocar continuar, se abrirá ${storeName} con el plan ${selectedPlanName}. La prueba dura 7 días. Después, la suscripción se cobra a ${selectedPrice} ${selectedPeriod} con renovación automática. Puedes cancelar antes de que termine la prueba desde las suscripciones de tu cuenta.`}</p>
             </div>
         </div>
     );
