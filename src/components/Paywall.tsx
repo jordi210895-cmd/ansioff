@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
-import { Check, Loader2, RefreshCw, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { Check, Loader2, RefreshCw, ShieldCheck, X } from 'lucide-react';
 import type { PersonalizedPlan } from '@/lib/onboarding';
 import type { PaywallProduct } from '@/lib/subscriptions';
 
@@ -140,8 +140,7 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 .paywall-root{position:fixed;inset:0;z-index:1300;background:#03080f;color:#e5f2f7;overflow-y:auto;font-family:var(--font-plus-jakarta),sans-serif;}
                 .paywall-shell{width:100%;max-width:520px;min-height:100%;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 20px max(18px,env(safe-area-inset-bottom));display:flex;flex-direction:column;}
                 .close{width:44px;height:44px;border-radius:14px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:#bdd2db;display:flex;align-items:center;justify-content:center;margin-left:auto;cursor:pointer;}
-                .hero{padding:10px 0 20px;text-align:center;}
-                .hero-mark{width:66px;height:66px;border-radius:20px;background:rgba(90,173,207,.12);border:1px solid rgba(90,173,207,.28);color:#74c7df;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+                .hero{padding:2px 0 20px;text-align:center;}
                 .eyebrow{color:#69bdd8;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;margin-bottom:9px;}
                 h1{font-size:30px;line-height:1.18;letter-spacing:0;margin:0 auto 10px;max-width:430px;}
                 .subtitle{font-size:14px;line-height:1.55;color:rgba(210,232,240,.62);max-width:400px;margin:0 auto;}
@@ -158,7 +157,7 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 .plan-trial{font-size:10px;color:rgba(155,231,198,.82);font-weight:750;line-height:1.25;margin:0 0 12px;}
                 .plan-saving{font-size:10px;line-height:1.35;color:#79d4ed;font-weight:800;margin-top:10px;}
                 .store-pill{display:flex;align-items:center;justify-content:center;gap:8px;width:max-content;max-width:100%;margin:0 auto 8px;padding:8px 13px;border:1px solid rgba(210,232,240,.18);border-radius:999px;color:rgba(210,232,240,.72);font-size:12px;font-weight:700;}
-                .purchase{width:100%;min-height:58px;border:0;border-radius:16px;background:#5aadcf;color:#031018;font:inherit;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;}
+                .purchase{width:100%;min-height:58px;border:0;border-radius:16px;background:#5aadcf;color:#031018;font:inherit;font-size:15px;font-weight:900;line-height:1.22;text-align:center;padding:10px 12px;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;}
                 .purchase:disabled{opacity:.45;cursor:default;}
                 .terms{font-size:10px;line-height:1.5;color:rgba(210,232,240,.44);text-align:center;margin:8px auto 4px;max-width:420px;}
                 .text-action{width:100%;min-height:38px;border:0;background:transparent;color:#8ca8b5;font:inherit;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;margin:2px 0 8px;}
@@ -166,12 +165,11 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 .legal{display:flex;justify-content:center;gap:12px;margin:6px 0 12px;font-size:12px;font-weight:800;flex-wrap:wrap;}
                 .legal a{color:#9bdcef;text-decoration:underline;text-underline-offset:3px;}
                 .error{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);color:#fda4af;padding:11px 13px;border-radius:12px;font-size:12px;line-height:1.4;margin-bottom:12px;}
-                @media(max-height:740px){.hero{padding-top:4px;padding-bottom:14px}.hero-mark{width:52px;height:52px;margin-bottom:12px}h1{font-size:26px}.subtitle{font-size:13px}.benefits{gap:8px;padding-bottom:14px}.plan{min-height:128px;padding:14px 12px}.plan-price{font-size:25px}.paywall-shell{padding-top:max(8px,env(safe-area-inset-top));}}
+                @media(max-height:740px){.hero{padding-top:0;padding-bottom:14px}h1{font-size:26px}.subtitle{font-size:13px}.benefits{gap:8px;padding-bottom:14px}.plan{min-height:128px;padding:14px 12px}.plan-price{font-size:25px}.paywall-shell{padding-top:max(8px,env(safe-area-inset-top));}}
             `}</style>
             <div className="paywall-shell">
                 {placement !== 'trialExpired' && <button className="close" onClick={onClose} aria-label={placement === 'onboarding' ? 'Cerrar y crear cuenta para probar gratis' : 'Cerrar'}><X size={20} /></button>}
                 <div className="hero">
-                    <div className="hero-mark"><Sparkles size={30} /></div>
                     <div className="eyebrow">ANSIOFF Premium</div>
                     <h1 id="paywall-title">{headline}</h1>
                     <p className="subtitle">{subtitle}</p>
@@ -212,7 +210,7 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 </div>
                 <button className="purchase" onClick={purchase} disabled={busy !== null || loading}>
                     {busy === 'purchase' && <Loader2 className="animate-spin" size={19} />}
-                    {placement === 'recovery' ? `Continuar ahora. ${selectedPrice}` : `Continuar ahora. 7 días gratis y después ${selectedPrice} ${selectedPeriod}`}
+                    {placement === 'recovery' ? `Continuar ahora por ${selectedPrice}` : `Continuar ahora por 0 euros, tendrás 7 días gratis y después ${selectedPrice} ${selectedPeriod}`}
                 </button>
                 <p className="terms">{placement === 'recovery'
                     ? 'La oferta y su elegibilidad proceden de la tienda. Después del periodo mostrado, la suscripción se renueva al precio ordinario indicado.'
