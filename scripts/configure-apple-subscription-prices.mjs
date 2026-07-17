@@ -219,15 +219,23 @@ for (const target of TARGETS) {
     before,
   }, null, 2));
 
-  if (APPLY) {
-    const priority = ['ESP', 'USA'];
-    const entries = [...territoryPoints.entries()].sort(([a], [b]) => {
-      const aIndex = priority.indexOf(a);
-      const bIndex = priority.indexOf(b);
-      if (aIndex !== -1 || bIndex !== -1) return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex);
-      return a.localeCompare(b);
-    });
-    await applyInBatches(entries, subscription.id);
+  const explicitTargets = [
+    ['ESP', espPoint, target.eur],
+    ['USA', usaPoint, target.usd],
+  ];
+  const changes = explicitTargets.filter(([territory, , desiredPrice]) => (
+    !(before[territory] || []).some(
+      (price) => Math.abs(Number(price.customerPrice) - desiredPrice) < 0.001,
+    )
+  ));
+
+  console.log(JSON.stringify({
+    productId: target.productId,
+    explicitChanges: changes.map(([territory, , customerPrice]) => ({ territory, customerPrice })),
+  }, null, 2));
+
+  if (APPLY && changes.length > 0) {
+    await applyInBatches(changes.map(([territory, point]) => [territory, point]), subscription.id);
   }
 
   const after = APPLY ? {
