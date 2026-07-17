@@ -50,7 +50,10 @@ function createToken() {
 const token = createToken();
 
 async function request(method, path, body, attempt = 0) {
-  const response = await fetch(`https://api.appstoreconnect.apple.com${path}`, {
+  const url = path.startsWith('https://')
+    ? path
+    : `https://api.appstoreconnect.apple.com${path}`;
+  const response = await fetch(url, {
     method,
     headers: {
       Authorization: `Bearer ${token}`,
@@ -82,6 +85,21 @@ async function request(method, path, body, attempt = 0) {
   return parsed;
 }
 
+async function requestAll(path) {
+  const data = [];
+  const included = [];
+  let next = path;
+
+  while (next) {
+    const result = await request('GET', next);
+    data.push(...(result.data || []));
+    included.push(...(result.included || []));
+    next = result.links?.next || null;
+  }
+
+  return { data, included };
+}
+
 async function findSubscriptions() {
   const apps = await request('GET', `/v1/apps?filter[bundleId]=${encodeURIComponent(BUNDLE_ID)}`);
   const app = apps.data?.[0];
@@ -97,8 +115,7 @@ async function findSubscriptions() {
 }
 
 async function findPricePoint(subscriptionId, territory, customerPrice) {
-  const result = await request(
-    'GET',
+  const result = await requestAll(
     `/v1/subscriptions/${subscriptionId}/pricePoints?filter[territory]=${territory}&include=territory&limit=200`,
   );
   const point = (result.data || []).find(
