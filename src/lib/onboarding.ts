@@ -102,7 +102,7 @@ export function toggleLimitedSelection<T>(current: T[], value: T, max = 3) {
 }
 
 const GOAL_LABELS: Record<OnboardingGoal, string> = {
-    calm_now: 'crear una pausa rápida',
+    calm_now: 'activar el Kit SOS',
     slow_thoughts: 'dar espacio a tus pensamientos',
     sleep_better: 'descansar mejor',
     daily_stress: 'ordenar el día a día',
@@ -141,7 +141,7 @@ export function createPersonalizedPlan(answers: OnboardingAnswers): Personalized
     const nowStep: PlanStep = goal === 'sleep_better'
         ? { stage: 'Ahora', title: 'Preparar el descanso', description: 'Un ritmo lento para cerrar el día antes de dormir.', module: 'breathing_478' }
         : goal === 'calm_now'
-            ? { stage: 'Ahora', title: 'Crear una pausa rápida', description: 'Guía 5-4-3-2-1 y ritmo 4-7-8 para volver al presente sin forzar.', module: 'sos' }
+            ? { stage: 'Ahora', title: 'Activar el Kit SOS', description: 'Guía 5-4-3-2-1 y ritmo 4-7-8 para volver al presente sin forzar.', module: 'sos' }
             : { stage: 'Ahora', title: 'Crear una pausa', description: 'Ritmo 4-7-8 para parar un momento y recuperar margen.', module: 'breathing_478' };
 
     const understandStep: PlanStep = goal === 'slow_thoughts' || answers.manifestations.includes('racing_thoughts')

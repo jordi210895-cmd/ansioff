@@ -21,7 +21,7 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
                         Soporte para tu cuenta y tus herramientas
                     </h2>
                     <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.68)] leading-relaxed">
-                        Aquí tienes información para usar el diario, los sonidos, las pausas guiadas y la configuración de la app.
+                        Aquí tienes información para usar el diario, los sonidos, el Kit SOS y la configuración de la app.
                     </p>
                 </div>
 
@@ -36,7 +36,7 @@ export default function SupportScreen({ onBack }: SupportScreenProps) {
 
                     <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] p-5 rounded-2xl shadow-sm">
                         <Headphones className="text-[#5aadcf] mb-3" size={24} />
-                        <h4 className="font-serif italic text-lg text-[#ddeef5] mb-2 font-light">Sonidos y pausas</h4>
+                        <h4 className="font-serif italic text-lg text-[#ddeef5] mb-2 font-light">Sonidos y Kit SOS</h4>
                         <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.8)] leading-relaxed">
                             Los audios, juegos de atención y ritmos guiados están pensados para crear pequeños espacios de foco durante el día.
                         </p>

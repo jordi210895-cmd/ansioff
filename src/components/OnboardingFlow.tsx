@@ -27,7 +27,7 @@ interface Option<T extends string | number> {
 }
 
 const GOALS: Option<OnboardingGoal>[] = [
-    { value: 'calm_now', label: 'Crear una pausa rápida', icon: <Waves size={20} /> },
+    { value: 'calm_now', label: 'Activar el Kit SOS', icon: <Waves size={20} /> },
     { value: 'slow_thoughts', label: 'Frenar pensamientos repetitivos', icon: <Brain size={20} /> },
     { value: 'sleep_better', label: 'Preparar una rutina nocturna', icon: <MoonStar size={20} /> },
     { value: 'daily_stress', label: 'Ordenar el día a día', icon: <BriefcaseBusiness size={20} /> },
@@ -340,7 +340,7 @@ export default function OnboardingFlow({ onFinished, onLogin }: OnboardingFlowPr
                             <QuestionHeader eyebrow="Tu ecosistema de pausas" title="Tus herramientas, conectadas en un solo lugar" />
                             <p className="value-intro">ANSIOFF combina pausas breves, diario personal y rutinas sencillas para comprender lo que se repite y crear un hábito que quepa en tu día.</p>
                             <div className="value-list">
-                                <div className="value-row"><div className="value-icon"><Waves size={21} /></div><div><strong>Volver al presente</strong><p>Pausas guiadas, ritmo 4-7-8 y audios para acompañarte cuando necesitas parar un momento.</p></div></div>
+                                <div className="value-row"><div className="value-icon"><Waves size={21} /></div><div><strong>Volver al presente</strong><p>Kit SOS, ritmo 4-7-8 y audios para acompañarte cuando necesitas parar un momento.</p></div></div>
                                 <div className="value-row"><div className="value-icon"><BookOpen size={21} /></div><div><strong>Entender lo que se repite</strong><p>Diario, ejercicios de escritura y reflexión opcional con IA para ordenar temas personales.</p></div></div>
                                 <div className="value-row"><div className="value-icon"><MoonStar size={21} /></div><div><strong>Construir una rutina posible</strong><p>Modo noche, sonidos, check-ins, juegos de atención y recordatorios adaptados a tu ritmo.</p></div></div>
                                 <div className="value-row"><div className="value-icon"><Activity size={21} /></div><div><strong>Observar tu constancia</strong><p>Actividad y progreso para reconocer lo que practicas, sin penalizar los días de descanso.</p></div></div>

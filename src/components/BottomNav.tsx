@@ -44,7 +44,7 @@ export default function BottomNav({ activeScreen, onNav, isPremium = false }: Bo
                 <svg width="22" height="22" viewBox="0 0 24 24" fill={activeScreen === 'notes' ? 'rgba(14, 165, 233, 0.2)' : 'none'} stroke={activeScreen === 'notes' ? 'var(--p)' : 'var(--text3)'} strokeWidth="2" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /></svg>
             </NavItem>
             {/* Shortened for brevity, labels are important for UX */}
-            <NavItem id="breath" activeScreen={activeScreen} onNav={onNav} label="Pausas">
+            <NavItem id="breath" activeScreen={activeScreen} onNav={onNav} label="Calma">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill={activeScreen === 'breath' ? 'rgba(14, 165, 233, 0.2)' : 'none'} stroke={activeScreen === 'breath' ? 'var(--p)' : 'var(--text3)'} strokeWidth="2" strokeLinecap="round"><path d="M12 6c0 0-2-2-5-1S3 9 3 12s1 5 4 6c1.5.5 3 .2 4-.5" /><path d="M12 6c0 0 2-2 5-1s4 4 4 7-1 5-4 6c-1.5.5-3 .2-4-.5" /><path d="M12 6v12" /></svg>
             </NavItem>
             <NavItem id="progress" activeScreen={activeScreen} onNav={onNav} label="Estado" locked={!isPremium}>

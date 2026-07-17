@@ -755,7 +755,7 @@ export default function App() {
 
       <button className="sos-fab" onClick={() => handleNav('pause')}>
         <div className="sos-fab-pulse"></div>
-        <span>Pausa</span>
+        <span>SOS</span>
       </button>
 
       <BottomNav activeScreen={curScreen} onNav={handleNav} isPremium={hasPremium} />

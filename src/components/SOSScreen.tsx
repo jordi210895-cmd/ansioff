@@ -9,7 +9,7 @@ interface SOSScreenProps {
 }
 
 const groundingSteps = [
-    { id: 'intro', t: 'Pausa y respira', d: 'Mira a tu alrededor y avanza a tu ritmo.', i: '🌬️', count: 0 },
+    { id: 'intro', t: 'SOS: respira', d: 'Mira a tu alrededor y avanza a tu ritmo.', i: '🌬️', count: 0 },
     { id: 'see', t: '5 cosas que VES', d: 'Nombra y describe 5 objetos que tengas delante.', i: '👁️', count: 5 },
     { id: 'touch', t: '4 cosas que TOCAS', d: 'Siente las texturas de 4 cosas a tu alcance.', i: '🤝', count: 4 },
     { id: 'hear', t: '3 cosas que OYES', d: 'Presta atención a 3 sonidos distintos.', i: '👂', count: 3 },
@@ -45,13 +45,13 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
     };
 
     return (
-        <div id="guided-pause" className="screen active">
+        <div id="sos-kit" className="screen active">
             <style jsx>{`
                 .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:120px;}
                 .screen::-webkit-scrollbar{display:none;}
 
-                #guided-pause .aurora-1{background:radial-gradient(circle,rgba(244,63,94,0.65),transparent 70%);top:-100px;left:-60px;}
-                #guided-pause .aurora-2{background:radial-gradient(circle,rgba(245,158,11,0.3),transparent 70%);bottom:0;right:-80px;}
+                #sos-kit .aurora-1{background:radial-gradient(circle,rgba(244,63,94,0.65),transparent 70%);top:-100px;left:-60px;}
+                #sos-kit .aurora-2{background:radial-gradient(circle,rgba(245,158,11,0.3),transparent 70%);bottom:0;right:-80px;}
 
                 .sos-top{padding:24px 26px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5;}
                 .sos-badge{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);border-radius:var(--radp);padding:6px 14px;color:var(--r2);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;}
@@ -117,7 +117,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                 <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
                 <div className="flex bg-[rgba(255,255,255,0.05)] p-1.5 rounded-2xl border border-white/10 shadow-inner">
                     <div className="px-8 py-3.5 rounded-xl text-[13px] font-bold uppercase tracking-[0.15em] bg-[#f43f5e] text-white shadow-xl shadow-red-500/30 scale-[1.02]">
-                        Pausa guiada
+                        Kit SOS
                     </div>
                 </div>
                 <div style={{ width: 36 }}></div>

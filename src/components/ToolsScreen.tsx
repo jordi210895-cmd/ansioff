@@ -17,7 +17,7 @@ const moduleCategories = [
     {
         title: 'Herramientas',
         tools: [
-            { id: 'pause', name: 'Pausa guiada', sub: 'Anclaje 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
+            { id: 'pause', name: 'Kit SOS', sub: 'Anclaje rápido 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
             { id: 'sc-cbt', name: 'Pensamientos', sub: 'Registro y reflexión', icon: <Brain />, color: 'var(--p)' },
             { id: 'sc-act', name: 'Aceptación', sub: 'Ejercicios guiados', icon: <Heart />, color: 'var(--p2)' },
         ]
