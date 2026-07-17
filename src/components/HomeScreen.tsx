@@ -1,6 +1,16 @@
 'use client';
 
-import { Wind, Clock, ChevronRight, AlertTriangle, User } from 'lucide-react';
+import {
+    AlertTriangle,
+    BookOpen,
+    ChevronRight,
+    Clock,
+    Gamepad2,
+    GraduationCap,
+    User,
+    Volume2,
+    Wind,
+} from 'lucide-react';
 
 interface HomeScreenProps {
     onNav: (screen: string) => void;
@@ -17,58 +27,66 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
         <div className="min-h-full bg-[#03080f] text-[#ddeef5] overflow-y-auto pb-32 font-sans relative scrollbar-hide">
             <style jsx>{`
                 .home-content{
-                    padding-left:max(24px,calc(env(safe-area-inset-left,0px) + 22px));
-                    padding-right:max(24px,calc(env(safe-area-inset-right,0px) + 22px));
+                    padding-left:max(18px,calc(env(safe-area-inset-left,0px) + 14px));
+                    padding-right:max(18px,calc(env(safe-area-inset-right,0px) + 14px));
                 }
                 .home-safe-header{
                     padding-top:max(56px,calc(var(--safe-top,0px) + 14px));
-                    padding-bottom:12px;
+                    padding-bottom:14px;
                 }
-                .home-greeting{margin-top:0;margin-bottom:16px;}
-                .home-stack{gap:23px;}
-                .home-card{border-radius:26px;}
-                .home-card-inner{border-radius:25px;padding:18px;gap:12px;}
-                .home-sos-title{font-size:21px;line-height:1.15;}
-                .home-sos-inline-icon{width:22px;height:22px;color:#f87171;filter:drop-shadow(0 0 10px rgba(248,113,113,.28));}
-                .home-sos-copy{font-size:13px;line-height:1.4;}
-                .home-sos-button{padding-top:9px;padding-bottom:9px;}
-                .home-section-title{font-size:21px;}
-                .home-section-head{margin-bottom:8px;}
-                .breath-card{border-radius:26px;padding:16px 18px;gap:12px;}
-                .breath-bg{border-radius:26px;}
-                .breath-title{font-size:30px;}
-                .breath-copy{font-size:13px;line-height:1.38;}
-                .breath-button{padding-top:8px;padding-bottom:8px;}
-                .home-quote-section{margin-bottom:0;}
+                .home-greeting{margin-top:0;margin-bottom:11px;}
+                .home-stack{gap:15px;}
+                .home-sos{border-radius:24px;}
+                .home-sos-inner{border-radius:23px;padding:9px 14px;}
+                .home-sos-icon{width:38px;height:38px;}
+                .home-sos-title{font-size:16px;line-height:1.2;}
+                .home-sos-copy{font-size:12px;line-height:1.3;}
+                .home-section-title{font-size:20px;}
+                .home-section-head{margin-bottom:9px;}
+                .breath-card{border-radius:24px;padding:9px 13px;gap:6px;}
+                .breath-bg{border-radius:24px;}
+                .breath-title{font-size:23px;line-height:1.04;}
+                .tools-title{margin-bottom:7px;}
+                .tools-grid{gap:10px;}
+                .tool-card{border-radius:22px;min-height:78px;padding:6px 8px 7px;}
+                .tool-icon{width:38px;height:38px;border-radius:13px;margin-bottom:4px;}
+                .tool-name{font-size:15px;line-height:1.1;}
+                .tool-copy{font-size:11px;line-height:1.2;margin-top:3px;}
+                .home-quote-section{margin-bottom:4px;}
                 .home-quote{border-radius:22px;padding:10px 16px;}
                 .home-quote-text{font-size:14px;line-height:1.32;}
                 @media(max-width:390px){
                     .home-content{
-                        padding-left:max(26px,calc(env(safe-area-inset-left,0px) + 24px));
-                        padding-right:max(26px,calc(env(safe-area-inset-right,0px) + 24px));
+                        padding-left:max(16px,calc(env(safe-area-inset-left,0px) + 12px));
+                        padding-right:max(16px,calc(env(safe-area-inset-right,0px) + 12px));
                     }
                     .home-safe-header{padding-top:max(54px,calc(var(--safe-top,0px) + 12px));padding-bottom:11px;}
-                    .home-greeting{margin-bottom:15px;}
-                    .home-stack{gap:21px;}
-                    .home-card-inner{padding:16px;gap:11px;}
-                    .home-sos-title{font-size:20px;}
+                    .home-greeting{margin-bottom:9px;}
+                    .home-stack{gap:13px;}
+                    .home-sos-inner{padding:8px 12px;}
+                    .home-sos-icon{width:36px;height:36px;}
+                    .home-sos-title{font-size:15.5px;}
                     .home-section-title{font-size:20px;}
-                    .breath-card{padding:15px 16px;gap:11px;}
-                    .breath-title{font-size:29px;}
+                    .breath-card{padding:8px 12px;gap:5px;}
+                    .breath-title{font-size:22px;}
+                    .tools-grid{gap:9px;}
+                    .tool-card{min-height:74px;padding:5px 7px 6px;}
+                    .tool-icon{width:36px;height:36px;margin-bottom:3px;}
                     .home-quote{padding:9px 15px;}
                     .home-quote-text{font-size:13.5px;}
                 }
                 @media(max-height:760px){
                     .home-safe-header{padding-top:max(50px,calc(var(--safe-top,0px) + 10px));padding-bottom:10px;}
-                    .home-greeting{margin-bottom:13px;}
-                    .home-stack{gap:18px;}
-                    .home-card-inner{padding:15px;gap:10px;}
-                    .home-sos-title{font-size:19px;}
-                    .home-sos-copy{font-size:12.5px;line-height:1.35;}
-                    .home-section-head{margin-bottom:7px;}
-                    .breath-card{padding:14px 15px;gap:10px;}
-                    .breath-title{font-size:28px;}
-                    .breath-copy{font-size:12.5px;line-height:1.34;}
+                    .home-greeting{margin-bottom:8px;}
+                    .home-stack{gap:11px;}
+                    .home-sos-inner{padding:7px 11px;}
+                    .home-sos-icon{width:34px;height:34px;}
+                    .home-section-head{margin-bottom:6px;}
+                    .breath-card{padding:7px 11px;gap:4px;}
+                    .breath-title{font-size:21px;}
+                    .tools-title{margin-bottom:6px;}
+                    .tool-card{min-height:70px;padding:4px 6px 5px;}
+                    .tool-icon{width:34px;height:34px;margin-bottom:3px;}
                     .home-quote{padding:8px 13px;border-radius:20px;}
                     .home-quote-text{font-size:13px;line-height:1.28;}
                 }
@@ -112,33 +130,28 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                 {/* Main Content Container */}
                 <div className="home-stack w-full flex flex-col">
 
-                    {/* 1. SOS area */}
+                    {/* 1. Compact SOS area */}
                     <section className="text-left">
-                        <div
-                            className="home-card w-full relative overflow-hidden p-px bg-gradient-to-br from-red-500/30 via-rose-500/10 to-red-500/20 border border-red-500/20 shadow-2xl shadow-red-950/20"
+                        <button
+                            onClick={() => onNav('sc-pause')}
+                            className="home-sos w-full group relative overflow-hidden p-px bg-gradient-to-r from-red-500/30 via-rose-500/10 to-red-500/30 transition-all active:scale-[0.98]"
                         >
-                            <div className="home-card-inner relative bg-[#03080f]/90 backdrop-blur-md flex flex-col">
-                                <div className="flex flex-col gap-2">
-                                    <h3 className="home-sos-title font-bold text-[#ddeef5] tracking-tight flex items-center gap-2">
-                                        <AlertTriangle className="home-sos-inline-icon shrink-0" strokeWidth={2.2} />
-                                        <span>Necesito ayuda ahora</span>
-                                    </h3>
-                                    <p className="home-sos-copy text-[rgba(200,225,235,0.6)]">
-                                        Si estás experimentando una crisis de ansiedad, pánico o sobreestimulación, activa el kit de calma inmediata.
-                                    </p>
+                            <div className="home-sos-inner relative bg-[#03080f]/80 backdrop-blur-md flex items-center justify-between border border-red-500/20">
+                                <div className="flex items-center gap-3.5 z-10 text-left min-w-0">
+                                    <div className="home-sos-icon rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 shrink-0 shadow-lg shadow-red-950/20">
+                                        <AlertTriangle className="w-6 h-6" strokeWidth={2} />
+                                    </div>
+                                    <div className="flex flex-col justify-center min-w-0">
+                                        <h3 className="home-sos-title font-bold text-[#ddeef5] mb-1">Necesito ayuda ahora</h3>
+                                        <p className="home-sos-copy text-[rgba(200,225,235,0.55)] font-medium">Asistencia de crisis inmediata</p>
+                                    </div>
                                 </div>
-
-                                <button
-                                    onClick={() => onNav('sc-pause')}
-                                    className="home-sos-button w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white rounded-full px-6 font-bold text-xs tracking-wider transition-all shadow-lg shadow-red-950/30 active:scale-[0.98] flex items-center justify-center gap-2"
-                                >
-                                    ACTIVAR KIT SOS <ChevronRight size={14} />
-                                </button>
+                                <ChevronRight className="text-[rgba(200,225,235,0.38)] group-hover:text-[#ddeef5] transition-colors shrink-0" size={20} />
 
                                 {/* Decorative background glow */}
-                                <div className="absolute -right-10 -bottom-10 w-44 h-44 bg-red-600/10 blur-3xl rounded-full pointer-events-none"></div>
+                                <div className="absolute -right-4 -top-4 w-32 h-32 bg-red-600/10 blur-3xl rounded-full pointer-events-none"></div>
                             </div>
-                        </div>
+                        </button>
                     </section>
 
                     {/* 2. Featured Breathing Card */}
@@ -156,32 +169,79 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-4 relative z-10">
-                                <div className="flex items-center justify-between">
-                                    <span className="inline-flex items-center px-3.5 py-1.5 rounded-xl bg-[#5aadcf]/20 text-[#5aadcf] text-[11px] font-bold uppercase tracking-wider w-fit border border-[#5aadcf]/20">
-                                        Patrón 4-2-6
-                                    </span>
-                                    <div className="flex items-center gap-2 text-[rgba(200,225,235,0.6)]">
-                                        <Clock size={16} className="text-[#5aadcf]/70" />
-                                        <span className="text-xs font-semibold uppercase tracking-wider">5 minutos</span>
-                                    </div>
-                                </div>
+                            <div className="flex flex-col gap-1.5 relative z-10">
+                                <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#5aadcf]/20 text-[#5aadcf] text-[10px] font-bold uppercase tracking-wider w-fit border border-[#5aadcf]/20">
+                                    Patrón 4-2-6
+                                </span>
                                 <h3 className="breath-title font-light text-[#ddeef5] leading-tight font-serif italic">
                                     Alivio del estrés <br /><span className="font-bold tracking-tight not-italic font-sans text-sky-200">Profundo</span>
                                 </h3>
-                                <p className="breath-copy text-[rgba(200,225,235,0.6)]">
-                                    Una sesión corta diseñada para reducir rápidamente el ritmo cardíaco y calmar la mente activa.
-                                </p>
                             </div>
 
-                            <div className="relative z-10">
+                            <div className="flex items-center justify-between relative z-10 mt-1">
+                                <div className="flex items-center gap-2 text-[rgba(200,225,235,0.6)]">
+                                    <Clock size={16} className="text-[#5aadcf]/70" />
+                                    <span className="text-sm font-medium">5 min</span>
+                                </div>
                                 <button
                                     onClick={() => onNav('sc-breath-426')}
-                                    className="breath-button w-full bg-[#5aadcf] hover:bg-[#89cee4] text-[#03080f] rounded-full px-6 font-bold text-xs tracking-wider transition-all shadow-lg shadow-[#5aadcf]/20 active:scale-[0.98]"
+                                    className="bg-[#5aadcf] hover:bg-[#89cee4] text-[#03080f] rounded-full py-1.5 px-5 font-bold text-xs tracking-wider transition-all shadow-lg shadow-[#5aadcf]/20 active:scale-[0.98]"
                                 >
-                                    INICIAR SESIÓN
+                                    COMENZAR
                                 </button>
                             </div>
+                        </div>
+                    </section>
+
+                    {/* 3. Tools grid */}
+                    <section>
+                        <div className="tools-title px-1">
+                            <h2 className="text-[11px] font-bold text-[rgba(200,225,235,0.38)] tracking-[0.2em] uppercase">Herramientas</h2>
+                        </div>
+
+                        <div className="tools-grid grid grid-cols-2">
+                            <button
+                                onClick={() => onNav('sc-audio')}
+                                className="tool-card bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center text-center hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.98] transition-all group overflow-hidden relative shadow-lg"
+                            >
+                                <div className="tool-icon bg-[#5aadcf]/10 border border-[#5aadcf]/25 flex items-center justify-center text-[#5aadcf] group-hover:scale-105 group-hover:bg-[#5aadcf]/25 transition-all duration-300">
+                                    <Volume2 size={24} strokeWidth={2} />
+                                </div>
+                                <h4 className="tool-name font-semibold text-[#ddeef5] font-serif italic">Audios</h4>
+                            </button>
+
+                            <button
+                                onClick={() => onNav('sc-notes')}
+                                className="tool-card bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center text-center hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.98] transition-all group overflow-hidden relative shadow-lg"
+                            >
+                                <div className="tool-icon bg-[#6bbf8e]/10 border border-[#6bbf8e]/25 flex items-center justify-center text-[#6bbf8e] group-hover:scale-105 group-hover:bg-[#6bbf8e]/25 transition-all duration-300">
+                                    <BookOpen size={24} strokeWidth={2} />
+                                </div>
+                                <h4 className="tool-name font-semibold text-[#ddeef5] font-serif italic">Diario</h4>
+                                <p className="tool-copy text-[rgba(200,225,235,0.38)] font-medium truncate w-full px-1">Reflexión diaria</p>
+                            </button>
+
+                            <button
+                                onClick={() => onNav('sc-games')}
+                                className="tool-card bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center text-center hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.98] transition-all group overflow-hidden relative shadow-lg"
+                            >
+                                <div className="tool-icon bg-orange-500/10 border border-orange-500/25 flex items-center justify-center text-orange-400 group-hover:scale-105 group-hover:bg-orange-500/25 transition-all duration-300">
+                                    <Gamepad2 size={24} strokeWidth={2} />
+                                </div>
+                                <h4 className="tool-name font-semibold text-[#ddeef5] font-serif italic">Juegos</h4>
+                                <p className="tool-copy text-[rgba(200,225,235,0.38)] font-medium truncate w-full px-1">Distracción sana</p>
+                            </button>
+
+                            <button
+                                onClick={() => onNav('sc-tools')}
+                                className="tool-card bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] flex flex-col items-center justify-center text-center hover:bg-[rgba(255,255,255,0.06)] active:scale-[0.98] transition-all group overflow-hidden relative shadow-lg"
+                            >
+                                <div className="tool-icon bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 group-hover:scale-105 group-hover:bg-purple-500/25 transition-all duration-300">
+                                    <GraduationCap size={24} strokeWidth={2} />
+                                </div>
+                                <h4 className="tool-name font-semibold text-[#ddeef5] font-serif italic">Módulos</h4>
+                                <p className="tool-copy text-[rgba(200,225,235,0.38)] font-medium truncate w-full px-1">Aprende y practica</p>
+                            </button>
                         </div>
                     </section>
 
