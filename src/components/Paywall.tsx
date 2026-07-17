@@ -35,6 +35,34 @@ function formatEuro(value: number) {
     }).format(value);
 }
 
+function formatCurrency(value: number, currencyCode = 'EUR') {
+    try {
+        return new Intl.NumberFormat(undefined, {
+            style: 'currency',
+            currency: currencyCode,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(value);
+    } catch {
+        return formatEuro(value);
+    }
+}
+
+function formatZeroPrice(currencyCode = 'EUR') {
+    if (currencyCode === 'USD') return '$0';
+    if (currencyCode === 'EUR') return '0 €';
+    try {
+        return new Intl.NumberFormat(undefined, {
+            style: 'currency',
+            currency: currencyCode,
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        }).format(0);
+    } catch {
+        return '0 €';
+    }
+}
+
 function formatStoreError(error: any, fallback: string) {
     const message = error?.message ? String(error.message) : '';
     if (/cancel/i.test(message) || error?.userCancelled) return 'Compra cancelada.';
@@ -66,6 +94,8 @@ export default function Paywall({ open, placement, plan, products, loading = fal
     const annualSavingsValue = Math.max(0, yearlyMonthlyCost - annualPriceValue);
     const annualSavingsPercent = yearlyMonthlyCost > 0 ? Math.max(0, Math.round((annualSavingsValue / yearlyMonthlyCost) * 100)) : 0;
     const selectedPrice = selected?.price || (selectedKind === 'annual' ? formatEuro(FALLBACK_ANNUAL_PRICE) : formatEuro(FALLBACK_MONTHLY_PRICE));
+    const currencyCode = selected?.storeProduct.currencyCode || monthly?.storeProduct.currencyCode || annual?.storeProduct.currencyCode || 'EUR';
+    const zeroPrice = formatZeroPrice(currencyCode);
     const selectedPeriod = selectedKind === 'annual' ? 'al año' : 'al mes';
     const selectedPlanName = selectedKind === 'annual' ? 'anual' : 'mensual';
     const planOptions: Array<{
@@ -91,7 +121,7 @@ export default function Paywall({ open, placement, plan, products, loading = fal
             price: annual?.price || formatEuro(FALLBACK_ANNUAL_PRICE),
             period: 'al año',
             badge: annualSavingsPercent ? `Ahorra ${annualSavingsPercent}%` : 'Mejor valor',
-            savings: annualSavingsValue ? `Ahorras ${formatEuro(annualSavingsValue)} al año` : undefined,
+            savings: annualSavingsValue ? `Ahorras ${formatCurrency(annualSavingsValue, annual?.storeProduct.currencyCode || currencyCode)} al año` : undefined,
         },
     ];
 
@@ -157,7 +187,7 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 .plan-trial{font-size:10px;color:rgba(155,231,198,.82);font-weight:750;line-height:1.25;margin:0 0 12px;}
                 .plan-saving{font-size:10px;line-height:1.35;color:#79d4ed;font-weight:800;margin-top:10px;}
                 .store-pill{display:flex;align-items:center;justify-content:center;gap:8px;width:max-content;max-width:100%;margin:0 auto 8px;padding:8px 13px;border:1px solid rgba(210,232,240,.18);border-radius:999px;color:rgba(210,232,240,.72);font-size:12px;font-weight:700;}
-                .purchase{width:100%;min-height:58px;border:0;border-radius:16px;background:#5aadcf;color:#031018;font:inherit;font-size:15px;font-weight:900;line-height:1.22;text-align:center;padding:10px 12px;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;}
+                .purchase{width:100%;min-height:58px;border:0;border-radius:16px;background:#5aadcf;color:#fff;font:inherit;font-size:15px;font-weight:900;line-height:1.22;text-align:center;padding:10px 12px;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;text-shadow:0 1px 2px rgba(0,0,0,.22);}
                 .purchase:disabled{opacity:.45;cursor:default;}
                 .terms{font-size:10px;line-height:1.5;color:rgba(210,232,240,.44);text-align:center;margin:8px auto 4px;max-width:420px;}
                 .text-action{width:100%;min-height:38px;border:0;background:transparent;color:#8ca8b5;font:inherit;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;margin:2px 0 8px;}
@@ -210,7 +240,7 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 </div>
                 <button className="purchase" onClick={purchase} disabled={busy !== null || loading}>
                     {busy === 'purchase' && <Loader2 className="animate-spin" size={19} />}
-                    {placement === 'recovery' ? `Continuar ahora por ${selectedPrice}` : `Continuar ahora por 0 euros, tendrás 7 días gratis y después ${selectedPrice} ${selectedPeriod}`}
+                    {placement === 'recovery' ? `Continuar ahora por ${selectedPrice}` : `Continuar ahora por ${zeroPrice}, tendrás 7 días gratis y después ${selectedPrice} ${selectedPeriod}`}
                 </button>
                 <p className="terms">{placement === 'recovery'
                     ? 'La oferta y su elegibilidad proceden de la tienda. Después del periodo mostrado, la suscripción se renueva al precio ordinario indicado.'

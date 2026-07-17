@@ -35,7 +35,7 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                     padding-bottom:14px;
                 }
                 .home-greeting{margin-top:0;margin-bottom:11px;}
-                .home-stack{gap:15px;}
+                .home-stack{gap:17px;}
                 .home-sos{border-radius:24px;}
                 .home-sos-inner{border-radius:23px;padding:9px 14px;}
                 .home-sos-icon{width:38px;height:38px;}
@@ -43,11 +43,11 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                 .home-sos-copy{font-size:12px;line-height:1.3;}
                 .home-section-title{font-size:20px;}
                 .home-section-head{margin-bottom:9px;}
-                .breath-card{border-radius:24px;padding:9px 13px;gap:6px;}
+                .breath-card{border-radius:24px;padding:12px 15px;gap:8px;}
                 .breath-bg{border-radius:24px;}
-                .breath-title{font-size:23px;line-height:1.04;}
+                .breath-title{font-size:26px;line-height:1.05;}
                 .tools-title{margin-bottom:7px;}
-                .tools-grid{gap:10px;}
+                .tools-grid{gap:12px;}
                 .tool-card{border-radius:22px;min-height:78px;padding:6px 8px 7px;}
                 .tool-icon{width:38px;height:38px;border-radius:13px;margin-bottom:4px;}
                 .tool-name{font-size:15px;line-height:1.1;}
@@ -62,14 +62,14 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                     }
                     .home-safe-header{padding-top:max(54px,calc(var(--safe-top,0px) + 12px));padding-bottom:11px;}
                     .home-greeting{margin-bottom:9px;}
-                    .home-stack{gap:13px;}
+                    .home-stack{gap:15px;}
                     .home-sos-inner{padding:8px 12px;}
                     .home-sos-icon{width:36px;height:36px;}
                     .home-sos-title{font-size:15.5px;}
                     .home-section-title{font-size:20px;}
-                    .breath-card{padding:8px 12px;gap:5px;}
-                    .breath-title{font-size:22px;}
-                    .tools-grid{gap:9px;}
+                    .breath-card{padding:11px 14px;gap:7px;}
+                    .breath-title{font-size:24px;}
+                    .tools-grid{gap:10px;}
                     .tool-card{min-height:74px;padding:5px 7px 6px;}
                     .tool-icon{width:36px;height:36px;margin-bottom:3px;}
                     .home-quote{padding:9px 15px;}
@@ -78,12 +78,12 @@ export default function HomeScreen({ onNav, userName = "" }: HomeScreenProps) {
                 @media(max-height:760px){
                     .home-safe-header{padding-top:max(50px,calc(var(--safe-top,0px) + 10px));padding-bottom:10px;}
                     .home-greeting{margin-bottom:8px;}
-                    .home-stack{gap:11px;}
+                    .home-stack{gap:12px;}
                     .home-sos-inner{padding:7px 11px;}
                     .home-sos-icon{width:34px;height:34px;}
                     .home-section-head{margin-bottom:6px;}
-                    .breath-card{padding:7px 11px;gap:4px;}
-                    .breath-title{font-size:21px;}
+                    .breath-card{padding:9px 12px;gap:6px;}
+                    .breath-title{font-size:23px;}
                     .tools-title{margin-bottom:6px;}
                     .tool-card{min-height:70px;padding:4px 6px 5px;}
                     .tool-icon{width:34px;height:34px;margin-bottom:3px;}
