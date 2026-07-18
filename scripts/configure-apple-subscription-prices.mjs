@@ -10,7 +10,7 @@ const START_DATE = process.env.APPLE_PRICE_START_DATE || new Intl.DateTimeFormat
   year: 'numeric',
   month: '2-digit',
   day: '2-digit',
-}).format(new Date());
+}).format(new Date(Date.now() + 24 * 60 * 60 * 1000));
 
 const TARGETS = [
   { productId: 'com.ansioff.premium.monthly', eur: 8.99, usd: 8.99 },
