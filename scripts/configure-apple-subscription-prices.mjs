@@ -225,7 +225,8 @@ for (const target of TARGETS) {
   ];
   const changes = explicitTargets.filter(([territory, , desiredPrice]) => (
     !(before[territory] || []).some(
-      (price) => Math.abs(Number(price.customerPrice) - desiredPrice) < 0.001,
+      (price) => Math.abs(Number(price.customerPrice) - desiredPrice) < 0.001
+        && (!price.startDate || price.startDate <= START_DATE),
     )
   ));
 
