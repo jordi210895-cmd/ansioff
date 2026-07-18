@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Trash2, Upload } from 'lucide-react';
+import { LockKeyhole, Trash2, Upload } from 'lucide-react';
 
 interface Track {
     id?: number;
@@ -15,11 +15,19 @@ interface AudioScreenProps {
     onAddTrack: (file: File) => void | Promise<void>;
     onDeleteTrack: (idx: number) => void;
     trackCount: number;
+    isPremium: boolean;
+    onUpgrade: () => void;
     onPracticeComplete?: () => void;
 }
 
-export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack, trackCount, onPracticeComplete }: AudioScreenProps) {
-    const [curIdx, setCurIdx] = useState(0);
+const isFreeTrack = (track?: Track) => track?.name.trim().toLowerCase() === 'sonido profundo';
+
+export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack, trackCount, isPremium, onUpgrade, onPracticeComplete }: AudioScreenProps) {
+    const [curIdx, setCurIdx] = useState(() => {
+        if (isPremium) return 0;
+        const freeIndex = tracks.findIndex(isFreeTrack);
+        return freeIndex >= 0 ? freeIndex : 0;
+    });
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const [curTime, setCurTime] = useState('0:00');
@@ -32,6 +40,12 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
     useEffect(() => {
         onPracticeCompleteRef.current = onPracticeComplete;
     }, [onPracticeComplete]);
+
+    useEffect(() => {
+        if (isPremium || isFreeTrack(currentTrack)) return;
+        const freeIndex = tracks.findIndex(isFreeTrack);
+        if (freeIndex >= 0) setCurIdx(freeIndex);
+    }, [currentTrack, isPremium, tracks]);
 
     // Initialize audio once on mount
     useEffect(() => {
@@ -96,6 +110,10 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
     }, [currentTrack]);
 
     const togglePlay = () => {
+        if (!isPremium && !isFreeTrack(currentTrack)) {
+            onUpgrade();
+            return;
+        }
         const audio = audioRef.current;
         if (!audio) return;
 
@@ -121,11 +139,19 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
 
     const nextTrack = () => {
         const nextIndex = (curIdx + 1) % tracks.length;
+        if (!isPremium && !isFreeTrack(tracks[nextIndex])) {
+            onUpgrade();
+            return;
+        }
         setCurIdx(nextIndex);
     };
 
     const prevTrack = () => {
         const previousIndex = (curIdx - 1 + tracks.length) % tracks.length;
+        if (!isPremium && !isFreeTrack(tracks[previousIndex])) {
+            onUpgrade();
+            return;
+        }
         setCurIdx(previousIndex);
     };
 
@@ -133,6 +159,10 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
         const file = event.target.files?.[0];
         event.target.value = '';
         if (!file) return;
+        if (!isPremium) {
+            onUpgrade();
+            return;
+        }
         await onAddTrack(file);
     };
 
@@ -225,6 +255,8 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
         .si-meta{font-size:10px;color:var(--text2);}
         .si-dur{font-size:10px;color:var(--text3);margin-left:auto;flex-shrink:0;padding-right:4px;}
         .si-btn{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--t);}
+        .si.locked{opacity:.72;}
+        .si-lock{margin-left:auto;color:var(--text2);display:flex;align-items:center;gap:6px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
         .si-delete{width:32px;height:32px;border-radius:50%;border:1px solid rgba(244,63,94,.18);background:rgba(244,63,94,.07);color:#f38c9d;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
         .personal-audio{padding:14px max(24px,calc(env(safe-area-inset-right,0px) + 20px)) 0 max(24px,calc(env(safe-area-inset-left,0px) + 20px));position:relative;z-index:5;}
         .upload-audio{width:100%;min-height:44px;border:1px solid rgba(90,173,207,.24);background:rgba(90,173,207,.07);border-radius:14px;color:#8dd3e8;display:flex;align-items:center;justify-content:center;gap:9px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;}
@@ -301,7 +333,11 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
 
             <div className="snd-list">
                 {tracks.map((t, i) => (
-                    <div key={i} className={`si ${curIdx === i ? 'on' : ''}`} onClick={() => {
+                    <div key={i} className={`si ${curIdx === i ? 'on' : ''} ${!isPremium && !isFreeTrack(t) ? 'locked' : ''}`} onClick={() => {
+                        if (!isPremium && !isFreeTrack(t)) {
+                            onUpgrade();
+                            return;
+                        }
                         setCurIdx(i);
                         // The track source will change via useEffect, and if it was already playing, it will continue.
                         // If it wasn't playing, we start it.
@@ -314,7 +350,11 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
                             <div className="si-name">{t.name}</div>
                             <div className="si-meta">Relajación · Guía</div>
                         </div>
-                        <div className="si-dur">{t.duration}</div>
+                        {!isPremium && !isFreeTrack(t) ? (
+                            <div className="si-lock"><LockKeyhole size={14} /> Premium</div>
+                        ) : (
+                            <div className="si-dur">{t.duration}</div>
+                        )}
                         <div className="si-btn">
                             {curIdx === i && isPlaying ? (
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--c2)"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>
@@ -333,9 +373,9 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
 
             <div className="personal-audio">
                 <input ref={fileInputRef} type="file" accept="audio/*" onChange={handleAudioFile} hidden />
-                <button className="upload-audio" onClick={() => fileInputRef.current?.click()}>
-                    <Upload size={16} />
-                    {`Añadir audio propio${trackCount > 3 ? ` · ${trackCount - 3}` : ''}`}
+                <button className="upload-audio" onClick={() => isPremium ? fileInputRef.current?.click() : onUpgrade()}>
+                    {isPremium ? <Upload size={16} /> : <LockKeyhole size={15} />}
+                    {isPremium ? `Añadir audio propio${trackCount > 3 ? ` · ${trackCount - 3}` : ''}` : 'Audio propio · Premium'}
                 </button>
             </div>
         </div>

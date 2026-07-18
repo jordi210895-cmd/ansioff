@@ -1,18 +1,22 @@
 'use client';
 
+import { LockKeyhole } from 'lucide-react';
+
 interface NavItemProps {
     id: string;
     activeScreen: string;
     onNav: (id: string) => void;
     label: string;
     children: React.ReactNode;
+    locked?: boolean;
 }
 
-const NavItem = ({ id, activeScreen, onNav, label, children }: NavItemProps) => {
+const NavItem = ({ id, activeScreen, onNav, label, children, locked = false }: NavItemProps) => {
     const active = activeScreen === id;
     return (
         <div className={`ni ${active ? 'active' : ''}`} onClick={() => onNav(id)}>
             {children}
+            {locked && <span className="nav-lock"><LockKeyhole size={9} /></span>}
             <div className="nl">{label}</div>
         </div>
     );
@@ -21,9 +25,10 @@ const NavItem = ({ id, activeScreen, onNav, label, children }: NavItemProps) => 
 interface BottomNavProps {
     activeScreen: string;
     onNav: (id: string) => void;
+    isPremium?: boolean;
 }
 
-export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
+export default function BottomNav({ activeScreen, onNav, isPremium = false }: BottomNavProps) {
     return (
         <nav className="bottom-nav">
             <NavItem id="home" activeScreen={activeScreen} onNav={onNav} label="Inicio">
@@ -35,14 +40,14 @@ export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
             <NavItem id="sounds" activeScreen={activeScreen} onNav={onNav} label="Sonidos">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill={activeScreen === 'sounds' ? 'rgba(14, 165, 233, 0.2)' : 'none'} stroke={activeScreen === 'sounds' ? 'var(--p)' : 'var(--text3)'} strokeWidth="2" strokeLinecap="round"><path d="M3 14h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H3v-6z" /><path d="M21 14h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2v-6z" /><path d="M5 14V9a7 7 0 0 1 14 0v5" /></svg>
             </NavItem>
-            <NavItem id="notes" activeScreen={activeScreen} onNav={onNav} label="Notas">
+            <NavItem id="notes" activeScreen={activeScreen} onNav={onNav} label="Notas" locked={!isPremium}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill={activeScreen === 'notes' ? 'rgba(14, 165, 233, 0.2)' : 'none'} stroke={activeScreen === 'notes' ? 'var(--p)' : 'var(--text3)'} strokeWidth="2" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /></svg>
             </NavItem>
             {/* Shortened for brevity, labels are important for UX */}
             <NavItem id="breath" activeScreen={activeScreen} onNav={onNav} label="Calma">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill={activeScreen === 'breath' ? 'rgba(14, 165, 233, 0.2)' : 'none'} stroke={activeScreen === 'breath' ? 'var(--p)' : 'var(--text3)'} strokeWidth="2" strokeLinecap="round"><path d="M12 6c0 0-2-2-5-1S3 9 3 12s1 5 4 6c1.5.5 3 .2 4-.5" /><path d="M12 6c0 0 2-2 5-1s4 4 4 7-1 5-4 6c-1.5.5-3 .2-4-.5" /><path d="M12 6v12" /></svg>
             </NavItem>
-            <NavItem id="progress" activeScreen={activeScreen} onNav={onNav} label="Estado">
+            <NavItem id="progress" activeScreen={activeScreen} onNav={onNav} label="Estado" locked={!isPremium}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill={activeScreen === 'progress' ? 'rgba(14, 165, 233, 0.2)' : 'none'} stroke={activeScreen === 'progress' ? 'var(--p)' : 'var(--text3)'} strokeWidth="2" strokeLinecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>
             </NavItem>
 
@@ -64,6 +69,7 @@ export default function BottomNav({ activeScreen, onNav }: BottomNavProps) {
           flex: 1;
           position:relative;
         }
+        :global(.nav-lock){position:absolute;top:2px;right:calc(50% - 18px);width:15px;height:15px;border-radius:50%;background:#0e1d2e;border:1px solid rgba(255,255,255,.12);color:#9bb8c8;display:flex;align-items:center;justify-content:center;}
         :global(.ni .nl){
             font-size:10px;
             color:var(--text3);

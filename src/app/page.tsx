@@ -37,7 +37,7 @@ import {
 } from '@/lib/onboarding';
 import {
   AccountTrialStatus, getAccountTrialStatus, markGeneralPaywallShown, markRecoveryPaywallShown,
-  recordFreeAction, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
+  PREMIUM_SCREEN_FEATURES, recordFreeAction, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
   startAccountTrial,
 } from '@/lib/access';
 import { registerNativeReviewResumeListener, requestNativeReviewIfDue } from '@/lib/appReview';
@@ -532,9 +532,14 @@ export default function App() {
     )) {
       setAccountTrial(currentTrial);
     }
+    const canUsePremiumFeature = hasPaidPremium || (isNativeApp && currentTrial.active);
     const expiredWithoutPremium = isNativeApp && currentTrial.expired && !hasPaidPremium;
     if (expiredWithoutPremium && id !== 'sc-settings') {
       setPaywallPlacement('trialExpired');
+      return;
+    }
+    if (isNativeApp && !canUsePremiumFeature && PREMIUM_SCREEN_FEATURES[id]) {
+      setPaywallPlacement('feature');
       return;
     }
     setPrevScreen(curScreen);
@@ -567,8 +572,7 @@ export default function App() {
   const handleOnboardingFinished = (answers: OnboardingAnswers, plan: PersonalizedPlan) => {
     setPersonalizedPlan(plan);
     setOnboardingDone(true);
-    setTrialAuthOffer(true);
-    setShowAuth(true);
+    setPaywallPlacement('onboarding');
   };
 
   const handlePurchase = async (product: PaywallProduct, useWinBackOffer: boolean) => {
@@ -671,7 +675,7 @@ export default function App() {
         );
       case 'sounds':
       case 'sc-audio':
-        return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} onPracticeComplete={handleFreeActionCompleted} />;
+        return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} isPremium={hasPremium} onUpgrade={() => setPaywallPlacement('feature')} onPracticeComplete={handleFreeActionCompleted} />;
       case 'notes':
       case 'sc-notes':
         return <NotesScreen onBack={goBack} />;
@@ -680,15 +684,15 @@ export default function App() {
         return <SOSScreen onBack={goBack} onFinished={() => { handleFreeActionCompleted(); handleNav('home'); }} />;
       case 'breath':
       case 'sc-breath':
-        return <BreathingScreen onBack={goBack} onPracticeComplete={handleFreeActionCompleted} initialPatternId="4-7-8" />;
+        return <BreathingScreen onBack={goBack} isPremium={hasPremium} onUpgrade={() => setPaywallPlacement('feature')} onPracticeComplete={handleFreeActionCompleted} initialPatternId="4-7-8" />;
       case 'sc-breath-426':
-        return <BreathingScreen onBack={goBack} onPracticeComplete={handleFreeActionCompleted} initialPatternId="4-2-6" />;
+        return <BreathingScreen onBack={goBack} isPremium={hasPremium} onUpgrade={() => setPaywallPlacement('feature')} onPracticeComplete={handleFreeActionCompleted} initialPatternId="4-2-6" />;
       case 'progress':
       case 'sc-stats':
         return <StatsScreen onBack={goBack} />;
       // Modules / Tools Hub
       case 'sc-tools':
-        return <ToolsScreen onBack={goBack} onNav={handleNav} />;
+        return <ToolsScreen onBack={goBack} onNav={handleNav} isPremium={hasPremium} />;
       case 'sc-games':
         return <GamesScreen onBack={goBack} />;
       case 'sc-act':
@@ -720,11 +724,12 @@ export default function App() {
     </div>
   );
 
+  if (!isNativeApp && !session) return <AuthScreen onAuth={handleAuth} />;
   if (showAuth) return (
     <AuthScreen
       onAuth={handleAuth}
       onTrialSignup={handleTrialSignup}
-      onCancel={isNativeApp && session ? () => {
+      onCancel={isNativeApp ? () => {
         setShowAuth(false);
         if (trialAuthOffer) {
           setTrialAuthOffer(false);
@@ -737,14 +742,13 @@ export default function App() {
       trialOffer={trialAuthOffer}
     />
   );
-  if (!session && (!isNativeApp || onboardingDone)) return (
+  if (isNativeApp && !onboardingDone) return <OnboardingFlow onFinished={handleOnboardingFinished} onLogin={() => setShowAuth(true)} />;
+  if (isNativeApp && !session && !paywallPlacement) return (
     <AuthScreen
       onAuth={handleAuth}
-      onTrialSignup={isNativeApp ? handleTrialSignup : undefined}
-      trialOffer={isNativeApp}
+      onTrialSignup={handleTrialSignup}
     />
   );
-  if (isNativeApp && !onboardingDone) return <OnboardingFlow onFinished={handleOnboardingFinished} onLogin={() => setShowAuth(true)} />;
 
   return (
     <div className="app-container">
@@ -760,7 +764,7 @@ export default function App() {
         <span>SOS</span>
       </button>
 
-      <BottomNav activeScreen={curScreen} onNav={handleNav} />
+      <BottomNav activeScreen={curScreen} onNav={handleNav} isPremium={hasPremium} />
       <InstallPWA />
       <Paywall
         open={paywallPlacement !== null}
