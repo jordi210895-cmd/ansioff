@@ -34,11 +34,21 @@ jobs:
           REVENUECAT_ANDROID_KEY: ${{ secrets.NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY }}
         run: test -n "$REVENUECAT_ANDROID_KEY"
 
+      - name: Validate Supabase configuration
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          test -n "$NEXT_PUBLIC_SUPABASE_URL"
+          test -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+          test "$NEXT_PUBLIC_SUPABASE_ANON_KEY" != "placeholder"
+          node -e "const url=process.env.NEXT_PUBLIC_SUPABASE_URL; if(!/^https:\/\/[^/]+\.supabase\.co$/.test(url)){throw new Error('Invalid NEXT_PUBLIC_SUPABASE_URL')}"
+
       - name: Build web app
         env:
           STATIC_EXPORT: 'true'
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://sthyhbxdwsnbewxmiyla.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL || 'https://ansioff.com' }}
           NEXT_PUBLIC_REVENUECAT_IOS_API_KEY: ${{ secrets.NEXT_PUBLIC_REVENUECAT_IOS_API_KEY }}
           NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY: ${{ secrets.NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY }}

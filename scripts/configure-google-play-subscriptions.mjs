@@ -14,6 +14,7 @@ const PRODUCTS = [
     descriptionEn: 'Monthly access to ANSIOFF Premium with a 7-day free trial.',
     billingPeriodDuration: 'P1M',
     eurPrice: '8.99',
+    usdPrice: '8.99',
   },
   {
     productId: 'com.ansioff.premium.annual',
@@ -24,6 +25,7 @@ const PRODUCTS = [
     descriptionEn: 'Annual access to ANSIOFF Premium with a 7-day free trial.',
     billingPeriodDuration: 'P1Y',
     eurPrice: '59.99',
+    usdPrice: '59.99',
   },
 ];
 
@@ -69,15 +71,18 @@ async function main() {
     }
   }
 
-  async function convertPrices(eurPrice) {
+  async function convertPrices(eurPrice, usdPrice) {
     const converted = await request('POST', '/pricing:convertRegionPrices', {
       price: money('EUR', eurPrice),
     });
-    const regionalConfigs = Object.entries(converted.convertedRegionPrices || {}).map(([regionCode, item]) => ({
-      regionCode,
-      newSubscriberAvailability: true,
-      price: item.price,
-    }));
+    const regionalConfigs = Object.entries(converted.convertedRegionPrices || {}).map(([regionCode, item]) => {
+      const price = regionCode === 'US' ? money('USD', usdPrice) : item.price;
+      return {
+        regionCode,
+        newSubscriberAvailability: true,
+        price,
+      };
+    });
     const regionCodes = regionalConfigs.map((item) => item.regionCode);
     const otherRegionsConfig = {
       ...(converted.convertedOtherRegionsPrice || {}),
@@ -101,7 +106,7 @@ async function main() {
   }
 
   async function upsertSubscription(product) {
-    const prices = await convertPrices(product.eurPrice);
+    const prices = await convertPrices(product.eurPrice, product.usdPrice);
     const subscription = {
       packageName: PACKAGE_NAME,
       productId: product.productId,
