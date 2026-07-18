@@ -1,13 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { LockKeyhole } from 'lucide-react';
 import { addBreathMins } from '@/utils/stats';
 
 interface BreathingScreenProps {
     onBack: () => void;
-    isPremium: boolean;
-    onUpgrade: () => void;
     onPracticeComplete?: () => void;
     initialPatternId?: string;
 }
@@ -22,16 +19,16 @@ const patterns = [
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
     },
     {
-        id: '4-7-8-calm', chip: '4·7·8', name: 'Pausa profunda', meta: '3 repeticiones · Premium', label: 'Guía', free: false, cycles: 3,
+        id: '4-7-8-calm', chip: '4·7·8', name: 'Pausa profunda', meta: '3 repeticiones · Calma', label: 'Guía', free: false, cycles: 3,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
     },
     {
-        id: '4-7-8-focus', chip: '4·7·8', name: 'Pausa para pensamientos repetitivos', meta: '3 repeticiones · Premium', label: 'Enfoque', free: false, cycles: 3,
+        id: '4-7-8-focus', chip: '4·7·8', name: 'Pausa para pensamientos repetitivos', meta: '3 repeticiones · Enfoque', label: 'Enfoque', free: false, cycles: 3,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
     },
 ];
 
-export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracticeComplete, initialPatternId = '4-7-8' }: BreathingScreenProps) {
+export default function BreathingScreen({ onBack, onPracticeComplete, initialPatternId = '4-7-8' }: BreathingScreenProps) {
     const initialPattern = patterns.find((item) => item.id === initialPatternId) || patterns[1];
     const [patternId, setPatternId] = useState(initialPattern.id);
     const [running, setRunning] = useState(false);
@@ -71,7 +68,7 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
             }, 1000);
         }
         return () => clearTimeout(timer);
-    }, [cycle, running, cnt, pi, phases, onPracticeComplete]);
+    }, [cycle, running, cnt, pi, phases, totalCycles, onPracticeComplete]);
 
     useEffect(() => {
         const completedMinutes = Math.floor(elapsedSeconds / 60);
@@ -88,10 +85,6 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
     const toggleBreath = () => setRunning(!running);
 
     const selectPattern = (nextPattern: typeof patterns[number]) => {
-        if (!isPremium && !nextPattern.free) {
-            onUpgrade();
-            return;
-        }
         setRunning(false);
         setPatternId(nextPattern.id);
         setPi(0);
@@ -148,7 +141,6 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
                 }
                 .rchip.on{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.35);}
                 .rchip:hover:not(.on){border-color:var(--border2);}
-                .rchip.locked{opacity:.62;}
                 .rcp-n{font-size:12px;font-weight:800;color:var(--c2);}
                 .rcp-l{font-size:9px;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;}
 
@@ -177,7 +169,6 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
                 .bex-meta{font-size:10px;color:var(--text2);}
                 .bex-nums{display:flex;gap:3px;margin-left:auto;}
                 .bex-n{width:18px;height:18px;border-radius:5px;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);font-size:9px;font-weight:800;color:var(--c2);display:flex;align-items:center;justify-content:center;}
-                .bex-lock{margin-left:auto;color:var(--text2);display:flex;align-items:center;gap:6px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
             `}</style>
 
             <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div><div className="aurora-3"></div></div>
@@ -197,9 +188,9 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
                 <div className="br-count">{cnt}</div>
                 <div className="rchips">
                     {patterns.map((item) => (
-                        <div key={item.id} className={`rchip ${patternId === item.id ? 'on' : ''} ${!isPremium && !item.free ? 'locked' : ''}`} onClick={() => selectPattern(item)}>
+                        <div key={item.id} className={`rchip ${patternId === item.id ? 'on' : ''}`} onClick={() => selectPattern(item)}>
                             <div className="rcp-n">{item.chip}</div>
-                            <div className="rcp-l">{!isPremium && !item.free ? 'Premium' : item.label}</div>
+                            <div className="rcp-l">{item.label}</div>
                         </div>
                     ))}
                 </div>
@@ -217,11 +208,7 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
                     <div key={item.id} className={`bex-row ${patternId === item.id ? 'on' : ''}`} onClick={() => selectPattern(item)}>
                         <div className="bex-orb" style={index === 1 ? { background: 'radial-gradient(circle at 36% 30%,rgba(167,243,208,.75),rgba(16,185,129,.5))' } : index === 2 ? { background: 'radial-gradient(circle at 36% 30%,rgba(196,181,253,.75),rgba(124,58,237,.5))' } : undefined}></div>
                         <div><div className="bex-name">{item.name}</div><div className="bex-meta">{item.meta}</div></div>
-                        {!isPremium && !item.free ? (
-                            <div className="bex-lock"><LockKeyhole size={14} /> Premium</div>
-                        ) : (
-                            <div className="bex-nums">{item.phases.map((phase, phaseIndex) => <div key={phaseIndex} className="bex-n">{phase.d}</div>)}</div>
-                        )}
+                        <div className="bex-nums">{item.phases.map((phase, phaseIndex) => <div key={phaseIndex} className="bex-n">{phase.d}</div>)}</div>
                     </div>
                 ))}
             </div>
