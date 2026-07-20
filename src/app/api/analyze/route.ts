@@ -1,6 +1,20 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+function parseModelJson(text: string) {
+    const cleanText = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+    try {
+        return JSON.parse(cleanText);
+    } catch {
+        const start = cleanText.indexOf('{');
+        const end = cleanText.lastIndexOf('}');
+        if (start >= 0 && end > start) {
+            return JSON.parse(cleanText.slice(start, end + 1));
+        }
+        throw new Error('La IA no devolvió una respuesta JSON válida.');
+    }
+}
+
 export async function POST(req: Request) {
     try {
         const apiKey = process.env.GEMINI_API_KEY;
@@ -50,16 +64,14 @@ DEBES responder ÚNICA y EXCLUSIVAMENTE con un objeto JSON válido que cumpla ex
         const response = await result.response;
         const text = response.text();
 
-        // Clean up markdown block if Gemini ignores instructions
-        const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        const jsonResponse = JSON.parse(cleanText);
+        const jsonResponse = parseModelJson(text);
 
         return NextResponse.json(jsonResponse);
 
     } catch (error: any) {
         console.error('Error in analyze API:', error);
         return NextResponse.json(
-            { error: error.message || 'Error al contactar con el motor de Inteligencia Artificial.' },
+            { error: error.message?.includes('JSON') ? 'La reflexión IA no devolvió una respuesta válida. Inténtalo de nuevo en unos minutos.' : error.message || 'Error al contactar con el motor de Inteligencia Artificial.' },
             { status: 500 }
         );
     }

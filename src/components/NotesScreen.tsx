@@ -5,6 +5,8 @@ import { BrainCircuit, Loader2, ShieldCheck, X } from 'lucide-react';
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
 
 const AI_CONSENT_KEY = 'ansioff_ai_reflection_consent_v1';
+const NOTES_STORAGE_KEY = 'ansioff_notes';
+const NATIVE_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://app-ansiedad-flame.vercel.app';
 
 interface Note {
     id: string;
@@ -14,6 +16,43 @@ interface Note {
 
 interface NotesScreenProps {
     onBack: () => void;
+}
+
+function normalizeNotes(value: unknown): Note[] {
+    if (!Array.isArray(value)) return [];
+    return value
+        .map((item): Note | null => {
+            if (!item || typeof item !== 'object') return null;
+            const note = item as Partial<Note> & { text?: string; date?: string };
+            const content = typeof note.content === 'string'
+                ? note.content
+                : typeof note.text === 'string'
+                    ? note.text
+                    : '';
+            if (!content.trim()) return null;
+            return {
+                id: typeof note.id === 'string' ? note.id : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+                content: content.trim(),
+                created_at: typeof note.created_at === 'string'
+                    ? note.created_at
+                    : typeof note.date === 'string'
+                        ? note.date
+                        : new Date().toISOString(),
+            };
+        })
+        .filter((note): note is Note => Boolean(note));
+}
+
+function parseJsonPayload(payload: unknown) {
+    if (payload && typeof payload === 'object') return payload;
+    if (typeof payload !== 'string') return null;
+    const trimmed = payload.trim();
+    if (!trimmed) return null;
+    try {
+        return JSON.parse(trimmed);
+    } catch {
+        return null;
+    }
 }
 
 export default function NotesScreen({ onBack }: NotesScreenProps) {
@@ -34,13 +73,24 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
     const fetchNotes = async () => {
         setLoading(true);
         try {
-            const saved = localStorage.getItem('ansioff_notes');
+            const saved = localStorage.getItem(NOTES_STORAGE_KEY);
             if (saved) {
                 const parsed = JSON.parse(saved);
-                setNotes(parsed);
+                const normalized = normalizeNotes(parsed);
+                setNotes(normalized);
+                if (normalized.length === 0 && saved.trim() !== '[]') {
+                    localStorage.setItem(`${NOTES_STORAGE_KEY}_invalid_${Date.now()}`, saved);
+                    localStorage.setItem(NOTES_STORAGE_KEY, '[]');
+                } else if (JSON.stringify(normalized) !== saved) {
+                    localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(normalized));
+                }
             }
         } catch (e) {
-            console.error(e);
+            console.warn('Notas locales corruptas. Se hace copia de seguridad y se reinicia el diario local.', e);
+            const saved = localStorage.getItem(NOTES_STORAGE_KEY);
+            if (saved) localStorage.setItem(`${NOTES_STORAGE_KEY}_invalid_${Date.now()}`, saved);
+            localStorage.setItem(NOTES_STORAGE_KEY, '[]');
+            setNotes([]);
         }
         setLoading(false);
     };
@@ -54,14 +104,14 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         };
         const updated = [newNote, ...notes];
         setNotes(updated);
-        localStorage.setItem('ansioff_notes', JSON.stringify(updated));
+        localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(updated));
         setText('');
     };
 
     const deleteNote = async (id: string) => {
         const updated = notes.filter(n => n.id !== id);
         setNotes(updated);
-        localStorage.setItem('ansioff_notes', JSON.stringify(updated));
+        localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(updated));
     };
 
     const requestNotesAnalysis = () => {
@@ -90,15 +140,17 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
             let data: any;
 
             if (Capacitor.isNativePlatform()) {
-                const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://ansioff.com';
                 const response = await CapacitorHttp.post({
-                    url: `${apiBaseUrl}/api/analyze`,
+                    url: `${NATIVE_API_BASE_URL}/api/analyze`,
                     headers: { 'Content-Type': 'application/json' },
                     data: { notes: recentNotes },
                 });
-                data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+                data = parseJsonPayload(response.data);
                 if (response.status < 200 || response.status >= 300) {
-                    throw new Error(data?.error || `Error del servidor (${response.status}).`);
+                    throw new Error((data as any)?.error || `No se pudo conectar con la reflexión IA (${response.status}).`);
+                }
+                if (!data || typeof data !== 'object') {
+                    throw new Error('La reflexión IA no devolvió una respuesta válida. Inténtalo de nuevo en unos minutos.');
                 }
             } else {
                 const response = await fetch('/api/analyze', {
@@ -117,7 +169,12 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
 
             setAiResult(data);
         } catch (err: any) {
-            setAiError(err.message || 'Error de conexión con la IA.');
+            const message = String(err?.message || '');
+            setAiError(
+                message.includes('Unexpected token') || message.includes('JSON')
+                    ? 'La reflexión IA no devolvió una respuesta válida. Inténtalo de nuevo en unos minutos.'
+                    : message || 'Error de conexión con la IA.'
+            );
         } finally {
             setIsAnalyzing(false);
         }
