@@ -2,6 +2,11 @@ name: Cancel Apple App Review
 
 on:
   workflow_dispatch:
+    inputs:
+      app_version:
+        description: 'App Store version to remove from review'
+        required: true
+        default: '1.1.1'
 
 jobs:
   cancel:
@@ -21,5 +26,5 @@ jobs:
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 || secrets.APP_STORE_CONNECT_API_KEY }}
           APP_STORE_BUNDLE_ID: com.ansioff.app.jordi
-          APP_STORE_VERSION: 1.1.0
+          APP_STORE_VERSION: ${{ inputs.app_version }}
         run: node scripts/cancel-apple-app-review.mjs
