@@ -5,7 +5,7 @@ const SCOPE = 'https://www.googleapis.com/auth/androidpublisher';
 const SOURCE_TRACK = process.env.GOOGLE_PLAY_SOURCE_TRACK || 'internal';
 const TARGET_TRACK = process.env.GOOGLE_PLAY_TARGET_TRACK || 'production';
 const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'completed';
-const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.1';
+const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.2';
 const RELEASE_NOTES = process.env.GOOGLE_PLAY_RELEASE_NOTES || [
   'Primera versión de ANSIOFF para Android.',
   'Incluye diario personal, sonidos, pausas guiadas, rutinas y progreso.',
