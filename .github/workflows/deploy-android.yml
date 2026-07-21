@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
 
       - name: Install dependencies
@@ -74,7 +74,7 @@ jobs:
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ansioff-android-1.1.1
+          name: ansioff-android-1.1.2
           path: android/app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload to Google Play internal testing
