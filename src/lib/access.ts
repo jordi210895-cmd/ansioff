@@ -20,6 +20,14 @@ export const PREMIUM_SCREEN_FEATURES: Record<string, PremiumFeature> = {
     'sc-stats': 'progress',
 };
 
+const COMPLIMENTARY_ACCOUNT_EMAILS = new Set([
+    'jordi210895@gmail.com',
+]);
+
+export function hasComplimentaryAccess(email?: string | null) {
+    return Boolean(email && COMPLIMENTARY_ACCOUNT_EMAILS.has(email.trim().toLowerCase()));
+}
+
 export const FREE_ACTIONS_KEY = 'ansioff_free_actions_v1';
 export const LAST_GENERAL_PAYWALL_KEY = 'ansioff_last_general_paywall_v1';
 export const GENERAL_PAYWALL_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000;

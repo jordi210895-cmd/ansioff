@@ -37,7 +37,7 @@ import {
 } from '@/lib/onboarding';
 import {
   AccountTrialStatus, getAccountTrialStatus, markGeneralPaywallShown, markRecoveryPaywallShown,
-  PREMIUM_SCREEN_FEATURES, recordFreeAction, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
+  hasComplimentaryAccess, PREMIUM_SCREEN_FEATURES, recordFreeAction, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
   startAccountTrial,
 } from '@/lib/access';
 import { registerNativeReviewResumeListener, requestNativeReviewIfDue } from '@/lib/appReview';
@@ -101,12 +101,13 @@ export default function App() {
 
   const isDemo = isDemoSession(session);
   const currentUserId = session?.user?.id as string | undefined;
-  const hasPaidPremium = Boolean(isDemo || subscription.isPremium || (!isNativeApp && profile?.is_premium));
+  const isComplimentaryAccount = hasComplimentaryAccess(session?.user?.email);
+  const hasPaidPremium = Boolean(isDemo || isComplimentaryAccount || subscription.isPremium || profile?.is_premium);
   const trialExpiredWithoutPremium = Boolean(isNativeApp && accountTrial.expired && !hasPaidPremium);
   const hasPremium = Boolean(hasPaidPremium || (isNativeApp && accountTrial.active));
 
   useEffect(() => {
-    if (hasPaidPremium && paywallPlacement === 'trialExpired') {
+    if (hasPaidPremium && paywallPlacement) {
       setPaywallPlacement(null);
     }
   }, [hasPaidPremium, paywallPlacement]);
@@ -332,7 +333,9 @@ export default function App() {
             setPaywallPlacement('recovery');
           }
         }
-        if (!nextSubscription?.isPremium) activateAccountTrial(session.user.id);
+        if (!nextSubscription?.isPremium && !hasComplimentaryAccess(session.user.email)) {
+          activateAccountTrial(session.user.id);
+        }
         completeOnboarding();
         setOnboardingDone(true);
       }
@@ -706,7 +709,7 @@ export default function App() {
       case 'sc-night':
         return <NightModeScreen onBack={goBack} onNav={handleNav} />;
       case 'sc-settings':
-        return <SettingsScreen onBack={goBack} profile={profile} onLogout={handleLogout} onDeleteAccount={session ? handleDeleteAccount : undefined} onLogin={() => setShowAuth(true)} isPremium={hasPremium} subscriptionStatus={subscription.status} managementURL={subscription.managementURL} onUpgrade={() => setPaywallPlacement('feature')} onRestore={handleRestore} />;
+        return <SettingsScreen onBack={goBack} profile={profile} onLogout={handleLogout} onDeleteAccount={session ? handleDeleteAccount : undefined} onLogin={() => setShowAuth(true)} isPremium={hasPremium} isComplimentary={isComplimentaryAccount} subscriptionStatus={subscription.status} managementURL={subscription.managementURL} onUpgrade={() => setPaywallPlacement('feature')} onRestore={handleRestore} />;
       case 'sc-exposure-why':
         return <ExposureScreen onBack={goBack} userId={currentUserId} />;
       default:

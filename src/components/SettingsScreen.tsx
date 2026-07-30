@@ -19,13 +19,14 @@ interface SettingsScreenProps {
     onDeleteAccount?: () => Promise<void>;
     onLogin?: () => void;
     isPremium: boolean;
+    isComplimentary?: boolean;
     subscriptionStatus: SubscriptionStatus;
     managementURL?: string | null;
     onUpgrade: () => void;
     onRestore: () => Promise<void>;
 }
 
-export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAccount, onLogin, isPremium, subscriptionStatus, managementURL, onUpgrade, onRestore }: SettingsScreenProps) {
+export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAccount, onLogin, isPremium, isComplimentary = false, subscriptionStatus, managementURL, onUpgrade, onRestore }: SettingsScreenProps) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [showAccountDeleteConfirm, setShowAccountDeleteConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -238,27 +239,29 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                     </button>
 
                     <button
-                        onClick={isPremium ? handleManageSubscription : onUpgrade}
+                        onClick={isComplimentary ? undefined : isPremium ? handleManageSubscription : onUpgrade}
                         className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center gap-4 border border-[rgba(255,255,255,0.07)] hover:border-[#5aadcf]/30 transition-colors text-left"
                     >
                         <div className="w-10 h-10 rounded-xl bg-[#c9a96e]/10 border border-[#c9a96e]/20 flex items-center justify-center text-[#c9a96e]">
                             <CreditCard size={20} className="stroke-[1.5]" />
                         </div>
                         <div className="flex-1">
-                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">{isPremium ? 'ANSIOFF Premium activo' : 'Plan gratuito'}</h3>
-                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.55)]">{subscriptionStatus === 'loading' ? 'Comprobando tus compras...' : isPremium ? 'Gestiona o cancela tu suscripción en la tienda.' : 'Desbloquea todas las herramientas y el seguimiento.'}</p>
+                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">{isComplimentary ? 'Cuenta gratuita permanente' : isPremium ? 'ANSIOFF Premium activo' : 'Plan gratuito'}</h3>
+                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.55)]">{isComplimentary ? 'Acceso completo sin cobros ni renovación.' : subscriptionStatus === 'loading' ? 'Comprobando tus compras...' : isPremium ? 'Gestiona o cancela tu suscripción en la tienda.' : 'Desbloquea todas las herramientas y el seguimiento.'}</p>
                         </div>
-                        {subscriptionStatus === 'loading' ? <Loader2 size={18} className="animate-spin text-[#5aadcf]" /> : <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)]" />}
+                        {!isComplimentary && (subscriptionStatus === 'loading' ? <Loader2 size={18} className="animate-spin text-[#5aadcf]" /> : <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)]" />)}
                     </button>
 
-                    <button
-                        onClick={handleRestoreSubscription}
-                        disabled={isRestoring}
-                        className="w-full py-3 px-4 rounded-xl border border-[rgba(255,255,255,0.07)] text-[12px] text-[rgba(200,225,235,0.75)] flex items-center justify-center gap-2 disabled:opacity-60"
-                    >
-                        {isRestoring ? <Loader2 size={15} className="animate-spin" /> : <RotateCcw size={15} />}
-                        Restaurar compras
-                    </button>
+                    {!isComplimentary && (
+                        <button
+                            onClick={handleRestoreSubscription}
+                            disabled={isRestoring}
+                            className="w-full py-3 px-4 rounded-xl border border-[rgba(255,255,255,0.07)] text-[12px] text-[rgba(200,225,235,0.75)] flex items-center justify-center gap-2 disabled:opacity-60"
+                        >
+                            {isRestoring ? <Loader2 size={15} className="animate-spin" /> : <RotateCcw size={15} />}
+                            Restaurar compras
+                        </button>
+                    )}
                 </div>
 
                 {/* --- CONTACTOS RÁPIDOS --- */}
