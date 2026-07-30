@@ -7,7 +7,6 @@ import {
     ChevronRight,
     Headphones,
     Hand,
-    Lightbulb,
     Minus,
     Plus,
     Trash2,
@@ -207,7 +206,7 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
                 .back-button{width:38px;height:38px;display:flex;align-items:center;justify-content:center;margin-top:2px;border-radius:13px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);cursor:pointer;}
                 .info-card,.form-card{margin:0 16px 14px;border-radius:18px;}
                 .info-card{display:flex;gap:12px;align-items:flex-start;padding:15px 16px;border:1px solid rgba(0,196,255,.22);background:rgba(0,196,255,.06);}
-                .info-icon{color:#00c4ff;flex:0 0 auto;margin-top:1px;}
+                .info-icon{display:block;flex:0 0 auto;margin-top:1px;font-size:18px;line-height:1.2;}
                 .info-copy{font-size:13px;line-height:1.5;color:rgba(255,255,255,.64);}
                 .info-copy strong{color:#00c4ff;font-weight:700;}
                 .form-card{padding:16px 18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.06);}
@@ -220,7 +219,7 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
                 .level-number{font-size:28px;font-weight:800;color:#00c4ff;line-height:1;}
                 input[type=range]{width:100%;accent-color:#00c4ff;cursor:pointer;}
                 .range-marks{display:flex;justify-content:space-between;margin:4px 0 16px;color:rgba(255,255,255,.27);font-size:10px;}
-                .add-button{width:100%;min-height:48px;border:0;border-radius:14px;background:#00c4ff;color:#07101e;font-size:15px;font-weight:800;cursor:pointer;}
+                .add-button{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;border:0;border-radius:14px;background:#00c4ff;color:#07101e;font-size:15px;font-weight:800;cursor:pointer;}
                 .add-button:disabled{opacity:.4;cursor:not-allowed;}
                 .section-label{display:block;padding:0 16px;margin:24px 0 10px;}
                 .empty-state{margin:0 16px;padding:34px 18px;border:1px dashed rgba(255,255,255,.1);border-radius:18px;text-align:center;color:rgba(255,255,255,.33);font-size:13px;line-height:1.5;}
@@ -289,7 +288,7 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
                 </header>
 
                 <section className="info-card">
-                    <Lightbulb className="info-icon" size={19} />
+                    <span className="info-icon" aria-hidden="true">💡</span>
                     <p className="info-copy">
                         Ordena tus situaciones de <strong>menor a mayor malestar</strong> (1–10).
                         Registra tu ansiedad antes y después de cada exposición y comprueba cómo disminuye con el tiempo.
