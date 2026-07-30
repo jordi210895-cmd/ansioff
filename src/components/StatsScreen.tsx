@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { getStats, getLevelForPoints, UserStats } from '../utils/stats';
+import { FileText } from 'lucide-react';
 
 interface StatsScreenProps {
     onBack: () => void;
+    onNav?: (screen: string) => void;
 }
 
-export default function StatsScreen({ onBack }: StatsScreenProps) {
+export default function StatsScreen({ onBack, onNav }: StatsScreenProps) {
     const [stats, setStats] = useState<UserStats | null>(null);
 
     useEffect(() => {
@@ -24,7 +26,7 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
     return (
         <div id="stats" className="screen active">
             <style jsx>{`
-                .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:96px;}
+                .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:120px;}
                 .screen::-webkit-scrollbar{display:none;}
 
                 #stats .aurora-1{background:radial-gradient(circle,rgba(245,158,11,0.4),transparent 70%);top:-80px;left:-60px;}
@@ -51,6 +53,38 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
                 .prog-base{height:8px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;position:relative;}
                 .prog-bar{height:100%;background:linear-gradient(90deg,var(--am),#fbbf24);border-radius:10px;}
                 .prog-meta{display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--text3);margin-top:8px;letter-spacing:.05em;}
+
+                .export-banner {
+                    margin: 0 22px 20px;
+                    background: linear-gradient(135deg, rgba(0, 196, 255, 0.15), rgba(75, 20, 140, 0.25));
+                    border: 1px solid rgba(0, 196, 255, 0.3);
+                    border-radius: 24px;
+                    padding: 18px 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    cursor: pointer;
+                    position: relative;
+                    z-index: 5;
+                    transition: transform 0.18s ease, border-color 0.18s ease;
+                }
+                .export-banner:active { transform: scale(0.98); }
+                .eb-title { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+                .eb-sub { font-size: 12px; color: rgba(255, 255, 255, 0.6); }
+                .eb-btn {
+                    background: #00c4ff;
+                    color: #07101e;
+                    border: none;
+                    border-radius: 12px;
+                    padding: 9px 14px;
+                    font-size: 12px;
+                    font-weight: 800;
+                    white-space: nowrap;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                }
 
                 .st-grid{padding:0 22px;display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative;z-index:5;}
                 .st-box{
@@ -85,6 +119,18 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
                     <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
                 </div>
             </div>
+
+            {onNav && (
+                <div className="export-banner" onClick={() => onNav('sc-export-pdf')}>
+                    <div>
+                        <div className="eb-title">Informe para tu psicólogo</div>
+                        <div className="eb-sub">Exporta tu progreso completo en PDF</div>
+                    </div>
+                    <button className="eb-btn" type="button">
+                        <FileText size={14} /> PDF
+                    </button>
+                </div>
+            )}
 
             <div className="lvl-card">
                 <div className="lvl-badge">NIVEL ACTUAL</div>

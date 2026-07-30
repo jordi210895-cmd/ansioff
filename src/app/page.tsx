@@ -20,6 +20,7 @@ import * as db from '@/lib/db';
 import { supabase, getUserProfile } from '@/lib/supabase';
 import ExposureScreen from '@/components/ExposureScreen';
 import AuthScreen from '@/components/AuthScreen';
+import ExportReportScreen from '@/components/ExportReportScreen';
 import InstallPWA from '@/components/InstallPWA';
 import OnboardingFlow from '@/components/OnboardingFlow';
 import Paywall, { PaywallPlacement } from '@/components/Paywall';
@@ -692,7 +693,10 @@ export default function App() {
         return <BreathingScreen onBack={goBack} isPremium={hasPremium} onUpgrade={() => setPaywallPlacement('feature')} onPracticeComplete={handleFreeActionCompleted} initialPatternId="4-2-6" />;
       case 'progress':
       case 'sc-stats':
-        return <StatsScreen onBack={goBack} />;
+        return <StatsScreen onBack={goBack} onNav={handleNav} />;
+      case 'sc-export-pdf':
+      case 'sc-report':
+        return <ExportReportScreen onBack={goBack} userId={currentUserId} isPremium={hasPremium} onUpgrade={() => setPaywallPlacement('feature')} />;
       // Modules / Tools Hub
       case 'sc-tools':
         return <ToolsScreen onBack={goBack} onNav={handleNav} isPremium={hasPremium} />;

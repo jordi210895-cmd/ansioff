@@ -32,8 +32,9 @@ const moduleCategories = [
         ]
     },
     {
-        title: 'Herramientas',
+        title: 'Informes y Seguimiento',
         tools: [
+            { id: 'sc-export-pdf', name: 'Informe PDF', sub: 'Exporta tu progreso para tu psicólogo', icon: <FileText />, color: '#00c4ff' },
             { id: 'sc-games', name: 'Juegos', sub: 'Atención y pausa', icon: <Gamepad2 />, color: 'var(--am)' },
             { id: 'sc-eval', name: 'Check-in', sub: 'Seguimiento personal', icon: <FileText />, color: 'var(--p3)' },
             { id: 'sc-night', name: 'Modo Noche', sub: 'Rutina nocturna', icon: <Moon />, color: 'var(--c3)' },
