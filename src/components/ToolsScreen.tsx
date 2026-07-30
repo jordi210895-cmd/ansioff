@@ -18,6 +18,7 @@ const moduleCategories = [
         title: 'Herramientas',
         tools: [
             { id: 'pause', name: 'Kit SOS', sub: 'Anclaje rápido 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
+            { id: 'sc-exposure-why', name: 'Exposición gradual', sub: 'Enfrenta tus miedos paso a paso', icon: <Target />, color: 'var(--r2)' },
             { id: 'sc-cbt', name: 'Pensamientos', sub: 'Registro y reflexión', icon: <Brain />, color: 'var(--p)' },
             { id: 'sc-act', name: 'Aceptación', sub: 'Ejercicios guiados', icon: <Heart />, color: 'var(--p2)' },
         ]
@@ -36,7 +37,6 @@ const moduleCategories = [
             { id: 'sc-games', name: 'Juegos', sub: 'Atención y pausa', icon: <Gamepad2 />, color: 'var(--am)' },
             { id: 'sc-eval', name: 'Check-in', sub: 'Seguimiento personal', icon: <FileText />, color: 'var(--p3)' },
             { id: 'sc-night', name: 'Modo Noche', sub: 'Rutina nocturna', icon: <Moon />, color: 'var(--c3)' },
-            { id: 'sc-exposure-why', name: 'Mis Motivos', sub: 'Objetivos personales', icon: <Target />, color: 'var(--r2)' },
         ]
     }
 ];

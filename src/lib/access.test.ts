@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     ACCOUNT_TRIAL_DURATION_MS, GENERAL_PAYWALL_INTERVAL_MS, getAccountTrialStatus,
+    hasComplimentaryAccess,
     markGeneralPaywallShown, markRecoveryPaywallShown,
     MAX_RECOVERY_IMPRESSIONS, PREMIUM_SCREEN_FEATURES, recordFreeAction,
     RECOVERY_INTERVAL_MS, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
@@ -29,6 +30,13 @@ describe('premium access and commercial cadence', () => {
         expect(PREMIUM_SCREEN_FEATURES.progress).toBe('progress');
         expect(PREMIUM_SCREEN_FEATURES.breath).toBeUndefined();
         expect(PREMIUM_SCREEN_FEATURES.sounds).toBeUndefined();
+    });
+
+    it('keeps the Jordi account complimentary regardless of email casing', () => {
+        expect(hasComplimentaryAccess('Jordi210895@gmail.com')).toBe(true);
+        expect(hasComplimentaryAccess('  jordi210895@GMAIL.COM  ')).toBe(true);
+        expect(hasComplimentaryAccess('otro@gmail.com')).toBe(false);
+        expect(hasComplimentaryAccess(null)).toBe(false);
     });
 
     it('shows a reminder after the third completed free action', () => {
