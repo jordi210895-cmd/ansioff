@@ -1,19 +1,19 @@
 PODS:
-  - Capacitor (6.2.1):
+  - Capacitor (7.6.8):
     - CapacitorCordova
-  - CapacitorApp (6.0.3):
+  - CapacitorApp (7.1.2):
     - Capacitor
-  - CapacitorCordova (6.2.1)
-  - CapacitorLocalNotifications (6.1.3):
+  - CapacitorCordova (7.6.8)
+  - CapacitorLocalNotifications (7.0.7):
     - Capacitor
-  - CapacitorPreferences (6.0.3):
+  - CapacitorPreferences (7.0.4):
     - Capacitor
-  - PurchasesHybridCommon (13.26.0):
-    - RevenueCat (= 5.20.0)
-  - RevenueCat (5.20.0)
-  - RevenuecatPurchasesCapacitor (9.2.2):
+  - PurchasesHybridCommon (16.2.0):
+    - RevenueCat (= 5.34.0)
+  - RevenueCat (5.34.0)
+  - RevenuecatPurchasesCapacitor (11.1.1):
     - Capacitor
-    - PurchasesHybridCommon (= 13.26.0)
+    - PurchasesHybridCommon (= 16.2.0)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -43,15 +43,15 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@revenuecat/purchases-capacitor"
 
 SPEC CHECKSUMS:
-  Capacitor: c95400d761e376be9da6be5a05f226c0e865cebf
-  CapacitorApp: a19ccb4f5f32d2534be5c6f524d5a9b614a1e8a7
-  CapacitorCordova: 8d93e14982f440181be7304aa9559ca631d77fff
-  CapacitorLocalNotifications: 801867e687c42dd2b33c1e22e08f48e6738d2f72
-  CapacitorPreferences: f3eadae2369ac3ab8e21743a2959145b0d1286a3
-  PurchasesHybridCommon: fa166fc8b385cf80f581f923c91d8ccffe5dd7f8
-  RevenueCat: e47ff90dfd271fde155a4befe48e8fc02e8281e4
-  RevenuecatPurchasesCapacitor: 6727a4dc1455bdf2374259420719ce5dfbe957fa
+  Capacitor: ff6bf01336ac353098378828aff465095a89e459
+  CapacitorApp: f01a913211780e0718dae9750442c3e23f96e106
+  CapacitorCordova: e61ee8c40101b8cd011d0224261606a290c082cf
+  CapacitorLocalNotifications: 71124afe526ac00585314bff34651bd023f86e37
+  CapacitorPreferences: 69d9991307507aeab8ef8019c10b9babfda0e9ca
+  PurchasesHybridCommon: 55e97b4e090015ed138988e6559def2bd4c50ebe
+  RevenueCat: eb2aa042789d9c99ad5172bd96e28b96286d6ada
+  RevenuecatPurchasesCapacitor: 420b762736c2842bfb64436b7e0b88d2f672c943
 
-PODFILE CHECKSUM: 90d4e86db05f99594553fe19d4cfe5e287192cc8
+PODFILE CHECKSUM: 36217e1233b6f6d7cd260844ea10e055030b931e
 
 COCOAPODS: 1.16.2

@@ -708,7 +708,7 @@ export default function App() {
       case 'sc-settings':
         return <SettingsScreen onBack={goBack} profile={profile} onLogout={handleLogout} onDeleteAccount={session ? handleDeleteAccount : undefined} onLogin={() => setShowAuth(true)} isPremium={hasPremium} subscriptionStatus={subscription.status} managementURL={subscription.managementURL} onUpgrade={() => setPaywallPlacement('feature')} onRestore={handleRestore} />;
       case 'sc-exposure-why':
-        return <ExposureScreen onBack={goBack} />;
+        return <ExposureScreen onBack={goBack} userId={currentUserId} />;
       default:
         return (
           <>

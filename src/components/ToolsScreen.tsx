@@ -36,7 +36,7 @@ const moduleCategories = [
             { id: 'sc-games', name: 'Juegos', sub: 'Atención y pausa', icon: <Gamepad2 />, color: 'var(--am)' },
             { id: 'sc-eval', name: 'Check-in', sub: 'Seguimiento personal', icon: <FileText />, color: 'var(--p3)' },
             { id: 'sc-night', name: 'Modo Noche', sub: 'Rutina nocturna', icon: <Moon />, color: 'var(--c3)' },
-            { id: 'sc-exposure-why', name: 'Mis Motivos', sub: 'Objetivos personales', icon: <Target />, color: 'var(--r2)' },
+            { id: 'sc-exposure-why', name: 'Exposición gradual', sub: 'Enfrenta tus miedos paso a paso', icon: <Target />, color: 'var(--r2)' },
         ]
     }
 ];
