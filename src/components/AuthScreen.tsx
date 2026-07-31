@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { supabase } from '@/lib/supabase';
-import { LogIn, UserPlus, Mail, Lock, Loader2, X, User } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, Loader2, X, User, Tag } from 'lucide-react';
 
 interface AuthScreenProps {
     onAuth: (session?: any, profile?: any) => void;
@@ -22,6 +22,7 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [promoCode, setPromoCode] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
@@ -78,10 +79,23 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
                 if (error) throw error;
                 onAuth();
             } else if (mode === 'signup') {
+                const formattedPromo = promoCode.trim().toUpperCase();
+                if (formattedPromo) {
+                    try {
+                        localStorage.setItem('ansioff_user_promo_code', formattedPromo);
+                    } catch { }
+                }
+
                 const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
-                    options: { data: { name: name.trim() } },
+                    options: {
+                        data: {
+                            name: name.trim(),
+                            promo_code: formattedPromo,
+                            referred_by: formattedPromo,
+                        },
+                    },
                 });
                 if (error) throw error;
                 if (data.session) {
@@ -421,6 +435,19 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
                                 required
                             />
                             <Lock size={19} className="auth-input-icon" />
+                        </div>
+                    )}
+
+                    {mode === 'signup' && (
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                placeholder="Código promocional / influencer (opcional)"
+                                value={promoCode}
+                                onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                                maxLength={20}
+                            />
+                            <Tag size={19} className="auth-input-icon" />
                         </div>
                     )}
 
