@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Download } from 'lucide-react';
 import { getStats, getLevelForPoints, UserStats } from '../utils/stats';
+import { exportClinicalDiaryPDF } from '../utils/exportUtils';
 
 interface StatsScreenProps {
     onBack: () => void;
@@ -82,7 +84,19 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
                         <div className="st-title">Progreso</div>
                         <div className="st-sub">Tu viaje hacia la calma interior</div>
                     </div>
-                    <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <button
+                            onClick={() => {
+                                const ok = exportClinicalDiaryPDF();
+                                if (ok) alert("¡Informe en PDF exportado correctamente!");
+                                else alert("No se pudo exportar el PDF.");
+                            }}
+                            style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', padding: '8px 12px', background: 'rgba(90, 173, 207, 0.15)', borderRadius: '12px', border: '1px solid rgba(90, 173, 207, 0.3)', color: '#5aadcf', fontSize: '12px', fontWeight: 600 }}
+                        >
+                            <Download size={14} /> PDF
+                        </button>
+                        <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px 12px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
+                    </div>
                 </div>
             </div>
 

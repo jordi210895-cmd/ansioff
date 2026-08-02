@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import HomeScreen from '@/components/HomeScreen';
 import AudioScreen from '@/components/AudioScreen';
@@ -33,6 +32,23 @@ interface Track {
 }
 
 const ICONS = ['🌊', '🌧️', '🌿', '🎵', '🔔', '🌬️', '🌙', '☀️', '🎶', '🦋'];
+const DEMO_SESSION_KEY = 'ansioff_demo_session';
+const DEMO_USER_ID = 'app-review-demo';
+const DEMO_EMAIL = 'smitsolutionshelp@gmail.com';
+const DEMO_PROFILE = {
+  id: DEMO_USER_ID,
+  name: 'Apple Review',
+  is_premium: true,
+};
+
+const createDemoSession = () => ({
+  user: {
+    id: DEMO_USER_ID,
+    email: DEMO_EMAIL,
+  },
+});
+
+const isDemoSession = (value: any) => value?.user?.id === DEMO_USER_ID;
 
 export default function App() {
   const [session, setSession] = useState<any>(null);
@@ -50,6 +66,13 @@ export default function App() {
 
   // Auth & Trial Logic
   useEffect(() => {
+    if (localStorage.getItem(DEMO_SESSION_KEY) === 'true') {
+      setSession(createDemoSession());
+      setProfile(DEMO_PROFILE);
+      setLoading(false);
+      return;
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session) fetchProfile(session.user.id);
@@ -69,8 +92,120 @@ export default function App() {
   }, []);
 
   const fetchProfile = async (uid: string) => {
-    const prof = await getUserProfile(uid);
+    let prof = await getUserProfile(uid);
+    if (!prof) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const fallbackName = user.user_metadata?.name || '';
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .insert({ id: uid, name: fallbackName, is_premium: false })
+            .select()
+            .single();
+          if (!error && data) {
+            prof = data;
+          } else {
+            prof = { id: uid, name: fallbackName, is_premium: false };
+          }
+        } catch {
+          prof = { id: uid, name: fallbackName, is_premium: false };
+        }
+      }
+    }
     setProfile(prof);
+    setLoading(false);
+  };
+
+  const handleAuth = async (authSession?: any, authProfile?: any) => {
+    setLoading(true);
+    if (authSession) {
+      localStorage.setItem(DEMO_SESSION_KEY, 'true');
+      setSession(authSession);
+      setProfile(authProfile || DEMO_PROFILE);
+      setLoading(false);
+      return;
+    }
+
+    const { data: { session } } = await supabase.auth.getSession();
+    setSession(session);
+    if (session) {
+      await fetchProfile(session.user.id);
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    localStorage.removeItem(DEMO_SESSION_KEY);
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.warn('Supabase sign-out skipped:', error);
+    }
+    setSession(null);
+    setProfile(null);
+    setCurScreen('home');
+    setPrevScreen('home');
+    setCbtCount(0);
+    setLoading(false);
+  };
+
+  const clearLocalAppData = async () => {
+    try {
+      const storedTracks = await db.getAllTracks();
+      for (const track of storedTracks) {
+        if (track.id) await db.deleteTrack(track.id);
+      }
+    } catch (error) {
+      console.warn('Local audio cleanup skipped:', error);
+    }
+
+    Object.keys(localStorage)
+      .filter((key) => key.startsWith('ansioff'))
+      .forEach((key) => localStorage.removeItem(key));
+  };
+
+  const handleDeleteAccount = async () => {
+    const currentSession = session;
+    setLoading(true);
+
+    if (currentSession && !isDemoSession(currentSession)) {
+      const userId = currentSession.user?.id;
+      const email = currentSession.user?.email;
+
+      if (userId) {
+        try {
+          await supabase.from('profiles').delete().eq('id', userId);
+        } catch (error) {
+          console.warn('Remote profile deletion skipped:', error);
+        }
+      }
+
+      try {
+        await supabase.from('account_deletion_requests').insert({
+          user_id: userId,
+          email,
+          requested_at: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.warn('Account deletion request could not be registered:', error);
+      }
+    }
+
+    await clearLocalAppData();
+
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.warn('Supabase sign-out skipped:', error);
+    }
+
+    setSession(null);
+    setProfile(null);
+    setCurScreen('home');
+    setPrevScreen('home');
+    setCbtCount(0);
     setLoading(false);
   };
 
@@ -134,6 +269,11 @@ export default function App() {
         }
       }, 5000);
       return () => clearTimeout(timer);
+    }
+
+    if (isDemoSession(session)) {
+      setCbtCount(Number(localStorage.getItem('ansioff_demo_cbt_count') || 0));
+      return;
     }
 
     // 4. CBT record count
@@ -207,7 +347,7 @@ export default function App() {
       case 'home':
         return (
           <>
-            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} />
+            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || session?.user?.user_metadata?.name?.split(' ')[0] || ""} />
           </>
         );
       case 'sounds':
@@ -243,13 +383,13 @@ export default function App() {
       case 'sc-night':
         return <NightModeScreen onBack={goBack} onNav={handleNav} />;
       case 'sc-settings':
-        return <SettingsScreen onBack={goBack} profile={profile} />;
+        return <SettingsScreen onBack={goBack} profile={profile} session={session} onLogout={handleLogout} onDeleteAccount={handleDeleteAccount} />;
       case 'sc-exposure-why':
         return <ExposureScreen onBack={goBack} />;
       default:
         return (
           <>
-            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || "Amigo"} />
+            <HomeScreen onNav={handleNav} cbtCount={cbtCount} trackCount={tracks.length} userName={profile?.name?.split(' ')[0] || session?.user?.user_metadata?.name?.split(' ')[0] || ""} />
           </>
         );
     }
@@ -260,6 +400,8 @@ export default function App() {
         <div className="w-8 h-8 border-4 border-[#5aadcf]/30 border-t-[#5aadcf] rounded-full animate-spin"></div>
     </div>
   );
+
+  if (!session) return <AuthScreen onAuth={handleAuth} />;
 
   return (
     <div className="app-container">
