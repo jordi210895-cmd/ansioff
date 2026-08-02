@@ -1,0 +1,30 @@
+name: Configure Apple Subscription Prices
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Set true to schedule the prices in App Store Connect'
+        required: true
+        default: 'false'
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Configure App Store subscription prices
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 || secrets.APP_STORE_CONNECT_API_KEY }}
+          APP_STORE_BUNDLE_ID: com.ansioff.app.jordi
+          APPLY_APPLE_SUBSCRIPTION_PRICES: ${{ inputs.apply }}
+        run: node scripts/configure-apple-subscription-prices.mjs

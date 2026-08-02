@@ -1,17 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { Share, Download, X, MoreVertical, Smartphone } from 'lucide-react';
 
 export default function InstallPWA() {
     const [show, setShow] = useState(false);
     const [platform, setPlatform] = useState<'ios' | 'android' | 'other' | null>(null);
     const [isStandalone, setIsStandalone] = useState(false);
+    const [isNativeApp, setIsNativeApp] = useState(false);
 
     useEffect(() => {
+        const nativeApp = Capacitor.isNativePlatform();
+        setIsNativeApp(nativeApp);
+        if (nativeApp) return;
+
         const checkStandalone = () => {
             const isS = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
             setIsStandalone(!!isS);
+            return !!isS;
         };
 
         const detectPlatform = () => {
@@ -21,26 +28,26 @@ export default function InstallPWA() {
             return 'other';
         };
 
-        checkStandalone();
+        const standalone = checkStandalone();
         setPlatform(detectPlatform());
 
         // Show banner after 3 seconds if not standalone
         const timer = setTimeout(() => {
-            if (!isStandalone) {
+            if (!standalone) {
                 const hasClosed = localStorage.getItem('pwa_install_closed');
                 if (!hasClosed) setShow(true);
             }
         }, 3000);
 
         return () => clearTimeout(timer);
-    }, [isStandalone]);
+    }, []);
 
     const handleClose = () => {
         setShow(false);
         localStorage.setItem('pwa_install_closed', 'true');
     };
 
-    if (!show || isStandalone) return null;
+    if (!show || isStandalone || isNativeApp) return null;
 
     return (
         <div className="fixed bottom-24 left-4 right-4 z-[100] animate-in fade-in slide-in-from-bottom-4 duration-500">

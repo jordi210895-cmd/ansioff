@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -10,10 +10,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "ANSIOFF - Tu calma en el bolsillo",
-  description: "Guía inmediata y herramientas para crisis de pánico y ansiedad generalizada.",
-  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
-  themeColor: "#040208",
+  title: "ANSIOFF - Diario y pausas",
+  description: "Diario personal, sonidos y rutinas para ordenar ideas y crear pausas.",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -35,6 +33,16 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#040208",
+};
+
+const oneSignalAppId = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
+const oneSignalSafariWebId = process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -46,24 +54,28 @@ export default function RootLayout({
         className={`${plusJakartaSans.variable} antialiased font-[family-name:var(--font-plus-jakarta)] bg-[#040208] text-white`}
       >
         {children}
-        <Script
-          src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
-          strategy="afterInteractive"
-        />
-        <Script id="onesignal-init" strategy="afterInteractive">
-          {`
-            window.OneSignalDeferred = window.OneSignalDeferred || [];
-            OneSignalDeferred.push(async function(OneSignal) {
-              await OneSignal.init({
-                appId: "SU_APP_ID_AQUI",
-                safari_web_id: "web.onesignal.auto.SU_SAFARI_ID",
-                notifyButton: {
-                  enable: false,
-                },
-              });
-            });
-          `}
-        </Script>
+        {oneSignalAppId && (
+          <>
+            <Script
+              src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+              strategy="afterInteractive"
+            />
+            <Script id="onesignal-init" strategy="afterInteractive">
+              {`
+                window.OneSignalDeferred = window.OneSignalDeferred || [];
+                OneSignalDeferred.push(async function(OneSignal) {
+                  await OneSignal.init({
+                    appId: ${JSON.stringify(oneSignalAppId)},
+                    safari_web_id: ${JSON.stringify(oneSignalSafariWebId || undefined)},
+                    notifyButton: {
+                      enable: false,
+                    },
+                  });
+                });
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

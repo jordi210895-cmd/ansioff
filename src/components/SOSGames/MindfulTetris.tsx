@@ -39,8 +39,8 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
     // Dynamically calculate optimal cell size to fit the board on screen
     useEffect(() => {
         const calcSize = () => {
-            // Available height = total viewport minus top bar (~80px) and controls (~200px)
-            const availableH = window.innerHeight - 280;
+            // Leave room for the controls and the device safe areas.
+            const availableH = window.innerHeight - 320;
             // Available width = viewport minus some padding
             const availableW = window.innerWidth - 48;
             const byHeight = Math.floor(availableH / ROWS);
@@ -61,7 +61,7 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
 
     const spawnPiece = useCallback(() => {
         let currentPiece = nextPiece;
-        let futurePiece = getRandomPiece();
+        const futurePiece = getRandomPiece();
 
         if (!currentPiece) {
             currentPiece = getRandomPiece();
@@ -352,7 +352,10 @@ export default function MindfulTetris({ onBack }: MindfulTetrisProps) {
             </div>
 
             {/* Controls */}
-            <div className="w-full max-w-[320px] p-6 flex-shrink-0 select-none pb-12 mt-4">
+            <div
+                className="w-full max-w-[320px] p-6 pt-2 flex-shrink-0 select-none mt-1"
+                style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}
+            >
                 <div className="grid grid-cols-3 gap-3">
                     <div />
                     <button

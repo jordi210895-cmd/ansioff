@@ -19,6 +19,9 @@ interface CBTRecord {
     created_at: string;
 }
 
+const LOCAL_CBT_KEY = 'ansioff_local_cbt_records';
+const DEMO_CBT_COUNT_KEY = 'ansioff_demo_cbt_count';
+
 const DISTORTIONS = [
     { t: 'Catastrofismo', d: 'Imaginar el peor escenario posible' },
     { t: 'Clarividencia', d: 'Creer que sabes el futuro' },
@@ -27,7 +30,20 @@ const DISTORTIONS = [
 ];
 
 function generateAlternative(thought: string, evidence: string, distortion: string): string {
-    return `He identificado que este pensamiento ("${thought.slice(0, 60)}${thought.length > 60 ? '...' : ''}") cae en un patrón de ${distortion}. Sin embargo, la evidencia me dice: ${evidence.slice(0, 100)}${evidence.length > 100 ? '...' : ''}. Esta sensación es real pero no refleja la realidad objetiva. Puedo manejarlo.`;
+    return `Estoy observando este pensamiento ("${thought.slice(0, 60)}${thought.length > 60 ? '...' : ''}") como un posible patrón de ${distortion}. La evidencia que he escrito es: ${evidence.slice(0, 100)}${evidence.length > 100 ? '...' : ''}. Puedo tomarme un momento, respirar y pedir apoyo si lo necesito.`;
+}
+
+function readLocalRecords(): CBTRecord[] {
+    try {
+        return JSON.parse(localStorage.getItem(LOCAL_CBT_KEY) || '[]');
+    } catch {
+        return [];
+    }
+}
+
+function writeLocalRecords(records: CBTRecord[]) {
+    localStorage.setItem(LOCAL_CBT_KEY, JSON.stringify(records));
+    localStorage.setItem(DEMO_CBT_COUNT_KEY, String(records.length));
 }
 
 export default function CBTScreen({ onBack }: CBTScreenProps) {
@@ -44,13 +60,19 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
 
     const loadHistory = async () => {
         setLoadingHistory(true);
-        const { data, error } = await supabase
-            .from('cbt_records')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(20);
-        if (!error && data) setRecords(data);
-        setLoadingHistory(false);
+        try {
+            const { data, error } = await supabase
+                .from('cbt_records')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(20);
+            if (error) throw error;
+            setRecords(data || []);
+        } catch {
+            setRecords(readLocalRecords());
+        } finally {
+            setLoadingHistory(false);
+        }
     };
 
     useEffect(() => {
@@ -69,14 +91,30 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
         setAlternative(alt);
         setSaving(true);
 
-        const { data: { user } } = await supabase.auth.getUser();
-        await supabase.from('cbt_records').insert({
+        const localRecord: CBTRecord = {
+            id: Date.now(),
             thought,
             distortion,
             evidence,
             alternative: alt,
-            user_id: user?.id,
-        });
+            created_at: new Date().toISOString(),
+        };
+
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            const { error } = await supabase.from('cbt_records').insert({
+                thought,
+                distortion,
+                evidence,
+                alternative: alt,
+                user_id: user?.id,
+            });
+            if (error) throw error;
+        } catch {
+            const nextRecords = [localRecord, ...readLocalRecords()].slice(0, 20);
+            writeLocalRecords(nextRecords);
+            setRecords(nextRecords);
+        }
 
         setSaving(false);
         addCbtEntry(); // Gamification tracking
@@ -85,8 +123,17 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
     };
 
     const handleDelete = async (id: number) => {
-        await supabase.from('cbt_records').delete().eq('id', id);
-        setRecords(prev => prev.filter(r => r.id !== id));
+        try {
+            await supabase.from('cbt_records').delete().eq('id', id);
+        } catch {
+            // Local fallback is used when Supabase credentials are unavailable.
+        }
+
+        setRecords(prev => {
+            const nextRecords = prev.filter(r => r.id !== id);
+            writeLocalRecords(nextRecords);
+            return nextRecords;
+        });
     };
 
     const reset = () => {
@@ -106,7 +153,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
 
     return (
         <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
-            <TopBar title="Técnicas TCC" onBack={onBack} />
+            <TopBar title="Pensamientos" onBack={onBack} />
 
             {/* Tab Toggle */}
             <div className="flex px-5 gap-2 mt-4 mb-2">
@@ -135,7 +182,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                                 <h2 className="text-3xl font-light mb-4 pl-1 font-serif italic text-[#ddeef5]">¿Qué estás pensando ahora?</h2>
                                 <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] mb-8 leading-relaxed px-1">
-                                    Escribe ese pensamiento negativo que te está generando ansiedad. Intenta ser muy concreto.
+                                    Escribe un pensamiento que se esté repitiendo. Intenta ser concreto y úsalo solo como ejercicio personal de reflexión.
                                 </p>
                                 <textarea
                                     className="w-full bg-[#0e1d2e]/50 backdrop-blur-sm border border-[rgba(255,255,255,0.07)] focus:border-[#5aadcf]/50 rounded-[24px] p-6 text-[#ddeef5] font-sans text-[15px] min-h-[160px] outline-none transition-colors placeholder:text-[rgba(200,225,235,0.2)] shadow-inner leading-relaxed"
@@ -148,7 +195,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                                     className="w-full bg-[#5aadcf] hover:bg-[#89cee4] text-[#03080f] font-sans font-semibold text-xs tracking-wider rounded-full py-4 flex items-center justify-center gap-2 mt-8 transition-colors disabled:opacity-30 disabled:pointer-events-none shadow-lg"
                                     onClick={next}
                                 >
-                                    <span>Identificar distorsión</span>
+                                    <span>Explorar patrón</span>
                                     <ArrowRight size={16} />
                                 </button>
                             </div>
@@ -162,7 +209,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                                     <p className="font-sans text-[rgba(200,225,235,0.8)] text-[15px] italic leading-relaxed">&quot;{thought}&quot;</p>
                                 </div>
                                 <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] mb-6 leading-relaxed px-1">
-                                    ¿Qué error de razonamiento detectas en este pensamiento?
+                                    ¿Qué patrón se parece más a este pensamiento?
                                 </p>
                                 <div className="grid grid-cols-1 gap-3">
                                     {DISTORTIONS.map((d) => (
@@ -183,11 +230,11 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                                 <h2 className="text-3xl font-light mb-4 pl-1 font-serif italic text-[#ddeef5]">Evidencia en contra</h2>
                                 <div className="bg-[#5aadcf]/10 border border-[#5aadcf]/20 p-5 rounded-2xl mb-6 flex gap-2 items-center">
-                                    <span className="font-sans font-medium text-xs text-[#5aadcf]">Distorsión detectada:</span>
+                                    <span className="font-sans font-medium text-xs text-[#5aadcf]">Patrón elegido:</span>
                                     <span className="font-sans font-medium text-[11px] text-[#03080f] bg-[#5aadcf] px-2.5 py-1 rounded-full">{distortion}</span>
                                 </div>
                                 <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] mb-8 leading-relaxed px-1">
-                                    ¿Cuántas veces has pensado eso y cuántas se ha cumplido de verdad? Busca pruebas reales de que NO va a pasar.
+                                    ¿Qué datos o experiencias podrían ayudarte a mirar este pensamiento con más distancia?
                                 </p>
                                 <textarea
                                     className="w-full bg-[#0e1d2e]/50 backdrop-blur-sm border border-[rgba(255,255,255,0.07)] focus:border-[#5aadcf]/50 rounded-[24px] p-6 text-[#ddeef5] font-sans text-[15px] min-h-[160px] outline-none transition-colors placeholder:text-[rgba(200,225,235,0.2)] shadow-inner leading-relaxed"
@@ -200,7 +247,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                                     className="w-full bg-[#5aadcf] hover:bg-[#89cee4] text-[#03080f] font-sans font-semibold text-xs tracking-wider rounded-full py-4 flex items-center justify-center gap-2 mt-8 transition-colors disabled:opacity-30 disabled:pointer-events-none shadow-lg"
                                     onClick={handleFinish}
                                 >
-                                    <span>{saving ? 'Guardando...' : 'Crear pensamiento sano'}</span>
+                                    <span>{saving ? 'Guardando...' : 'Crear alternativa amable'}</span>
                                     <ArrowRight size={16} />
                                 </button>
                             </div>
@@ -210,7 +257,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                                 <div className="bg-[#6bbf8e]/10 border border-[#6bbf8e]/20 p-8 rounded-3xl mb-8 relative overflow-hidden text-center">
                                     <CheckCircle2 className="text-[#6bbf8e] mx-auto mb-6" size={32} />
-                                    <h2 className="text-3xl font-light mb-6 text-[#ddeef5] font-serif italic">Pensamiento Sano</h2>
+                                    <h2 className="text-3xl font-light mb-6 text-[#ddeef5] font-serif italic">Alternativa amable</h2>
                                     <p className="font-sans font-light text-[15px] text-[rgba(200,225,235,0.8)] leading-relaxed italic mb-8 px-2">
                                         &quot;{alternative}&quot;
                                     </p>
@@ -247,7 +294,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                             <div className="text-center py-16 animate-in fade-in slide-in-from-bottom-2 duration-300">
                                 <Brain className="mx-auto text-[rgba(200,225,235,0.2)] mb-6" size={48} />
                                 <p className="font-sans font-light text-[15px] text-[#ddeef5] mb-2">Aún no hay registros.</p>
-                                <p className="font-sans font-light text-[13px] text-[rgba(200,225,235,0.38)]">Completa tu primer ejercicio TCC.</p>
+                                <p className="font-sans font-light text-[13px] text-[rgba(200,225,235,0.38)]">Completa tu primer ejercicio de reflexión.</p>
                             </div>
                         ) : (
                             <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -284,7 +331,7 @@ export default function CBTScreen({ onBack }: CBTScreenProps) {
                                                     <p className="font-sans font-light text-[14px] text-[rgba(200,225,235,0.8)] leading-relaxed">{r.evidence}</p>
                                                 </div>
                                                 <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-2xl border border-[rgba(255,255,255,0.05)]">
-                                                    <div className="font-sans font-bold text-[9px] text-[#6bbf8e]/80 uppercase tracking-widest mb-1.5">Pensamiento alternativo</div>
+                                                    <div className="font-sans font-bold text-[9px] text-[#6bbf8e]/80 uppercase tracking-widest mb-1.5">Alternativa amable</div>
                                                     <p className="font-sans font-light text-[14px] text-[#ddeef5] italic leading-relaxed">"{r.alternative}"</p>
                                                 </div>
                                                 <button

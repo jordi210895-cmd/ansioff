@@ -1,13 +1,11 @@
 name: Deploy iOS
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   deploy:
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,24 +17,39 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Validate Supabase configuration
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: node scripts/validate-supabase-config.mjs
 
       - name: Build Web App
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://sthyhbxdwsnbewxmiyla.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || 'sk_live_placeholder' }}
-          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET || 'whsec_placeholder' }}
+          STATIC_EXPORT: 'true'
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL || 'https://app-ansiedad-flame.vercel.app' }}
+          NEXT_PUBLIC_REVENUECAT_IOS_API_KEY: ${{ secrets.NEXT_PUBLIC_REVENUECAT_IOS_API_KEY }}
+          NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY: ${{ secrets.NEXT_PUBLIC_REVENUECAT_ANDROID_API_KEY }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || 'stripe_secret_placeholder' }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET || 'webhook_secret_placeholder' }}
           STRIPE_PRICE_ID: ${{ secrets.STRIPE_PRICE_ID || 'price_1TFF4PLwRc1rwaq7enc3lw54' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'placeholder' }}
           CI: false
         run: npm run build
 
-      - name: Install Cocoapods
-        run: cd ios/App && pod install
-
       - name: Sync Capacitor
         run: npx cap sync ios
+
+      - name: Install App Store Connect API Key
+        env:
+          API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 || secrets.APP_STORE_CONNECT_API_KEY }}
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo "$API_KEY_BASE64" | base64 --decode > ~/.appstoreconnect/private_keys/AuthKey_${API_KEY_ID}.p8
 
       - name: Import Code Signing Certificates
         run: |
@@ -46,6 +59,7 @@ jobs:
           security list-keychains -d user -s build.keychain login.keychain
           security set-keychain-settings -lut 21600 build.keychain
           security unlock-keychain -p "" build.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
 
       - name: Download Provisioning Profile
         run: |
@@ -53,19 +67,29 @@ jobs:
           echo "${{ secrets.PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
 
       - name: Build and Upload to App Store Connect
+        env:
+          API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
         run: |
+          API_KEY_PATH="$HOME/.appstoreconnect/private_keys/AuthKey_${API_KEY_ID}.p8"
           xcodebuild archive \
             -workspace ios/App/App.xcworkspace \
             -scheme App \
             -configuration Release \
             -archivePath ios/App/App.xcarchive \
-            -allowProvisioningUpdates
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$API_KEY_PATH" \
+            -authenticationKeyID "$API_KEY_ID" \
+            -authenticationKeyIssuerID "$API_ISSUER_ID"
           
           xcodebuild -exportArchive \
             -archivePath ios/App/App.xcarchive \
-            -exportOptionsPlist ios/App/exportOptions.plist \
+            -exportOptionsPlist .github/workflows/ios/App/exportOptions.plist \
             -exportPath ios/App/output \
-            -allowProvisioningUpdates
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$API_KEY_PATH" \
+            -authenticationKeyID "$API_KEY_ID" \
+            -authenticationKeyIssuerID "$API_ISSUER_ID"
 
       - name: Upload to TestFlight
         env:
@@ -77,4 +101,3 @@ jobs:
             --file ios/App/output/App.ipa \
             --apiKey "$API_KEY_ID" \
             --apiIssuer "$API_ISSUER_ID"
-

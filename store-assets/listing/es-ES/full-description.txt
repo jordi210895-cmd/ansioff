@@ -1,0 +1,38 @@
+Ansioff es una app de diario personal, pausas guiadas y rutinas sencillas para ordenar tus ideas durante el día.
+
+Reúne herramientas breves para escribir, escuchar sonidos, crear hábitos y volver a una tarea cuando necesitas un momento de pausa.
+
+Qué puedes hacer con Ansioff:
+
+Pausas guiadas
+Sigue pasos sencillos como 5-4-3-2-1 para observar tu entorno, centrar la atención y avanzar a tu ritmo.
+
+Ritmos guiados
+Practica ritmos visuales breves como 4-2-6 y 4-7-8. Úsalos como pausas personales de concentración para volver a tu tarea.
+
+Sonidos para volver a ti
+Escucha audios y paisajes sonoros para acompañar tus rutinas de foco, escritura o descanso.
+
+Diario personal
+Escribe pensamientos, ideas y notas privadas. Usa el diario para liberar carga mental y observar temas que se repiten.
+
+Reflexión con IA
+La IA de reflexión puede resumir tus notas recientes y ayudarte a encontrar patrones de escritura. Tú decides cuándo usarla.
+
+Progreso y constancia
+Consulta minutos de práctica, registros completados, audios escuchados y rachas. Ansioff premia la constancia sin penalizar los descansos.
+
+Ansioff puede ayudarte si buscas:
+
+Una app de diario y reflexión.
+Rutinas breves para crear pausas.
+Sonidos para concentrarte o desconectar.
+Un espacio privado para escribir.
+Seguimiento de hábitos personales.
+Herramientas para organizar tu día.
+
+Ansioff es una herramienta de organización personal e informativa para crear pausas, escribir y seguir hábitos cotidianos.
+
+Privacidad: https://app-ansiedad-flame.vercel.app/privacy
+Términos de uso (EULA): https://app-ansiedad-flame.vercel.app/terms
+Soporte: https://app-ansiedad-flame.vercel.app/support

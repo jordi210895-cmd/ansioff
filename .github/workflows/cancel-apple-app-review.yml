@@ -1,0 +1,30 @@
+name: Cancel Apple App Review
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_version:
+        description: 'App Store version to remove from review'
+        required: true
+        default: '1.1.1'
+
+jobs:
+  cancel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cancel iOS version review
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 || secrets.APP_STORE_CONNECT_API_KEY }}
+          APP_STORE_BUNDLE_ID: com.ansioff.app.jordi
+          APP_STORE_VERSION: ${{ inputs.app_version }}
+        run: node scripts/cancel-apple-app-review.mjs

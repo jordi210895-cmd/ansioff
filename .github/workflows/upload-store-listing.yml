@@ -1,0 +1,92 @@
+name: Upload Store Listing
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Store listing target'
+        required: true
+        default: 'google-play'
+        type: choice
+        options:
+          - google-play
+          - app-store
+          - all
+      app_store_version:
+        description: 'App Store version to update'
+        required: true
+        default: '1.1.1'
+      submit_app_store_review:
+        description: 'Submit the App Store version for review after uploading metadata/screenshots'
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  google-play:
+    if: ${{ inputs.target == 'google-play' || inputs.target == 'all' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm install googleapis@latest --no-save
+
+      - name: Upload Google Play listing
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: node scripts/upload-google-play-store-listing.mjs
+
+  app-store:
+    if: ${{ inputs.target == 'app-store' || inputs.target == 'all' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Install fastlane
+        run: gem install fastlane -NV
+
+      - name: Create App Store Connect API key
+        env:
+          API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 || secrets.APP_STORE_CONNECT_API_KEY }}
+        run: |
+          echo "$API_KEY_BASE64" | base64 --decode > AuthKey.p8
+          ruby -rjson -e 'File.write("asc_api_key.json", JSON.pretty_generate({ key_id: ENV.fetch("API_KEY_ID"), issuer_id: ENV.fetch("API_ISSUER_ID"), key: File.read("AuthKey.p8"), duration: 1200, in_house: false }))'
+
+      - name: Upload App Store metadata and screenshots
+        env:
+          FASTLANE_SKIP_UPDATE_CHECK: '1'
+          FASTLANE_HIDE_CHANGELOG: '1'
+          APP_STORE_VERSION: ${{ inputs.app_store_version }}
+          SUBMIT_FOR_REVIEW: ${{ inputs.submit_app_store_review }}
+        run: |
+          fastlane deliver \
+            --api_key_path asc_api_key.json \
+            --app_identifier com.ansioff.app.jordi \
+            --app_version "$APP_STORE_VERSION" \
+            --metadata_path fastlane/metadata \
+            --screenshots_path fastlane/screenshots \
+            --skip_binary_upload true \
+            --overwrite_screenshots true \
+            --reject_if_possible true \
+            --submit_for_review "$SUBMIT_FOR_REVIEW" \
+            --automatic_release true \
+            --force true \
+            --run_precheck_before_submit false

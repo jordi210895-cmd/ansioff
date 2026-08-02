@@ -13,22 +13,24 @@ export default function PrivacyPolicy() {
 
                 <h1 className="text-4xl font-bold text-white mb-8 font-serif">Política de Privacidad</h1>
 
-                <p className="mb-6 text-sm text-slate-400">Última actualización: 7 de Marzo de 2026</p>
+                <p className="mb-6 text-sm text-slate-400">Última actualización: 12 de julio de 2026</p>
 
                 <div className="space-y-8 leading-relaxed">
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-4">1. Introducción</h2>
-                        <p>Bienvenido a ANSIOFF ("la Aplicación"). Esta Política de Privacidad explica cómo recopilamos, usamos, divulgamos y salvaguardamos su información cuando visita nuestra aplicación móvil o sitio web. Lea atentamente esta política de privacidad. Si no está de acuerdo con los términos de esta política de privacidad, no acceda a la aplicación.</p>
+                        <p>Esta Política explica qué datos utiliza ANSIOFF, dónde se guardan y cuándo se comparten con un proveedor. ANSIOFF es una herramienta de diario personal, pausas guiadas y organización cotidiana.</p>
                     </section>
 
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-4">2. Recopilación de su información</h2>
-                        <p>Podemos recopilar información sobre usted de varias maneras. La información que podemos recopilar en la Aplicación incluye:</p>
+                        <p>La aplicación puede tratar las siguientes categorías de información:</p>
                         <ul className="list-disc pl-5 mt-4 space-y-2">
-                            <li><strong>Datos Personales:</strong> Información de identificación personal, como su dirección de correo electrónico, que nos proporciona voluntariamente al registrarse en la Aplicación a través de <strong>Supabase Auth</strong>.</li>
-                            <li><strong>Identificadores de Dispositivo:</strong> Si permite las notificaciones, recopilamos un identificador de dispositivo único (push token) a través de <strong>OneSignal</strong> para enviarle recordatorios y consejos de bienestar.</li>
-                            <li><strong>Datos Generados por el Usuario:</strong> Entradas de diario, registros de pensamientos (CBT) y configuraciones personales. Estos datos se almacenan de forma segura en <strong>Supabase</strong> (cuando inicia sesión) o localmente en su dispositivo (IndexedDB/LocalStorage).</li>
-                            <li><strong>Datos Derivados:</strong> Información que nuestros servidores recopilan automáticamente cuando accede a la Aplicación, como su dirección IP y tiempos de acceso.</li>
+                            <li><strong>Cuenta opcional:</strong> correo electrónico e identificador de usuario gestionados mediante Supabase cuando decide registrarse o iniciar sesión.</li>
+                            <li><strong>Datos locales:</strong> respuestas del onboarding, notas, check-ins, progreso, configuración y audios personalizados. Se guardan en el dispositivo mediante LocalStorage o IndexedDB.</li>
+                            <li><strong>Reflexión IA opcional:</strong> si pulsa expresamente la función y acepta el aviso, se envían como máximo las 15 notas más recientes al servicio de ANSIOFF y a Google Gemini para generar un resumen.</li>
+                            <li><strong>Compras:</strong> RevenueCat y la tienda correspondiente procesan identificadores de compra, recibos, producto adquirido, estado de suscripción y fechas necesarias para validar el acceso Premium.</li>
+                            <li><strong>Notificaciones:</strong> se solicita permiso solo si activa recordatorios. Los recordatorios locales se programan en el dispositivo; cuando se utilicen notificaciones remotas, OneSignal podrá procesar el token de notificación.</li>
+                            <li><strong>Medición publicitaria:</strong> si procede y conforme a la configuración de consentimiento aplicable, se pueden registrar eventos comerciales genéricos como registro, inicio de prueba, suscripción, renovación o cancelación técnica de suscripción.</li>
                         </ul>
                     </section>
 
@@ -36,30 +38,37 @@ export default function PrivacyPolicy() {
                         <h2 className="text-2xl font-semibold text-white mb-4">3. Uso de su información</h2>
                         <p>Tener información precisa sobre usted nos permite brindarle una experiencia fluida, eficiente y personalizada. Específicamente, utilizamos la información para:</p>
                         <ul className="list-disc pl-5 mt-4 space-y-2">
-                            <li>Crear y administrar su cuenta y sincronizar sus datos entre dispositivos.</li>
-                            <li>Enviarle notificaciones push con ejercicios de respiración y recordatorios de calma (solo si se activan).</li>
-                            <li>Personalizar su experiencia basada en su progreso y uso de herramientas.</li>
-                            <li>Supervisar el rendimiento técnico de la Aplicación.</li>
+                            <li>Crear y administrar la cuenta opcional.</li>
+                            <li>Personalizar el plan dentro del dispositivo según las respuestas del onboarding.</li>
+                            <li>Validar compras, restaurar suscripciones y habilitar funciones Premium.</li>
+                            <li>Generar una reflexión IA únicamente cuando la solicita y consiente.</li>
+                            <li>Programar recordatorios cuando los activa.</li>
+                            <li>Medir campañas y mejorar la atribución publicitaria usando eventos comerciales genéricos, sin enviar contenido de diario personal.</li>
                         </ul>
+                        <p className="mt-4">Las respuestas del onboarding, notas, audios, check-ins y puntuaciones no se envían a Meta, Google Ads ni a plataformas publicitarias. Los eventos de embudo publicitario, cuando estén habilitados, son genéricos y requieren consentimiento cuando corresponda.</p>
                     </section>
 
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-4">4. Proveedores de Servicios Terceros</h2>
                         <p>Para el funcionamiento de la aplicación, utilizamos los siguientes proveedores de confianza:</p>
                         <ul className="list-disc pl-5 mt-4 space-y-2">
-                            <li><strong>Supabase:</strong> Para la gestión de usuarios y base de datos segura.</li>
-                            <li><strong>OneSignal:</strong> Para el envío de notificaciones push.</li>
+                            <li><strong>Supabase:</strong> autenticación y servicios de cuenta.</li>
+                            <li><strong>Google Gemini:</strong> procesamiento puntual de las notas enviadas voluntariamente para generar la reflexión IA.</li>
+                            <li><strong>RevenueCat:</strong> validación y gestión técnica del estado de las suscripciones.</li>
+                            <li><strong>Apple App Store y Google Play:</strong> cobro, recibos, renovación y cancelación de las compras realizadas en sus tiendas.</li>
+                            <li><strong>Google Ads / Google Analytics y Meta Ads:</strong> medición de eventos comerciales genéricos de embudo y suscripción, cuando estén configurados y conforme al consentimiento aplicable.</li>
+                            <li><strong>OneSignal:</strong> notificaciones remotas cuando esta función esté habilitada y autorizada.</li>
                         </ul>
                     </section>
 
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-4">5. Seguridad y Retención</h2>
-                        <p>Utilizamos medidas de seguridad técnicas para proteger su información. Sus datos se conservan mientras su cuenta esté activa o sea necesario para proporcionarle los servicios de la Aplicación. Puede solicitar la eliminación de todos sus datos en cualquier momento desde la sección de Ajustes de la Aplicación.</p>
+                        <p>Utilizamos conexiones cifradas y limitamos el contenido enviado a cada proveedor. Los datos locales permanecen hasta que los borra desde Ajustes, elimina la aplicación o el sistema limpia su almacenamiento. Los datos de cuenta se conservan mientras la cuenta esté activa o durante el plazo legal necesario. Los registros de compra pueden conservarse por obligaciones contables y de la tienda.</p>
                     </section>
 
                     <section>
                         <h2 className="text-2xl font-semibold text-white mb-4">6. Derechos del usuario</h2>
-                        <p>Usted tiene derecho a acceder, rectificar o eliminar sus datos personales. Puede eliminar su cuenta y todos los datos asociados directamente desde el botón "Borrar todos mis datos" en el menú de Ajustes. Para cualquier otra consulta, puede contactarnos.</p>
+                        <p>Puede borrar los datos locales, eliminar su cuenta, retirar permisos de notificación y dejar de utilizar la reflexión IA desde Ajustes. También puede restaurar o gestionar su suscripción desde la tienda. Para ejercer los derechos de acceso, rectificación, oposición, limitación o supresión, puede contactarnos o usar las páginas públicas de <Link className="text-blue-500 underline" href="/delete-account">eliminación de cuenta</Link> y <Link className="text-blue-500 underline" href="/delete-data">eliminación de datos</Link>.</p>
                     </section>
 
                     <section>

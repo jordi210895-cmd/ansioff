@@ -15,9 +15,7 @@ export default function SOSDisclaimer({ onAccept, onCancel }: SOSDisclaimerProps
             </div>
             <h2 className="text-[32px] font-serif text-[#e8f4f8] mb-4">Anclaje al Presente</h2>
             <p className="text-white/50 text-[15px] leading-relaxed mb-12 max-w-xs">
-                La ansiedad es una falsa alarma de tu cuerpo. Inténtalo: respira profundo y siente tu peso sobre la silla.
-                <br /><br />
-                Usa estos ejercicios como un anclaje extra para interrumpir pensamientos intrusivos.
+                Usa este ejercicio como una pausa de atención cuando quieras parar un momento. Siente tu peso sobre la silla y avanza a tu ritmo.
             </p>
             <div className="flex flex-col gap-4 w-full max-w-xs">
                 <button
@@ -36,4 +34,3 @@ export default function SOSDisclaimer({ onAccept, onCancel }: SOSDisclaimerProps
         </div>
     );
 }
-

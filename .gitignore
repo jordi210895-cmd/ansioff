@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.npm-cache
 /.pnp
 .pnp.*
 .yarn/*
@@ -23,6 +24,32 @@
 # misc
 .DS_Store
 *.pem
+*.p8
+*.p12
+*.cer
+*.mobileprovision
+*.keychain
+*.keychain-db
+
+# app store / mobile build artifacts
+*.ipa
+*.aab
+*.apk
+*.idsig
+*.xcarchive
+ios/App/output*/
+ios/App/build/
+ios/App/Pods/
+android/app/build/
+android/app/release/
+android/.gradle/
+android/local.properties
+twa-build/
+
+# handover/signing bundles must stay out of git
+deployment_handover/
+apple-signing/
+app-store-connect/
 
 # debug
 npm-debug.log*
@@ -32,6 +59,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel

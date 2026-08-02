@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { LockKeyhole, Trash2, Upload } from 'lucide-react';
 
 interface Track {
     id?: number;
@@ -11,19 +12,40 @@ interface Track {
 interface AudioScreenProps {
     onBack: () => void;
     tracks: Track[];
-    onAddTrack: (file: File) => void;
+    onAddTrack: (file: File) => void | Promise<void>;
     onDeleteTrack: (idx: number) => void;
     trackCount: number;
+    isPremium: boolean;
+    onUpgrade: () => void;
+    onPracticeComplete?: () => void;
 }
 
-export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
-    const [curIdx, setCurIdx] = useState(0);
+const isFreeTrack = (track?: Track) => track?.name.trim().toLowerCase() === 'sonido profundo';
+
+export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack, trackCount, isPremium, onUpgrade, onPracticeComplete }: AudioScreenProps) {
+    const [curIdx, setCurIdx] = useState(() => {
+        if (isPremium) return 0;
+        const freeIndex = tracks.findIndex(isFreeTrack);
+        return freeIndex >= 0 ? freeIndex : 0;
+    });
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const [curTime, setCurTime] = useState('0:00');
 
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const onPracticeCompleteRef = useRef(onPracticeComplete);
     const currentTrack = tracks[curIdx] || tracks[0];
+
+    useEffect(() => {
+        onPracticeCompleteRef.current = onPracticeComplete;
+    }, [onPracticeComplete]);
+
+    useEffect(() => {
+        if (isPremium || isFreeTrack(currentTrack)) return;
+        const freeIndex = tracks.findIndex(isFreeTrack);
+        if (freeIndex >= 0) setCurIdx(freeIndex);
+    }, [currentTrack, isPremium, tracks]);
 
     // Initialize audio once on mount
     useEffect(() => {
@@ -42,7 +64,11 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
         };
 
         const onEnded = () => {
-            nextTrack();
+            audio.currentTime = 0;
+            setProgress(0);
+            setCurTime('0:00');
+            setIsPlaying(false);
+            onPracticeCompleteRef.current?.();
         };
 
         const onPlay = () => setIsPlaying(true);
@@ -67,7 +93,7 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
     useEffect(() => {
         const audio = audioRef.current;
         if (audio && currentTrack) {
-            const wasPlaying = isPlaying;
+            const wasPlaying = !audio.paused;
             // Only update src if it's actually different to avoid restart loops
             if (audio.src !== window.location.origin + currentTrack.url && !currentTrack.url.startsWith('blob:')) {
                  audio.src = currentTrack.url;
@@ -84,6 +110,10 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
     }, [currentTrack]);
 
     const togglePlay = () => {
+        if (!isPremium && !isFreeTrack(currentTrack)) {
+            onUpgrade();
+            return;
+        }
         const audio = audioRef.current;
         if (!audio) return;
 
@@ -108,11 +138,32 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
     };
 
     const nextTrack = () => {
-        setCurIdx((curIdx + 1) % tracks.length);
+        const nextIndex = (curIdx + 1) % tracks.length;
+        if (!isPremium && !isFreeTrack(tracks[nextIndex])) {
+            onUpgrade();
+            return;
+        }
+        setCurIdx(nextIndex);
     };
 
     const prevTrack = () => {
-        setCurIdx((curIdx - 1 + tracks.length) % tracks.length);
+        const previousIndex = (curIdx - 1 + tracks.length) % tracks.length;
+        if (!isPremium && !isFreeTrack(tracks[previousIndex])) {
+            onUpgrade();
+            return;
+        }
+        setCurIdx(previousIndex);
+    };
+
+    const handleAudioFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        event.target.value = '';
+        if (!file) return;
+        if (!isPremium) {
+            onUpgrade();
+            return;
+        }
+        await onAddTrack(file);
     };
 
     const fmtTime = (s: number) => {
@@ -125,40 +176,41 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
     return (
         <div id="sounds" className="screen active">
             <style jsx>{`
-        .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:120px;}
+        .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;padding-bottom:112px;}
         .screen::-webkit-scrollbar{display:none;}
 
         #sounds .aurora-1{background:radial-gradient(circle,rgba(124,58,237,0.55),transparent 70%);top:-80px;right:-60px;}
         #sounds .aurora-2{background:radial-gradient(circle,rgba(6,182,212,0.35),transparent 70%);top:250px;left:-80px;}
         #sounds .aurora-3{background:radial-gradient(circle,rgba(244,63,94,0.2),transparent 70%);bottom:60px;right:40px;}
 
-        .snd-hd{padding:22px 24px 16px;position:relative;z-index:5;}
-        .snd-title{font-size:36px;font-weight:800;letter-spacing:-.03em;color:var(--text);margin-bottom:3px;}
+        .snd-hd{padding:max(14px,calc(env(safe-area-inset-top,0px) + 10px)) max(24px,calc(env(safe-area-inset-right,0px) + 20px)) 12px max(24px,calc(env(safe-area-inset-left,0px) + 20px));position:relative;z-index:5;}
+        .snd-title{font-size:34px;font-weight:800;letter-spacing:-.035em;color:var(--text);margin-bottom:2px;line-height:1;}
         .snd-sub{font-size:12px;color:var(--text2);}
+        .snd-back{cursor:pointer;width:38px;height:38px;background:var(--glass);border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;}
 
         .player{
-            margin:0 22px 18px;
+            margin:0 max(24px,calc(env(safe-area-inset-right,0px) + 20px)) 14px max(24px,calc(env(safe-area-inset-left,0px) + 20px));
             background:rgba(255,255,255,0.07);
             backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);
             border:1px solid rgba(255,255,255,0.15);border-radius:var(--rad);
-            padding:20px 18px 24px;position:relative;z-index:10;
+            padding:16px 16px 18px;position:relative;z-index:10;
             isolation: isolate;
         }
         .player::before{content:'';position:absolute;top:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(6,182,212,.5),transparent);}
         .player-glow{position:absolute;top:-20px;right:-20px;width:140px;height:140px;background:radial-gradient(circle,rgba(124,58,237,.15),transparent 65%);pointer-events:none;}
-        .pl-tag{font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--c2);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+        .pl-tag{font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--c2);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
         .pl-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--c2);box-shadow:0 0 8px var(--c2);animation:dotP 1.5s ease-in-out infinite;}
-        .pl-row{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+        .pl-row{display:flex;align-items:center;gap:12px;margin-bottom:11px;}
         .pl-art{
-          width:56px;height:56px;border-radius:15px;flex-shrink:0;
+          width:52px;height:52px;border-radius:14px;flex-shrink:0;
           background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(6,182,212,.15));
           border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;
-          font-size:24px;
+          font-size:22px;
         }
-        .pl-name{font-size:16px;font-weight:800;color:var(--text);margin-bottom:2px;}
+        .pl-name{font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px;line-height:1.15;}
         .pl-type{font-size:10px;color:var(--text2);letter-spacing:.04em;}
         .pl-dur{font-size:11px;font-weight:700;color:var(--c2);margin-left:auto;flex-shrink:0;}
-        .wave{display:flex;align-items:center;gap:2px;height:24px;margin-bottom:12px;}
+        .wave{display:flex;align-items:center;gap:2px;height:20px;margin-bottom:10px;}
         .wb{flex:1;border-radius:2px;background:rgba(6,182,212,.2);animation:wbA 1.4s ease-in-out infinite;}
         .wb:nth-child(2n){animation-delay:.2s;}
         .wb:nth-child(3n){animation-delay:.4s;}
@@ -167,42 +219,61 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
         .prog-bar{width:100%;height:4px;background:rgba(255,255,255,.06);border-radius:3px;margin-bottom:6px;cursor:pointer;position:relative;}
         .prog-fill{height:100%;background:linear-gradient(90deg,var(--p2),var(--c2));border-radius:3px;position:relative;transition:width 0.1s linear;}
         .prog-fill::after{content:'';position:absolute;right:-4px;top:-3px;width:10px;height:10px;border-radius:50%;background:var(--c2);box-shadow:0 0 8px var(--c2);}
-        .prog-times{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:8px;}
-        .ctrl-row{display:flex;align-items:center;justify-content:center;gap:32px;margin-top:20px;position:relative;z-index:20;}
-        .cbtn{background:none;border:none;cursor:pointer;color:var(--text2);transition:var(--t);display:flex;padding:10px;}
+        .prog-times{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px;}
+        .ctrl-row{display:flex;align-items:center;justify-content:center;gap:28px;margin-top:14px;position:relative;z-index:20;}
+        .cbtn{background:none;border:none;cursor:pointer;color:var(--text2);transition:var(--t);display:flex;padding:8px;}
         .cbtn:hover{color:var(--text);}
         .cplay{
-          width:52px;height:52px;border-radius:50%;border:none;
+          width:48px;height:48px;border-radius:50%;border:none;
           background:linear-gradient(135deg,var(--p),var(--c));
           display:flex;align-items:center;justify-content:center;cursor:pointer;
           box-shadow:0 0 20px rgba(124,58,237,.4);transition:var(--t);
         }
         .cplay:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(124,58,237,.6);}
         .cstop{
-          width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.1);
+          width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.1);
           border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
           cursor:pointer;color:white;transition:var(--t);
         }
         .cstop:hover{background:rgba(244,63,94,0.2);border-color:rgba(244,63,94,0.4);}
 
-        .snd-cats{display:flex;gap:8px;padding:0 22px 14px;overflow-x:auto;z-index:5;position:relative;}
+        .snd-cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:0 max(24px,calc(env(safe-area-inset-right,0px) + 20px)) 8px max(24px,calc(env(safe-area-inset-left,0px) + 20px));z-index:5;position:relative;}
         .snd-cats::-webkit-scrollbar{display:none;}
         .cat-pill{
           background:var(--glass);border:1px solid var(--border);border-radius:var(--radp);
-          padding:7px 14px;font-size:11px;font-weight:700;color:var(--text2);
-          white-space:nowrap;cursor:pointer;transition:var(--t);
+          padding:6px 8px;font-size:10px;font-weight:700;color:var(--text2);
+          white-space:nowrap;cursor:pointer;transition:var(--t);text-align:center;min-width:0;overflow:hidden;text-overflow:ellipsis;
         }
         .cat-pill.on{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.35);color:var(--p3);}
 
-        .snd-list{padding:0 22px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:5;}
-        .si{display:flex;align-items:center;gap:12px;background:var(--glass);border:1px solid var(--border);border-radius:15px;padding:13px 14px;cursor:pointer;transition:var(--t);}
+        .snd-list{padding:0 max(24px,calc(env(safe-area-inset-right,0px) + 20px));display:flex;flex-direction:column;gap:8px;position:relative;z-index:5;}
+        .si{display:flex;align-items:center;gap:11px;background:var(--glass);border:1px solid var(--border);border-radius:15px;padding:11px 12px;cursor:pointer;transition:var(--t);}
         .si:hover{border-color:var(--border2);background:rgba(255,255,255,0.02);}
         .si.on{border-color:var(--c2);background:rgba(6,182,212,0.06);}
-        .si-art{width:46px;height:46px;border-radius:13px;flex-shrink:0;background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(6,182,212,.1));border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:20px;}
+        .si-art{width:42px;height:42px;border-radius:12px;flex-shrink:0;background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(6,182,212,.1));border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:19px;}
         .si-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;}
         .si-meta{font-size:10px;color:var(--text2);}
-        .si-dur{font-size:10px;color:var(--text3);margin-left:auto;flex-shrink:0;padding-right:8px;}
-        .si-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--t);}
+        .si-dur{font-size:10px;color:var(--text3);margin-left:auto;flex-shrink:0;padding-right:4px;}
+        .si-btn{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--t);}
+        .si.locked{opacity:.72;}
+        .si-lock{margin-left:auto;color:var(--text2);display:flex;align-items:center;gap:6px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
+        .si-delete{width:32px;height:32px;border-radius:50%;border:1px solid rgba(244,63,94,.18);background:rgba(244,63,94,.07);color:#f38c9d;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
+        .personal-audio{padding:14px max(24px,calc(env(safe-area-inset-right,0px) + 20px)) 0 max(24px,calc(env(safe-area-inset-left,0px) + 20px));position:relative;z-index:5;}
+        .upload-audio{width:100%;min-height:44px;border:1px solid rgba(90,173,207,.24);background:rgba(90,173,207,.07);border-radius:14px;color:#8dd3e8;display:flex;align-items:center;justify-content:center;gap:9px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;}
+        @media(max-height:740px){
+          .snd-hd{padding-top:max(10px,calc(env(safe-area-inset-top,0px) + 8px));padding-bottom:8px;}
+          .snd-title{font-size:32px;}
+          .player{padding:14px 14px 16px;margin-bottom:10px;}
+          .pl-art{width:48px;height:48px;}
+          .wave{height:16px;margin-bottom:8px;}
+          .ctrl-row{gap:24px;margin-top:10px;}
+          .cplay{width:46px;height:46px;}
+          .cstop{width:36px;height:36px;}
+          .snd-cats{padding-bottom:7px;}
+          .si{padding:10px 11px;}
+          .si-art{width:40px;height:40px;}
+          .upload-audio{min-height:42px;}
+        }
       `}</style>
 
             <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div><div className="aurora-3"></div></div>
@@ -210,9 +281,9 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <div className="snd-title">Sonidos</div>
-                        <div className="snd-sub">Para calmar la mente y el cuerpo</div>
+                        <div className="snd-sub">Para acompañar tus pausas y tu foco</div>
                     </div>
-                    <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
+                    <div onClick={onBack} className="snd-back" aria-label="Volver">‹</div>
                 </div>
             </div>
 
@@ -221,7 +292,7 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
                 <div className="pl-tag">{isPlaying ? 'Reproduciendo ahora' : 'En pausa'}</div>
                 <div className="pl-row">
                     <div className="pl-art">{currentTrack?.icon}</div>
-                    <div><div className="pl-name">{currentTrack?.name}</div><div className="pl-type">RELAJACIÓN GUIADA</div></div>
+                    <div><div className="pl-name">{currentTrack?.name}</div><div className="pl-type">AUDIO GUIADO</div></div>
                     <div className="pl-dur">{currentTrack?.duration}</div>
                 </div>
                 <div className="wave">
@@ -257,12 +328,16 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
             </div>
 
             <div className="snd-cats">
-                <div className="cat-pill on">Todos</div><div className="cat-pill">Meditación</div><div className="cat-pill">Frecuencias</div>
+                <div className="cat-pill on">Todos</div><div className="cat-pill">Foco</div><div className="cat-pill">Frecuencias</div>
             </div>
 
             <div className="snd-list">
                 {tracks.map((t, i) => (
-                    <div key={i} className={`si ${curIdx === i ? 'on' : ''}`} onClick={() => {
+                    <div key={i} className={`si ${curIdx === i ? 'on' : ''} ${!isPremium && !isFreeTrack(t) ? 'locked' : ''}`} onClick={() => {
+                        if (!isPremium && !isFreeTrack(t)) {
+                            onUpgrade();
+                            return;
+                        }
                         setCurIdx(i);
                         // The track source will change via useEffect, and if it was already playing, it will continue.
                         // If it wasn't playing, we start it.
@@ -275,7 +350,11 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
                             <div className="si-name">{t.name}</div>
                             <div className="si-meta">Relajación · Guía</div>
                         </div>
-                        <div className="si-dur">{t.duration}</div>
+                        {!isPremium && !isFreeTrack(t) ? (
+                            <div className="si-lock"><LockKeyhole size={14} /> Premium</div>
+                        ) : (
+                            <div className="si-dur">{t.duration}</div>
+                        )}
                         <div className="si-btn">
                             {curIdx === i && isPlaying ? (
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--c2)"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>
@@ -283,8 +362,21 @@ export default function AudioScreen({ onBack, tracks }: AudioScreenProps) {
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--c2)"><polygon points="5 3 19 12 5 21 5 3" /></svg>
                             )}
                         </div>
+                        {t.id !== undefined && (
+                            <button className="si-delete" onClick={(event) => { event.stopPropagation(); onDeleteTrack(i); }} aria-label={`Eliminar ${t.name}`} title="Eliminar audio">
+                                <Trash2 size={14} />
+                            </button>
+                        )}
                     </div>
                 ))}
+            </div>
+
+            <div className="personal-audio">
+                <input ref={fileInputRef} type="file" accept="audio/*" onChange={handleAudioFile} hidden />
+                <button className="upload-audio" onClick={() => isPremium ? fileInputRef.current?.click() : onUpgrade()}>
+                    {isPremium ? <Upload size={16} /> : <LockKeyhole size={15} />}
+                    {isPremium ? `Añadir audio propio${trackCount > 3 ? ` · ${trackCount - 3}` : ''}` : 'Audio propio · Premium'}
+                </button>
             </div>
         </div>
     );

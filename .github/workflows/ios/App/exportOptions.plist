@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>method</key>
-    <string>app-store</string>
+    <string>app-store-connect</string>
     <key>teamID</key>
     <string>T4R8R6D8BA</string>
     <key>uploadSymbols</key>
@@ -14,8 +14,8 @@
     <string>manual</string>
     <key>provisioningProfiles</key>
     <dict>
-        <key>com.ansioff.app</key>
-        <string>profile</string>
+        <key>com.ansioff.app.jordi</key>
+        <string>ANSIOFF_APPSTORE_20260702</string>
     </dict>
 </dict>
 </plist>

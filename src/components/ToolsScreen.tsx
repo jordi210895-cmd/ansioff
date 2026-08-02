@@ -2,27 +2,30 @@
 
 import {
     Activity, Wind, Gamepad2, Music, PenLine, Heart,
-    Brain, FileText, Stethoscope, Moon, Target, ChevronRight
+    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole
 } from 'lucide-react';
 
 interface ToolsScreenProps {
     onBack: () => void;
     onNav: (screen: string) => void;
+    isPremium: boolean;
 }
+
+const premiumToolIds = new Set(['sc-cbt', 'sc-act', 'notes', 'sc-games', 'sc-night', 'sc-exposure-why']);
 
 const moduleCategories = [
     {
-        title: 'Terapéutico',
+        title: 'Herramientas',
         tools: [
-            { id: 'crisis', name: 'Kit de Crisis', sub: 'Anclaje rápido 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
-            { id: 'sc-cbt', name: 'Técnicas TCC', sub: 'Reestructuración de ideas', icon: <Brain />, color: 'var(--p)' },
-            { id: 'sc-act', name: 'Módulo ACT', sub: 'Aceptación y Compromiso', icon: <Heart />, color: 'var(--p2)' },
+            { id: 'pause', name: 'Kit SOS', sub: 'Anclaje rápido 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
+            { id: 'sc-cbt', name: 'Pensamientos', sub: 'Registro y reflexión', icon: <Brain />, color: 'var(--p)' },
+            { id: 'sc-act', name: 'Aceptación', sub: 'Ejercicios guiados', icon: <Heart />, color: 'var(--p2)' },
         ]
     },
     {
-        title: 'Bienestar',
+        title: 'Rutinas',
         tools: [
-            { id: 'breath', name: 'Respiración', sub: 'Patrones guiados', icon: <Wind />, color: 'var(--c)' },
+            { id: 'breath', name: 'Ritmos guiados', sub: 'Patrones visuales', icon: <Wind />, color: 'var(--c)' },
             { id: 'sounds', name: 'Audios relax', sub: 'Paisajes sonoros', icon: <Music />, color: 'var(--c2)' },
             { id: 'notes', name: 'Diario', sub: 'Escritura consciente', icon: <PenLine />, color: 'var(--em)' },
         ]
@@ -30,15 +33,15 @@ const moduleCategories = [
     {
         title: 'Herramientas',
         tools: [
-            { id: 'sc-games', name: 'Juegos', sub: 'Distracción cognitiva', icon: <Gamepad2 />, color: 'var(--am)' },
-            { id: 'sc-eval', name: 'Evaluaciones', sub: 'Hamilton y Goldberg', icon: <FileText />, color: 'var(--p3)' },
-            { id: 'sc-night', name: 'Modo Noche', sub: 'Higiene del sueño', icon: <Moon />, color: 'var(--c3)' },
-            { id: 'sc-exposure-why', name: 'Mis Motivos', sub: 'Exposición y mejora', icon: <Target />, color: 'var(--r2)' },
+            { id: 'sc-games', name: 'Juegos', sub: 'Atención y pausa', icon: <Gamepad2 />, color: 'var(--am)' },
+            { id: 'sc-eval', name: 'Check-in', sub: 'Seguimiento personal', icon: <FileText />, color: 'var(--p3)' },
+            { id: 'sc-night', name: 'Modo Noche', sub: 'Rutina nocturna', icon: <Moon />, color: 'var(--c3)' },
+            { id: 'sc-exposure-why', name: 'Mis Motivos', sub: 'Objetivos personales', icon: <Target />, color: 'var(--r2)' },
         ]
     }
 ];
 
-export default function ToolsScreen({ onBack, onNav }: ToolsScreenProps) {
+export default function ToolsScreen({ onBack, onNav, isPremium }: ToolsScreenProps) {
     return (
         <div id="modules" className="screen active">
             <style jsx>{`
@@ -70,6 +73,8 @@ export default function ToolsScreen({ onBack, onNav }: ToolsScreenProps) {
                 .mod-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:1px;}
                 .mod-meta{font-size:11px;color:var(--text2);}
                 .mod-arr{margin-left:auto;color:var(--text3);opacity:.5;}
+                .mod-lock{margin-left:auto;color:var(--text2);display:flex;align-items:center;gap:6px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
+                .mod-row.locked{opacity:.74;}
             `}</style>
 
             <div className="aurora"><div className="aurora-1"></div><div className="aurora-2"></div></div>
@@ -88,8 +93,10 @@ export default function ToolsScreen({ onBack, onNav }: ToolsScreenProps) {
                 <div key={ci} className="cat-sec">
                     <div className="cat-lbl">{cat.title}</div>
                     <div className="mod-grid">
-                        {cat.tools.map((t, ti) => (
-                            <div key={ti} className="mod-row" onClick={() => onNav(t.id)}>
+                        {cat.tools.map((t, ti) => {
+                            const locked = !isPremium && premiumToolIds.has(t.id);
+                            return (
+                            <div key={ti} className={`mod-row ${locked ? 'locked' : ''}`} onClick={() => onNav(t.id)}>
                                 <div className="mod-ico-box" style={{ color: t.color }}>
                                     {t.icon}
                                 </div>
@@ -97,13 +104,16 @@ export default function ToolsScreen({ onBack, onNav }: ToolsScreenProps) {
                                     <div className="mod-name">{t.name}</div>
                                     <div className="mod-meta">{t.sub}</div>
                                 </div>
-                                <div className="mod-arr"><ChevronRight size={18} /></div>
+                                {locked ? (
+                                    <div className="mod-lock"><LockKeyhole size={14} /> Premium</div>
+                                ) : (
+                                    <div className="mod-arr"><ChevronRight size={18} /></div>
+                                )}
                             </div>
-                        ))}
+                        )})}
                     </div>
                 </div>
             ))}
         </div>
     );
 }
-

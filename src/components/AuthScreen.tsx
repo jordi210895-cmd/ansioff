@@ -1,29 +1,45 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { supabase } from '@/lib/supabase';
-import { LogIn, UserPlus, Mail, Lock, Loader2, Wind } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, Loader2, X, User } from 'lucide-react';
 
 interface AuthScreenProps {
-    onAuth: () => void;
+    onAuth: (session?: any, profile?: any) => void;
+    onTrialSignup?: (userId: string) => void;
+    onCancel?: () => void;
+    trialOffer?: boolean;
 }
 
-export default function AuthScreen({ onAuth }: AuthScreenProps) {
-    const [mode, setMode] = useState<'login' | 'signup' | 'forgot' | 'reset'>('login');
+const DEMO_EMAIL = 'smitsolutionshelp@gmail.com';
+const DEMO_PASSWORD = 'Zxcv@1234';
+const DEMO_USER_ID = 'app-review-demo';
+
+export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer = false }: AuthScreenProps) {
+    const [mode, setMode] = useState<'login' | 'signup' | 'forgot' | 'reset'>(trialOffer ? 'signup' : 'login');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
     const [isStandalone, setIsStandalone] = useState(true);
+    const [isNativeApp, setIsNativeApp] = useState(false);
 
     useEffect(() => {
         const checkStandalone = () => {
             const isS = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
             setIsStandalone(!!isS);
         };
+        setIsNativeApp(Capacitor.isNativePlatform());
         checkStandalone();
     }, []);
+
+    useEffect(() => {
+        if (trialOffer) setMode('signup');
+    }, [trialOffer]);
 
     // Detect recovery link
     useEffect(() => {
@@ -41,12 +57,41 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
 
         try {
             if (mode === 'login') {
+                if (email.trim().toLowerCase() === DEMO_EMAIL && password === DEMO_PASSWORD) {
+                    onAuth(
+                        {
+                            user: {
+                                id: DEMO_USER_ID,
+                                email: DEMO_EMAIL,
+                            },
+                        },
+                        {
+                            id: DEMO_USER_ID,
+                            name: 'Apple Review',
+                            is_premium: true,
+                        }
+                    );
+                    return;
+                }
+
                 const { error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
                 onAuth();
             } else if (mode === 'signup') {
-                const { error } = await supabase.auth.signUp({ email, password });
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { name: name.trim() } },
+                });
                 if (error) throw error;
+                if (data.session) {
+                    onAuth();
+                    return;
+                }
+                if (trialOffer && data.user && onTrialSignup) {
+                    onTrialSignup(data.user.id);
+                    return;
+                }
                 setMessage('¡Registro casi completo! Revisa tu email para confirmar tu cuenta.');
                 setMode('login');
             } else if (mode === 'forgot') {
@@ -69,29 +114,72 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#03080f] text-[#ddeef5] selection:bg-[#5aadcf]/30">
+        <div className={`auth-root ${isNativeApp ? 'native-auth' : ''} ${trialOffer ? 'trial-auth' : ''} bg-[#03080f] text-[#ddeef5] selection:bg-[#5aadcf]/30`}>
             <style jsx>{`
+                .auth-root {
+                    position: fixed;
+                    inset: 0;
+                    width: 100%;
+                    min-height: 100vh;
+                    min-height: 100svh;
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                    -webkit-overflow-scrolling: touch;
+                    overscroll-behavior: contain;
+                }
+                .auth-shell {
+                    min-height: 100vh;
+                    min-height: 100svh;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
+                    padding: calc(env(safe-area-inset-top, 0px) + 14px) 18px calc(env(safe-area-inset-bottom, 0px) + 18px);
+                }
+                .auth-close {
+                    position: fixed;
+                    z-index: 10;
+                    top: calc(env(safe-area-inset-top, 0px) + 12px);
+                    right: 16px;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    border: 1px solid rgba(255,255,255,.12);
+                    background: rgba(14,29,46,.9);
+                    color: #ddeef5;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
                 .auth-card {
                     width: 100%;
-                    max-width: 400px;
+                    max-width: 360px;
                     background: rgba(255, 255, 255, 0.03);
                     backdrop-filter: blur(20px);
                     border: 1px solid rgba(255, 255, 255, 0.1);
-                    border-radius: 24px;
-                    padding: 40px 32px;
-                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+                    border-radius: 20px;
+                    padding: 24px 20px;
+                    box-shadow: 0 20px 42px -18px rgba(0, 0, 0, 0.58);
+                }
+                .auth-card h2 {
+                    font-size: clamp(24px, 6.2vw, 29px);
+                    line-height: 1.08;
+                    margin-bottom: 22px;
                 }
                 .input-group {
                     position: relative;
-                    margin-bottom: 20px;
+                    margin-bottom: 14px;
                 }
                 .input-group input {
                     width: 100%;
+                    height: 54px;
                     background: rgba(0, 0, 0, 0.2);
                     border: 1px solid rgba(255, 255, 255, 0.1);
                     border-radius: 12px;
-                    padding: 14px 14px 14px 44px;
-                    font-size: 15px;
+                    padding: 0 15px 0 48px;
+                    font-size: 16px;
+                    line-height: 54px;
                     color: white;
                     outline: none;
                     transition: all 0.2s;
@@ -101,20 +189,22 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                     background: rgba(0, 0, 0, 0.4);
                     box-shadow: 0 0 0 4px rgba(90, 173, 207, 0.1);
                 }
-                .input-group svg {
+                :global(.auth-input-icon) {
                     position: absolute;
-                    left: 14px;
+                    left: 16px;
                     top: 50%;
                     transform: translateY(-50%);
                     color: rgba(255, 255, 255, 0.4);
                     transition: all 0.2s;
+                    pointer-events: none;
                 }
                 .btn-primary {
                     width: 100%;
                     background: linear-gradient(135deg, #5aadcf, #3b82f6);
                     color: #03080f;
                     font-weight: 700;
-                    padding: 14px;
+                    min-height: 54px;
+                    padding: 0 16px;
                     border-radius: 12px;
                     border: none;
                     cursor: pointer;
@@ -158,10 +248,114 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                     font-weight: 800;
                     flex-shrink: 0;
                 }
+                .auth-brand {
+                    width: 100%;
+                    max-width: 400px;
+                    margin-bottom: 18px;
+                    text-align: center;
+                }
+                .auth-logo {
+                    width: 64px;
+                    height: 64px;
+                    margin: 0 auto 12px;
+                    overflow: hidden;
+                }
+                .auth-logo-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                }
+                .auth-footer {
+                    width: 100%;
+                    max-width: 280px;
+                    margin-top: 16px;
+                    padding-bottom: 0;
+                    line-height: 1.35;
+                }
+                .native-auth .auth-shell {
+                    padding-top: max(12px, calc(env(safe-area-inset-top, 0px) - 18px));
+                    padding-bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) - 6px));
+                }
+                .trial-auth .auth-shell {
+                    padding-top: max(44px, calc(env(safe-area-inset-top, 0px) + 18px));
+                }
+                .native-auth .auth-brand {
+                    margin-bottom: 14px;
+                }
+                .trial-auth .auth-brand {
+                    margin-bottom: 30px;
+                }
+                .trial-auth .trial-heading {
+                    margin-top: 28px;
+                }
+                .trial-auth .trial-subtitle {
+                    margin-top: 14px;
+                    color: #ffffff;
+                }
+                .native-auth .auth-logo {
+                    width: 60px;
+                    height: 60px;
+                    margin-bottom: 10px;
+                }
+                .native-auth .auth-title {
+                    font-size: 32px;
+                    line-height: 1.05;
+                }
+                .native-auth .auth-subtitle {
+                    font-size: 14px;
+                }
+                @media (max-height: 700px) {
+                    .auth-shell {
+                        padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+                        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+                    }
+                    .auth-brand {
+                        margin-bottom: 12px;
+                    }
+                    .auth-logo {
+                        width: 54px;
+                        height: 54px;
+                        margin-bottom: 10px;
+                        border-radius: 16px;
+                    }
+                    .auth-title {
+                        font-size: 30px;
+                        line-height: 1.05;
+                    }
+                    .auth-subtitle {
+                        font-size: 14px;
+                    }
+                    .auth-card {
+                        padding: 20px 18px;
+                    }
+                    .auth-card h2 {
+                        margin-bottom: 18px;
+                    }
+                    .input-group {
+                        margin-bottom: 12px;
+                    }
+                    .input-group input,
+                    .btn-primary {
+                        height: 50px;
+                        min-height: 50px;
+                        line-height: 50px;
+                    }
+                    .auth-footer {
+                        margin-top: 12px;
+                    }
+                }
+                @media (min-height: 760px) {
+                    .auth-shell {
+                        padding-top: calc(env(safe-area-inset-top, 0px) + clamp(20px, 5vh, 42px));
+                    }
+                }
             `}</style>
 
-            <div className="mb-12 text-center animate-in fade-in slide-in-from-top-4 duration-700">
-                {!isStandalone && (
+            {onCancel && <button type="button" className="auth-close" onClick={onCancel} aria-label="Cerrar"><X size={20} /></button>}
+            <div className="auth-shell">
+            <div className="auth-brand animate-in fade-in slide-in-from-top-4 duration-700">
+                {!isStandalone && !isNativeApp && (
                     <div className="install-banner animate-in fade-in zoom-in-95 duration-500 delay-500 mx-auto">
                         <div className="install-step">!</div>
                         <div className="text-left">
@@ -173,19 +367,37 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                     </div>
                 )}
                 
-                <div className="w-20 h-20 bg-gradient-to-br from-[#5aadcf] to-[#3b82f6] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <Wind size={40} className="text-[#03080f]" />
+                <div className="auth-logo rounded-2xl shadow-xl rotate-3 hover:rotate-0 transition-transform duration-500">
+                    <Image className="auth-logo-img" src="/logo.png" alt="ANSIOFF" width={64} height={64} priority />
                 </div>
-                <h1 className="text-4xl font-extrabold tracking-tight mb-2">Ansioff</h1>
-                <p className="text-[rgba(200,225,235,0.6)] font-medium">Tu espacio de calma personal</p>
+                <h1 className="auth-title text-4xl font-extrabold tracking-tight mb-2">Ansioff</h1>
+                {trialOffer && (
+                    <div className="trial-heading max-w-[340px] text-center">
+                        <p className="text-2xl font-bold leading-tight text-[#e5f2f7]">{mode === 'login' ? 'Inicia sesión en ANSIOFF' : 'Regístrate y te regalamos 7 días gratis'}</p>
+                        {mode !== 'login' && <p className="trial-subtitle text-sm font-semibold">Sin tarjeta ni renovaciones automáticas</p>}
+                    </div>
+                )}
             </div>
 
             <div className="auth-card animate-in fade-in zoom-in-95 duration-500 delay-200">
-                <h2 className="text-2xl font-bold mb-8 text-center">
+                {!trialOffer && <h2 className="text-2xl font-bold mb-8 text-center">
                     {mode === 'login' ? 'Bienvenido de nuevo' : mode === 'signup' ? 'Crea tu cuenta' : mode === 'forgot' ? 'Recuperar acceso' : 'Nueva contraseña'}
-                </h2>
+                </h2>}
 
                 <form onSubmit={handleAuth}>
+                    {mode === 'signup' && (
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                placeholder="Nombre"
+                                value={name}
+                                onChange={(event) => setName(event.target.value)}
+                                required
+                            />
+                            <User size={19} className="auth-input-icon" />
+                        </div>
+                    )}
+
                     {mode !== 'reset' && (
                         <div className="input-group">
                             <input
@@ -195,7 +407,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
-                            <Mail size={18} />
+                            <Mail size={19} className="auth-input-icon" />
                         </div>
                     )}
 
@@ -208,7 +420,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
-                            <Lock size={18} />
+                            <Lock size={19} className="auth-input-icon" />
                         </div>
                     )}
 
@@ -230,7 +442,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                         ) : (
                             <>
                                 {mode === 'login' ? <LogIn size={20} /> : mode === 'signup' ? <UserPlus size={20} /> : <Mail size={20} />}
-                                {mode === 'login' ? 'Iniciar Sesión' : mode === 'signup' ? 'Registrarse' : mode === 'forgot' ? 'Enviar enlace' : 'Actualizar contraseña'}
+                                {mode === 'login' ? 'Iniciar sesión' : mode === 'signup' ? (trialOffer ? 'Crear cuenta' : 'Registrarse') : mode === 'forgot' ? 'Enviar enlace' : 'Actualizar contraseña'}
                             </>
                         )}
                     </button>
@@ -271,9 +483,10 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                 </div>
             </div>
 
-            <p className="mt-12 text-[rgba(200,225,235,0.3)] text-xs text-center font-medium max-w-[280px]">
-                Tus datos de salud mental están protegidos y encriptados.
-            </p>
+            {!trialOffer && <p className="auth-footer text-[rgba(200,225,235,0.3)] text-xs text-center font-medium">
+                Tus datos personales están protegidos y encriptados.
+            </p>}
+            </div>
         </div>
     );
 }

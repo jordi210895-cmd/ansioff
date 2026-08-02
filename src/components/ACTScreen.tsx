@@ -12,26 +12,26 @@ const STEPS = [
     {
         t: 'Afrontar',
         icon: <Shield className="w-6 h-6" />,
-        desc: 'No huyas de las sensaciones. Quédate en el lugar donde estás y observa lo que ocurre en tu cuerpo sin intentar evitarlo.',
-        long: 'Huir refuerza el miedo. Al quedarte, le estás diciendo a tu cerebro que la sensación no es peligrosa, solo incómoda.'
+        desc: 'Haz una pausa y observa lo que ocurre sin intentar resolverlo todo a la vez.',
+        long: 'Practica quedarte unos instantes y observar con curiosidad. El objetivo es crear margen antes de continuar.'
     },
     {
         t: 'Aceptar',
         icon: <Info className="w-6 h-6" />,
-        desc: 'Deja que las sensaciones fluyan. No luches contra ellas. Acéptalas como si fueran una lluvia intensa que te está mojando.',
-        long: 'Aceptar significa no poner tensión. Si tu corazón late rápido, dite a ti mismo: "Vale, está latiendo rápido. Lo acepto".'
+        desc: 'Deja que lo que aparece esté ahí unos segundos. No tienes que juzgarlo ni empujarlo.',
+        long: 'Aceptar aquí significa notar lo que ocurre sin juzgarlo. Es un ejercicio personal de atención.'
     },
     {
         t: 'Flotar',
         icon: <Wind className="w-6 h-6" />,
-        desc: 'Imagínate flotando sobre las olas del pánico. No remes contra ellas, deja que te lleven mientras tú mantienes tu cuerpo relajado.',
-        long: 'El pánico es como una ola. Si nadas contra ella, te agotas. Si flotas, la ola pasará y tú seguirás en la superficie.'
+        desc: 'Imagínate flotando sobre una ola. No remes contra ella: acompaña el movimiento y vuelve poco a poco.',
+        long: 'Usa la imagen de una ola como metáfora de atención. Puedes repetirlo cuando quieras hacer una pausa.'
     },
     {
         t: 'Dejar pasar',
         icon: <Clock className="w-6 h-6" />,
-        desc: 'Sé paciente. La adrenalina tarda unos minutos en disolverse. Deja que el tiempo pase sin mirar el reloj con ansiedad.',
-        long: 'No esperes que el miedo se vaya "ya mismo". Dale permiso para estar el tiempo que necesite. Eventualmente, se cansará.'
+        desc: 'Sé paciente. Deja que el tiempo pase sin mirar el reloj y continúa cuando estés listo.',
+        long: 'Date tiempo y reduce la exigencia. Esta práctica solo busca ayudarte a organizar una pausa.'
     }
 ];
 
@@ -40,16 +40,16 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
 
     return (
         <div className="flex flex-col h-full bg-[#03080f] text-[#ddeef5] overflow-hidden">
-            <TopBar title="Sin Miedo" onBack={onBack} />
+            <TopBar title="Aceptación" onBack={onBack} />
             <div className="flex-1 overflow-y-auto px-5 pb-24 animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="mb-6 mt-4">
                     {/* Claire Weekes Attribution Card */}
                     <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-2xl p-5 mb-2 shadow-sm">
-                        <div className="text-[rgba(200,225,235,0.38)] text-[10px] uppercase tracking-widest font-bold mb-1">Método creado por</div>
-                        <div className="text-[#ddeef5] text-2xl font-light font-serif italic mb-1">Dra. Claire Weekes</div>
-                        <div className="text-[#5aadcf]/70 text-[11px] mb-4">Psiquiatra y pionera del pánico · 1962</div>
+                        <div className="text-[rgba(200,225,235,0.38)] text-[10px] uppercase tracking-widest font-bold mb-1">Ejercicio inspirado en</div>
+                        <div className="text-[#ddeef5] text-2xl font-light font-serif italic mb-1">Aceptación y atención plena</div>
+                        <div className="text-[#5aadcf]/70 text-[11px] mb-4">Recurso educativo de atención</div>
                         <p className="font-sans font-light text-sm text-[rgba(200,225,235,0.38)] leading-relaxed">
-                            La Dra. Weekes descubrió que el pánico se alimenta de la lucha y la huida. Sus 4 pasos — Afrontar, Aceptar, Flotar y Dejar pasar — rompen ese ciclo de raíz.
+                            Estos pasos son una práctica de observación para crear una pausa y volver a lo que estabas haciendo.
                         </p>
                     </div>
                 </div>
@@ -94,4 +94,3 @@ export default function ACTScreen({ onBack }: ACTScreenProps) {
         </div>
     );
 }
-

@@ -32,7 +32,7 @@ export default function GamesScreen({ onBack }: GamesScreenProps) {
             <div className="flex flex-col h-full bg-slate-950 text-white overflow-hidden">
                 <TopBar title="Juegos de Anclaje" onBack={onBack} />
                 <div className="flex-1 overflow-y-auto screen-px pb-24">
-                    <div className="text-blue-500 text-[10px] uppercase tracking-widest font-bold mt-4 mb-6">Distracción Cognitiva</div>
+                    <div className="text-blue-500 text-[10px] uppercase tracking-widest font-bold mt-4 mb-6">Atención y pausa</div>
 
                     <div className="space-y-4">
                         <button
@@ -60,7 +60,7 @@ export default function GamesScreen({ onBack }: GamesScreenProps) {
                             </div>
                             <h3 className="text-xl font-medium mb-1 font-serif">Restas en Cascada</h3>
                             <p className="text-slate-400 text-xs leading-relaxed max-w-[80%]">
-                                Activa tu razonamiento lógico para reducir la intensidad emocional.
+                                Activa tu razonamiento lógico para centrar la atención unos minutos.
                             </p>
                             <ArrowRight className="absolute right-6 bottom-6 text-slate-700 group-hover:text-blue-500 transition-colors" size={20} />
                         </button>
@@ -74,7 +74,7 @@ export default function GamesScreen({ onBack }: GamesScreenProps) {
                             <HelpCircle size={16} /> ¿Para qué sirven estos juegos?
                         </div>
                         <p className="text-slate-200/40 text-xs leading-relaxed">
-                            Durante un ataque de pánico, el cerebro emocional toma el control. Estos ejercicios fuerzan al cerebro a usar la lógica y la coordinación, ayudando a interrumpir el ciclo de pensamientos catastróficos.
+                            Estos ejercicios son recursos de concentración. Pueden ayudarte a poner la atención en una tarea concreta durante unos minutos y crear una pausa sencilla.
                         </p>
                     </div>
                 </div>
@@ -103,4 +103,3 @@ export default function GamesScreen({ onBack }: GamesScreenProps) {
 
     return null;
 }
-

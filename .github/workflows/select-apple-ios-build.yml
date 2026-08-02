@@ -1,0 +1,40 @@
+name: Select Apple iOS Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_version:
+        description: 'App Store version to associate the build with'
+        required: true
+        default: '1.1.1'
+      build_number:
+        description: 'Build number to associate with the App Store version'
+        required: true
+        default: '39'
+      select_build:
+        description: 'Set true to associate the build with the App Store version'
+        required: true
+        default: 'true'
+
+jobs:
+  select:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Select build in App Store Connect
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 || secrets.APP_STORE_CONNECT_API_KEY }}
+          APP_STORE_BUNDLE_ID: com.ansioff.app.jordi
+          APP_STORE_VERSION: ${{ inputs.app_version }}
+          APP_STORE_BUILD_NUMBER: ${{ inputs.build_number }}
+          SELECT_BUILD: ${{ inputs.select_build }}
+        run: node scripts/select-apple-ios-build.mjs
