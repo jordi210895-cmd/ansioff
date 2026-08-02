@@ -509,7 +509,8 @@ export default function App() {
       });
     } else {
       try {
-        setCbtCount(JSON.parse(localStorage.getItem('ansioff_cbt_entries') || '[]').length);
+        const localCbtRecords = localStorage.getItem('ansioff_local_cbt_records') || localStorage.getItem('ansioff_cbt_entries') || '[]';
+        setCbtCount(JSON.parse(localCbtRecords).length);
       } catch {
         setCbtCount(0);
       }
@@ -713,7 +714,7 @@ export default function App() {
       case 'sc-night':
         return <NightModeScreen onBack={goBack} onNav={handleNav} />;
       case 'sc-settings':
-        return <SettingsScreen onBack={goBack} profile={profile} onLogout={handleLogout} onDeleteAccount={session ? handleDeleteAccount : undefined} onLogin={() => setShowAuth(true)} isPremium={hasPremium} isComplimentary={isComplimentaryAccount} subscriptionStatus={subscription.status} managementURL={subscription.managementURL} onUpgrade={() => setPaywallPlacement('feature')} onRestore={handleRestore} />;
+        return <SettingsScreen onBack={goBack} profile={profile} session={session} onLogout={handleLogout} onDeleteAccount={session ? handleDeleteAccount : undefined} onLogin={() => setShowAuth(true)} isPremium={hasPremium} isComplimentary={isComplimentaryAccount} subscriptionStatus={subscription.status} managementURL={subscription.managementURL} onUpgrade={() => setPaywallPlacement('feature')} onRestore={handleRestore} />;
       case 'sc-exposure-why':
         return <ExposureScreen onBack={goBack} userId={currentUserId} />;
       default:

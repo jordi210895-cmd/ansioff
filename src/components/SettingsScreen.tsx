@@ -15,6 +15,7 @@ import { cancelDailyReminder, getDailyReminderStatus, scheduleDailyReminder } fr
 interface SettingsScreenProps {
     onBack: () => void;
     profile?: any;
+    session?: any;
     onLogout?: () => void;
     onDeleteAccount?: () => Promise<void>;
     onLogin?: () => void;
@@ -26,7 +27,7 @@ interface SettingsScreenProps {
     onRestore: () => Promise<void>;
 }
 
-export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAccount, onLogin, isPremium, isComplimentary = false, subscriptionStatus, managementURL, onUpgrade, onRestore }: SettingsScreenProps) {
+export default function SettingsScreen({ onBack, profile, session, onLogout, onDeleteAccount, onLogin, isPremium, isComplimentary = false, subscriptionStatus, managementURL, onUpgrade, onRestore }: SettingsScreenProps) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [showAccountDeleteConfirm, setShowAccountDeleteConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -222,21 +223,40 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                     </div>
                 </div>
 
-                <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[rgba(200,225,235,0.38)] mb-4 px-1">Cuenta y suscripción</div>
+                <div className="font-sans font-bold text-[10px] uppercase tracking-widest text-[rgba(200,225,235,0.38)] mb-4 px-1">Cuenta y sesión</div>
                 <div className="space-y-3 mb-8">
                     <button
-                        onClick={profile ? undefined : onLogin}
+                        onClick={profile || session ? undefined : onLogin}
                         className="w-full bg-[rgba(255,255,255,0.04)] p-5 rounded-2xl flex items-center gap-4 border border-[rgba(255,255,255,0.07)] text-left"
                     >
                         <div className="w-10 h-10 rounded-xl bg-[#5aadcf]/10 border border-[#5aadcf]/20 flex items-center justify-center text-[#5aadcf]">
                             <Cloud size={20} className="stroke-[1.5]" />
                         </div>
                         <div className="flex-1">
-                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">{profile ? 'Cuenta conectada' : 'Usando ANSIOFF como invitado'}</h3>
-                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.55)]">{profile ? 'Tu compra queda vinculada a esta cuenta.' : 'Crea una cuenta cuando quieras para sincronizar tu acceso.'}</p>
+                            <h3 className="font-sans font-medium text-sm text-[#ddeef5] mb-1">
+                                {profile?.name || session?.user?.user_metadata?.name || (session?.user?.email ? session.user.email.split('@')[0] : 'Cuenta conectada')}
+                            </h3>
+                            <p className="font-sans font-light text-[11px] text-[rgba(200,225,235,0.55)]">
+                                {session?.user?.email || (profile ? 'Tu compra queda vinculada a esta cuenta.' : 'Crea una cuenta cuando quieras para sincronizar tu acceso.')}
+                            </p>
                         </div>
-                        {!profile && <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)]" />}
+                        {!profile && !session && <ChevronRight size={18} className="text-[rgba(200,225,235,0.6)]" />}
                     </button>
+
+                    {session && onLogout && (
+                        <button
+                            onClick={onLogout}
+                            className="w-full bg-red-500/5 p-4 rounded-xl flex items-center gap-4 border border-red-500/15 hover:bg-red-500/10 hover:border-red-500/25 transition-all duration-200 group"
+                        >
+                            <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
+                                <LogOut size={16} className="stroke-[1.5]" />
+                            </div>
+                            <div className="flex-1 text-left">
+                                <h3 className="font-sans font-medium text-xs text-slate-300 group-hover:text-red-300 transition-colors">Cerrar sesión</h3>
+                            </div>
+                            <ChevronRight size={16} className="text-slate-600 group-hover:text-red-300 transition-colors" />
+                        </button>
+                    )}
 
                     <button
                         onClick={isComplimentary ? undefined : isPremium ? handleManageSubscription : onUpgrade}
@@ -435,20 +455,6 @@ export default function SettingsScreen({ onBack, profile, onLogout, onDeleteAcco
                         <ChevronRight size={16} className="text-slate-600 group-hover:text-blue-400 transition-colors" />
                     </button>
 
-                    {profile && onLogout && (
-                        <button
-                            onClick={onLogout}
-                            className="w-full bg-[rgba(255,255,255,0.02)] p-4 rounded-xl flex items-center gap-4 border border-[rgba(255,255,255,0.05)] hover:bg-red-500/10 hover:border-red-500/20 transition-all duration-200 group"
-                        >
-                            <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
-                                <LogOut size={16} className="stroke-[1.5]" />
-                            </div>
-                            <div className="flex-1 text-left">
-                                <h3 className="font-sans font-medium text-xs text-slate-300 group-hover:text-red-300 transition-colors">Cerrar sesión</h3>
-                            </div>
-                            <ChevronRight size={16} className="text-slate-600 group-hover:text-red-300 transition-colors" />
-                        </button>
-                    )}
                 </div>
 
                 {/* --- CONFIGURACIÓN COGNITIVA (NEUROUX) --- */}

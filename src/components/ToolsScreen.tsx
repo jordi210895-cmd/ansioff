@@ -2,7 +2,7 @@
 
 import {
     Activity, Wind, Gamepad2, Music, PenLine, Heart,
-    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole
+    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, Settings
 } from 'lucide-react';
 
 interface ToolsScreenProps {
@@ -38,6 +38,12 @@ const moduleCategories = [
             { id: 'sc-games', name: 'Juegos', sub: 'Atención y pausa', icon: <Gamepad2 />, color: 'var(--am)' },
             { id: 'sc-eval', name: 'Check-in', sub: 'Seguimiento personal', icon: <FileText />, color: 'var(--p3)' },
             { id: 'sc-night', name: 'Modo Noche', sub: 'Rutina nocturna', icon: <Moon />, color: 'var(--c3)' },
+        ]
+    },
+    {
+        title: 'Cuenta',
+        tools: [
+            { id: 'sc-settings', name: 'Ajustes', sub: 'Cuenta, sesión y privacidad', icon: <Settings />, color: 'var(--c)' },
         ]
     }
 ];

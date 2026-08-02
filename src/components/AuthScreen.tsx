@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { supabase } from '@/lib/supabase';
-import { LogIn, UserPlus, Mail, Lock, Loader2, X, User } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, Loader2, X, User, Tag, UserRoundPlus } from 'lucide-react';
 
 interface AuthScreenProps {
     onAuth: (session?: any, profile?: any) => void;
@@ -22,6 +22,8 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [referrerName, setReferrerName] = useState('');
+    const [referralCode, setReferralCode] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
@@ -78,12 +80,31 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
                 if (error) throw error;
                 onAuth();
             } else if (mode === 'signup') {
+                const normalizedReferrerName = referrerName.trim();
+                const normalizedReferralCode = referralCode.trim().toUpperCase();
                 const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
-                    options: { data: { name: name.trim() } },
+                    options: {
+                        data: {
+                            name: name.trim(),
+                            referrer_name: normalizedReferrerName || null,
+                            referral_code: normalizedReferralCode || null,
+                        },
+                    },
                 });
                 if (error) throw error;
+
+                try {
+                    if (normalizedReferrerName) {
+                        localStorage.setItem('ansioff_referrer_name', normalizedReferrerName);
+                    }
+                    if (normalizedReferralCode) {
+                        localStorage.setItem('ansioff_referral_code', normalizedReferralCode);
+                    }
+                } catch (storageError) {
+                    console.warn('Referral details could not be stored locally.', storageError);
+                }
                 if (data.session) {
                     onAuth();
                     return;
@@ -422,6 +443,30 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
                             />
                             <Lock size={19} className="auth-input-icon" />
                         </div>
+                    )}
+
+                    {mode === 'signup' && (
+                        <>
+                            <div className="input-group">
+                                <input
+                                    type="text"
+                                    placeholder="Nombre del profesional que te invita (Opcional)"
+                                    value={referrerName}
+                                    onChange={(event) => setReferrerName(event.target.value)}
+                                />
+                                <UserRoundPlus size={19} className="auth-input-icon" />
+                            </div>
+                            <div className="input-group">
+                                <input
+                                    type="text"
+                                    placeholder="Código de Influencer / Promocional (Opcional)"
+                                    value={referralCode}
+                                    onChange={(event) => setReferralCode(event.target.value)}
+                                    autoCapitalize="characters"
+                                />
+                                <Tag size={19} className="auth-input-icon" />
+                            </div>
+                        </>
                     )}
 
                     {error && (

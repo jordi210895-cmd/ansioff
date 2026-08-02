@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ArrowLeft, FileText, Check, Share2, Download, Eye, Calendar, Sparkles } from 'lucide-react';
-import { generateReportPDF, ReportOptions, ReportDataCounts, getReportCounts } from '@/utils/exportUtils';
+import { downloadReportPDF, generateReportPDF, ReportOptions, ReportDataCounts, getReportCounts } from '@/utils/exportUtils';
 
 interface ExportReportScreenProps {
     onBack: () => void;
@@ -80,16 +80,7 @@ export default function ExportReportScreen({ onBack, userId }: ExportReportScree
 
     const handleDownload = () => {
         if (!pdfGenerated) return;
-        if (pdfGenerated.pdfDoc && typeof pdfGenerated.pdfDoc.save === 'function') {
-            pdfGenerated.pdfDoc.save(pdfGenerated.fileName);
-        } else {
-            const a = document.createElement('a');
-            a.href = pdfGenerated.blobUrl;
-            a.download = pdfGenerated.fileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
+        downloadReportPDF(pdfGenerated);
     };
 
     const handleShare = async () => {

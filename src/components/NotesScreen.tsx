@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BrainCircuit, Loader2, ShieldCheck, X } from 'lucide-react';
+import { BrainCircuit, Download, Loader2, ShieldCheck, X } from 'lucide-react';
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
+import { exportClinicalDiaryPDF } from '@/utils/exportUtils';
 
 const AI_CONSENT_KEY = 'ansioff_ai_reflection_consent_v1';
 const NOTES_STORAGE_KEY = 'ansioff_notes';
@@ -127,6 +128,11 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         localStorage.setItem(AI_CONSENT_KEY, 'accepted');
         setShowAiConsent(false);
         void analyzeNotes();
+    };
+
+    const handleExportPDF = () => {
+        const exported = exportClinicalDiaryPDF();
+        if (!exported) alert('No se pudo generar el informe PDF. Inténtalo de nuevo.');
     };
 
     const analyzeNotes = async () => {
@@ -284,7 +290,17 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
                         <div className="nt-title">Diario</div>
                         <div className="nt-sub">Escribe tus pensamientos para liberarlos</div>
                     </div>
-                    <div onClick={onBack} style={{ cursor: 'pointer', padding: '8px', background: 'var(--glass)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</div>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <button
+                            type="button"
+                            onClick={handleExportPDF}
+                            aria-label="Exportar diario en PDF"
+                            style={{ cursor: 'pointer', padding: '8px 10px', background: 'rgba(90,173,207,.12)', color: '#5aadcf', borderRadius: '12px', border: '1px solid rgba(90,173,207,.25)', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 700 }}
+                        >
+                            <Download size={14} /> PDF
+                        </button>
+                        <button type="button" onClick={onBack} aria-label="Volver" style={{ cursor: 'pointer', padding: '8px 12px', background: 'var(--glass)', color: 'var(--text)', borderRadius: '12px', border: '1px solid var(--border)' }}>‹</button>
+                    </div>
                 </div>
             </div>
 

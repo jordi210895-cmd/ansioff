@@ -30,14 +30,19 @@ interface Note {
 
 interface CBTEntry {
     id: number | string;
-    date: string;
-    trigger: string;
-    negative_thought: string;
-    emotions: string;
+    date?: string;
+    created_at?: string;
+    trigger?: string;
+    thought?: string;
+    negative_thought?: string;
+    emotions?: string;
+    evidence?: string;
+    distortion?: string | null;
     cognitive_distortion?: string;
-    alternative_thought: string;
-    belief_before: number;
-    belief_after: number;
+    alternative?: string;
+    alternative_thought?: string;
+    belief_before?: number;
+    belief_after?: number;
 }
 
 interface ExposureEntry {
@@ -107,10 +112,10 @@ export function getReportCounts(period: 'semanal' | 'mensual', userId?: string):
     } catch { }
 
     try {
-        const cbtStr = localStorage.getItem('ansioff_cbt_entries');
+        const cbtStr = localStorage.getItem('ansioff_local_cbt_records') || localStorage.getItem('ansioff_cbt_entries');
         const cbt: CBTEntry[] = cbtStr ? JSON.parse(cbtStr) : [];
         diaryCount += cbt.filter((c) => {
-            const d = new Date(c.date || '');
+            const d = new Date(c.created_at || c.date || '');
             return !isNaN(d.getTime()) && d >= cutoffDate;
         }).length;
     } catch { }
@@ -377,14 +382,23 @@ export function generateReportPDF(options: ReportOptions) {
             } catch { }
 
             try {
-                const cbtStr = localStorage.getItem('ansioff_cbt_entries');
+                const cbtStr = localStorage.getItem('ansioff_local_cbt_records') || localStorage.getItem('ansioff_cbt_entries');
                 const cbt: CBTEntry[] = cbtStr ? JSON.parse(cbtStr) : [];
                 cbt.forEach((c) => {
-                    const d = new Date(c.date || '');
+                    const d = new Date(c.created_at || c.date || '');
                     if (!isNaN(d.getTime()) && d >= cutoffDate) {
                         const dateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
-                        const content = `Desencadenante: ${c.trigger}\nPensamiento: ${c.negative_thought}\nAlternativo: ${c.alternative_thought}`;
-                        realEntries.push({ dateStr, text: content });
+                        const thought = c.thought || c.negative_thought || c.trigger || '';
+                        const pattern = c.distortion || c.cognitive_distortion || '';
+                        const evidence = c.evidence || c.emotions || '';
+                        const alternative = c.alternative || c.alternative_thought || '';
+                        const content = [
+                            thought && `Pensamiento: ${thought}`,
+                            pattern && `Patrón: ${pattern}`,
+                            evidence && `Evidencia: ${evidence}`,
+                            alternative && `Alternativa amable: ${alternative}`,
+                        ].filter(Boolean).join('\n');
+                        if (content) realEntries.push({ dateStr, text: content });
                     }
                 });
             } catch { }
@@ -612,12 +626,49 @@ export const exportClinicalDiaryPDF = () => {
             includeExposure: true,
             includeGoals: true,
         });
-        if (result.pdfDoc && typeof result.pdfDoc.save === 'function') {
-            result.pdfDoc.save('Ansioff_Diario_Clinico.pdf');
-        }
-        return true;
+        return downloadReportPDF(result, 'Ansioff_Diario_Clinico.pdf');
     } catch (error) {
         console.error('Error generating PDF', error);
         return false;
     }
 };
+
+interface DownloadableReport {
+    fileName: string;
+    blobUrl: string;
+    pdfDoc?: {
+        save?: (fileName: string) => void;
+    };
+}
+
+export function downloadReportPDF(
+    result: DownloadableReport,
+    fileName = result.fileName
+): boolean {
+    try {
+        if (typeof document !== 'undefined' && result.blobUrl) {
+            const link = document.createElement('a');
+            link.href = result.blobUrl;
+            link.download = fileName;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            return true;
+        }
+
+        if (result.pdfDoc && typeof result.pdfDoc.save === 'function') {
+            result.pdfDoc.save(fileName);
+            return true;
+        }
+    } catch (error) {
+        console.warn('Blob PDF download failed; using jsPDF fallback.', error);
+        if (result.pdfDoc && typeof result.pdfDoc.save === 'function') {
+            result.pdfDoc.save(fileName);
+            return true;
+        }
+    }
+
+    return false;
+}
