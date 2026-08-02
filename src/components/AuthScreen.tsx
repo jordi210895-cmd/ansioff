@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { supabase } from '@/lib/supabase';
-import { LogIn, UserPlus, Mail, Lock, Loader2, X, User } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, Loader2, X, User, Tag } from 'lucide-react';
 
 interface AuthScreenProps {
     onAuth: (session?: any, profile?: any) => void;
@@ -22,6 +22,7 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [referralCode, setReferralCode] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
@@ -78,12 +79,27 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
                 if (error) throw error;
                 onAuth();
             } else if (mode === 'signup') {
+                const codeFormatted = referralCode.trim().toUpperCase();
                 const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
-                    options: { data: { name: name.trim() } },
+                    options: {
+                        data: {
+                            name: name.trim(),
+                            referral_code: codeFormatted || null,
+                        },
+                    },
                 });
                 if (error) throw error;
+
+                if (codeFormatted) {
+                    try {
+                        localStorage.setItem('ansioff_referral_code', codeFormatted);
+                    } catch (err) {
+                        console.error('Error storing referral code', err);
+                    }
+                }
+
                 if (data.session) {
                     onAuth();
                     return;
@@ -421,6 +437,18 @@ export default function AuthScreen({ onAuth, onTrialSignup, onCancel, trialOffer
                                 required
                             />
                             <Lock size={19} className="auth-input-icon" />
+                        </div>
+                    )}
+
+                    {mode === 'signup' && (
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                placeholder="Código de Influencer / Promocional (Opcional)"
+                                value={referralCode}
+                                onChange={(e) => setReferralCode(e.target.value)}
+                            />
+                            <Tag size={19} className="auth-input-icon" />
                         </div>
                     )}
 
