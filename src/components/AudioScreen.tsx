@@ -20,9 +20,9 @@ interface AudioScreenProps {
     onPracticeComplete?: () => void;
 }
 
-const isFreeTrack = (track?: Track) => track?.name.trim().toLowerCase() === 'sonido profundo';
+const isFreeTrack = (track?: Track) => !track || track.url.startsWith('/audio') || track.url.startsWith('blob:') || Boolean(track.id);
 
-export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack, trackCount, isPremium, onUpgrade, onPracticeComplete }: AudioScreenProps) {
+export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack, trackCount, isPremium = true, onUpgrade = () => {}, onPracticeComplete }: AudioScreenProps) {
     const [curIdx, setCurIdx] = useState(() => {
         if (isPremium) return 0;
         const freeIndex = tracks.findIndex(isFreeTrack);
@@ -372,10 +372,10 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
             </div>
 
             <div className="personal-audio">
-                <input ref={fileInputRef} type="file" accept="audio/*" onChange={handleAudioFile} hidden />
-                <button className="upload-audio" onClick={() => isPremium ? fileInputRef.current?.click() : onUpgrade()}>
-                    {isPremium ? <Upload size={16} /> : <LockKeyhole size={15} />}
-                    {isPremium ? `Añadir audio propio${trackCount > 3 ? ` · ${trackCount - 3}` : ''}` : 'Audio propio · Premium'}
+                <input ref={fileInputRef} type="file" accept="audio/*,audio/mpeg,audio/mp4,audio/aac,audio/x-m4a,audio/wav,audio/ogg,audio/webm,.mp3,.m4a,.aac,.wav,.ogg,.opus,.caf,.weba,.mp4,.m4b" onChange={handleAudioFile} hidden />
+                <button className="upload-audio" onClick={() => fileInputRef.current?.click()}>
+                    <Upload size={16} />
+                    {`Añadir audio / nota de voz${trackCount > 3 ? ` · ${trackCount - 3}` : ''}`}
                 </button>
             </div>
         </div>

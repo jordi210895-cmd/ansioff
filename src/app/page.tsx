@@ -353,7 +353,7 @@ export default function App() {
         );
       case 'sounds':
       case 'sc-audio':
-        return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} />;
+        return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} isPremium={Boolean(profile?.is_premium ?? true)} />;
       case 'notes':
       case 'sc-notes':
         return <NotesScreen onBack={goBack} />;
