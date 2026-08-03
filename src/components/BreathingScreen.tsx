@@ -18,16 +18,16 @@ const patterns = [
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 2, c: 'var(--c3)' }, { n: 'Exhala', d: 6, c: 'var(--p2)' }],
     },
     {
-        id: '4-7-8', chip: '4·7·8', name: 'Ritmo 4-7-8', meta: '3 repeticiones · Principiante', label: 'Ritmo', free: true, cycles: 3,
+        id: '4-7-8', chip: '4·7·8', name: 'Ritmo 4-7-8 (Sueño & Calma)', meta: '3 repeticiones · Relajación profunda', label: 'Sueño', free: true, cycles: 3,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
     },
     {
-        id: '4-7-8-calm', chip: '4·7·8', name: 'Pausa profunda', meta: '3 repeticiones · Premium', label: 'Guía', free: false, cycles: 3,
-        phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
+        id: '4-4-4-4', chip: '4·4·4', name: 'Respiración Cuadrada (Box)', meta: 'Enfoque · Control del pánico', label: 'Enfoque', free: false, cycles: null,
+        phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 4, c: 'var(--c3)' }, { n: 'Exhala', d: 4, c: 'var(--p2)' }, { n: 'Pausa', d: 4, c: 'var(--c3)' }],
     },
     {
-        id: '4-7-8-focus', chip: '4·7·8', name: 'Pausa para pensamientos repetitivos', meta: '3 repeticiones · Premium', label: 'Enfoque', free: false, cycles: 3,
-        phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
+        id: '5-2-7', chip: '5·2·7', name: 'Desconexión de Pensamientos', meta: '5-2-7 · Para rumiación mental', label: 'Desconexión', free: false, cycles: null,
+        phases: [{ n: 'Inhala', d: 5, c: 'var(--c2)' }, { n: 'Aguanta', d: 2, c: 'var(--c3)' }, { n: 'Exhala', d: 7, c: 'var(--p2)' }],
     },
 ];
 
