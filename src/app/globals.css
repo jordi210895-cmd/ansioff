@@ -60,6 +60,7 @@
 }
 
 @theme {
+  --font-serif: var(--font-playfair), Georgia, serif;
   --color-primary: var(--sky-1);
   --color-background-light: var(--navy-2);
   --color-background-dark: var(--navy-1);

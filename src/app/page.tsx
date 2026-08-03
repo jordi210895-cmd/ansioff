@@ -22,6 +22,7 @@ import ExposureScreen from '@/components/ExposureScreen';
 import DisclaimerModal from '@/components/DisclaimerModal';
 import AuthScreen from '@/components/AuthScreen';
 import InstallPWA from '@/components/InstallPWA';
+import PsychologistsScreen from '@/components/PsychologistsScreen';
 
 interface Track {
   id?: number;
@@ -386,6 +387,8 @@ export default function App() {
         return <SettingsScreen onBack={goBack} profile={profile} session={session} onLogout={handleLogout} onDeleteAccount={handleDeleteAccount} />;
       case 'sc-exposure-why':
         return <ExposureScreen onBack={goBack} />;
+      case 'sc-psychologists':
+        return <PsychologistsScreen onBack={goBack} />;
       default:
         return (
           <>

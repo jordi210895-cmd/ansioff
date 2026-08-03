@@ -2,7 +2,7 @@
 
 import {
     Activity, Wind, Gamepad2, Music, PenLine, Heart,
-    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole
+    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, UserCheck
 } from 'lucide-react';
 
 interface ToolsScreenProps {
@@ -23,6 +23,12 @@ const moduleCategories = [
         ]
     },
     {
+        title: 'Apoyo Profesional',
+        tools: [
+            { id: 'sc-psychologists', name: 'Psicólogos Colaboradores', sub: 'Directorio de especialistas', icon: <UserCheck />, color: '#5aadcf' },
+        ]
+    },
+    {
         title: 'Rutinas',
         tools: [
             { id: 'breath', name: 'Ritmos guiados', sub: 'Patrones visuales', icon: <Wind />, color: 'var(--c)' },
@@ -31,7 +37,7 @@ const moduleCategories = [
         ]
     },
     {
-        title: 'Herramientas',
+        title: 'Especiales',
         tools: [
             { id: 'sc-games', name: 'Juegos', sub: 'Atención y pausa', icon: <Gamepad2 />, color: 'var(--am)' },
             { id: 'sc-eval', name: 'Check-in', sub: 'Seguimiento personal', icon: <FileText />, color: 'var(--p3)' },

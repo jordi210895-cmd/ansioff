@@ -73,3 +73,7 @@ public/audio/
 *.m4a
 *.mp3
 *.wav
+
+# local backups / subfolders
+ansioff-actual-jordi/
+

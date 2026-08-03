@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -7,6 +7,12 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -51,7 +57,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body
-        className={`${plusJakartaSans.variable} antialiased font-[family-name:var(--font-plus-jakarta)] bg-[#040208] text-white`}
+        className={`${plusJakartaSans.variable} ${playfairDisplay.variable} antialiased font-[family-name:var(--font-plus-jakarta)] bg-[#040208] text-white`}
       >
         {children}
         {oneSignalAppId && (
