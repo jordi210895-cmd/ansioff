@@ -14,20 +14,20 @@ interface BreathingScreenProps {
 
 const patterns = [
     {
-        id: '4-2-6', chip: '4·2·6', name: 'Pausa 4-2-6', meta: '5 min · Principiante', label: 'Pausa', free: true, cycles: null,
+        id: '4-2-6', chip: '4·2·6', name: 'Alivio rápido 4-2-6', meta: '5 min · Principiante', label: 'Alivio', free: true, cycles: null,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 2, c: 'var(--c3)' }, { n: 'Exhala', d: 6, c: 'var(--p2)' }],
     },
     {
-        id: '4-7-8', chip: '4·7·8', name: 'Ritmo 4-7-8', meta: '3 repeticiones · Principiante', label: 'Ritmo', free: true, cycles: 3,
+        id: '4-7-8', chip: '4·7·8', name: 'Relajación profunda 4-7-8', meta: '3 repeticiones · Calma', label: 'Calma', free: true, cycles: 3,
         phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
     },
     {
-        id: '4-7-8-calm', chip: '4·7·8', name: 'Pausa profunda', meta: '3 repeticiones · Premium', label: 'Guía', free: false, cycles: 3,
-        phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
+        id: '4-4-4-4', chip: '4·4·4·4', name: 'Respiración cuadrada', meta: 'Ritmo 4-4-4-4 · Enfoque', label: 'Enfoque', free: false, cycles: null,
+        phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 4, c: 'var(--c3)' }, { n: 'Exhala', d: 4, c: 'var(--p2)' }, { n: 'Pausa', d: 4, c: 'var(--c3)' }],
     },
     {
-        id: '4-7-8-focus', chip: '4·7·8', name: 'Pausa para pensamientos repetitivos', meta: '3 repeticiones · Premium', label: 'Enfoque', free: false, cycles: 3,
-        phases: [{ n: 'Inhala', d: 4, c: 'var(--c2)' }, { n: 'Aguanta', d: 7, c: 'var(--c3)' }, { n: 'Exhala', d: 8, c: 'var(--p2)' }],
+        id: '5-2-7', chip: '5·2·7', name: 'Desconexión 5-2-7', meta: 'Para pensamientos repetitivos', label: 'Desconexión', free: false, cycles: null,
+        phases: [{ n: 'Inhala', d: 5, c: 'var(--c2)' }, { n: 'Aguanta', d: 2, c: 'var(--c3)' }, { n: 'Exhala', d: 7, c: 'var(--p2)' }],
     },
 ];
 
@@ -71,7 +71,7 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
             }, 1000);
         }
         return () => clearTimeout(timer);
-    }, [cycle, running, cnt, pi, phases, onPracticeComplete]);
+    }, [cycle, running, cnt, pi, phases, totalCycles, onPracticeComplete]);
 
     useEffect(() => {
         const completedMinutes = Math.floor(elapsedSeconds / 60);

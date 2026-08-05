@@ -27,6 +27,7 @@ interface ExposureEntry {
     after: number;
     tool: string;
     comment: string;
+    durationMins?: number;
     createdAt: string;
 }
 
@@ -44,6 +45,7 @@ interface ExposureDraft {
     after: number;
     tool: string;
     comment: string;
+    durationMins: number;
 }
 
 const STORAGE_PREFIX = 'ansioff_exposure_hierarchy_v1';
@@ -58,6 +60,10 @@ const TOOLS = [
 
 function storageKey(userId?: string) {
     return `${STORAGE_PREFIX}:${userId || 'guest'}`;
+}
+
+function reasonStorageKey(userId?: string) {
+    return `ansioff_exposure_reason:${userId || 'guest'}`;
 }
 
 function createId() {
@@ -91,12 +97,15 @@ function formatNumber(value: number) {
 
 export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) {
     const key = storageKey(userId);
+    const reasonKey = reasonStorageKey(userId);
     const [situations, setSituations] = useState<ExposureSituation[]>([]);
     const [loadedKey, setLoadedKey] = useState<string | null>(null);
     const [situationName, setSituationName] = useState('');
     const [situationLevel, setSituationLevel] = useState(5);
     const [openSituationId, setOpenSituationId] = useState<string | null>(null);
     const [draft, setDraft] = useState<ExposureDraft | null>(null);
+    const [personalGoal, setPersonalGoal] = useState('');
+    const [goalSaved, setGoalSaved] = useState(false);
 
     useEffect(() => {
         setLoadedKey(null);
@@ -123,6 +132,13 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
         }
         setLoadedKey(key);
     }, [key]);
+
+    useEffect(() => {
+        const savedGoal = window.localStorage.getItem(reasonKey)
+            || window.localStorage.getItem('ansioff_exposure_reason')
+            || '';
+        setPersonalGoal(savedGoal);
+    }, [reasonKey]);
 
     useEffect(() => {
         if (loadedKey !== key) return;
@@ -157,7 +173,17 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
             after: situation.level,
             tool: '',
             comment: '',
+            durationMins: 15,
         });
+    };
+
+    const savePersonalGoal = () => {
+        const value = personalGoal.trim();
+        if (!value) return;
+        window.localStorage.setItem(reasonKey, value);
+        setPersonalGoal(value);
+        setGoalSaved(true);
+        window.setTimeout(() => setGoalSaved(false), 1800);
     };
 
     const saveEntry = () => {
@@ -169,6 +195,7 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
             after: draft.after,
             tool: draft.tool,
             comment: draft.comment.trim(),
+            durationMins: draft.durationMins,
             createdAt: new Date().toISOString(),
         };
         setSituations((current) => current.map((situation) => (
@@ -204,11 +231,19 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
                 .exposure-title{font-size:36px;font-weight:800;line-height:1.03;letter-spacing:-.04em;}
                 .exposure-subtitle{font-size:14px;color:rgba(255,255,255,.48);margin-top:8px;}
                 .back-button{width:38px;height:38px;display:flex;align-items:center;justify-content:center;margin-top:2px;border-radius:13px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);cursor:pointer;}
-                .info-card,.form-card{margin:0 16px 14px;border-radius:18px;}
+                .info-card,.goal-card,.form-card{margin:0 16px 14px;border-radius:18px;}
                 .info-card{display:flex;gap:12px;align-items:flex-start;padding:15px 16px;border:1px solid rgba(0,196,255,.22);background:rgba(0,196,255,.06);}
                 .info-icon{display:block;flex:0 0 auto;margin-top:1px;font-size:18px;line-height:1.2;}
                 .info-copy{font-size:13px;line-height:1.5;color:rgba(255,255,255,.64);}
                 .info-copy strong{color:#00c4ff;font-weight:700;}
+                .goal-card{padding:15px 16px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);}
+                .goal-heading{display:flex;align-items:center;gap:7px;margin-bottom:9px;color:#fff;font-size:13px;font-weight:800;}
+                .goal-copy{margin-bottom:10px;color:rgba(255,255,255,.4);font-size:11px;line-height:1.45;}
+                .goal-input{width:100%;min-height:70px;padding:11px 12px;resize:vertical;outline:none;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:13px;line-height:1.45;}
+                .goal-input:focus{border-color:#00c4ff;}
+                .goal-input::placeholder{color:rgba(255,255,255,.25);}
+                .goal-save{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;min-height:40px;margin-top:9px;border:0;border-radius:11px;background:rgba(0,196,255,.13);color:#00c4ff;font-size:12px;font-weight:800;cursor:pointer;}
+                .goal-save:disabled{opacity:.4;cursor:not-allowed;}
                 .form-card{padding:16px 18px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.06);}
                 .field-label,.section-label{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.34);}
                 .field-label{margin-bottom:12px;}
@@ -271,6 +306,9 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
                 .notes-input{width:100%;min-height:92px;padding:11px 14px;resize:vertical;outline:none;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:14px;line-height:1.5;}
                 .notes-input:focus{border-color:#00c4ff;}
                 .notes-input::placeholder{color:rgba(255,255,255,.25);}
+                .duration-row{display:flex;align-items:center;gap:12px;}
+                .duration-input{width:92px;height:42px;padding:0 10px;border:1px solid rgba(255,255,255,.1);border-radius:11px;outline:none;background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:15px;font-weight:800;text-align:center;}
+                .duration-copy{color:rgba(255,255,255,.42);font-size:12px;line-height:1.4;}
                 .modal-actions{display:flex;gap:10px;margin-top:18px;}
                 .modal-cancel,.modal-save{min-height:48px;border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;}
                 .modal-cancel{flex:1;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);color:rgba(255,255,255,.7);}
@@ -293,6 +331,21 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
                         Ordena tus situaciones de <strong>menor a mayor malestar</strong> (1–10).
                         Registra tu ansiedad antes y después de cada exposición y comprueba cómo disminuye con el tiempo.
                     </p>
+                </section>
+
+                <section className="goal-card" aria-label="Objetivo personal de exposición">
+                    <div className="goal-heading"><Brain size={16} color="#00c4ff" /> Mi objetivo personal</div>
+                    <p className="goal-copy">Anota qué quieres recuperar o conseguir. Se incluirá en el informe PDF que decidas compartir.</p>
+                    <textarea
+                        className="goal-input"
+                        value={personalGoal}
+                        onChange={(event) => setPersonalGoal(event.target.value)}
+                        placeholder="Ej: Quiero volver a usar el transporte público con más tranquilidad."
+                        maxLength={500}
+                    />
+                    <button className="goal-save" onClick={savePersonalGoal} disabled={!personalGoal.trim()}>
+                        {goalSaved ? 'Objetivo guardado' : 'Guardar objetivo'}
+                    </button>
                 </section>
 
                 <section className="form-card" aria-label="Añadir situación">
@@ -380,6 +433,21 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
                                     <input type="range" min="1" max="10" value={draft[field]} onChange={(event) => setDraft({ ...draft, [field]: Number(event.target.value) })} aria-label={`Ansiedad ${field}`} style={{ accentColor: field === 'during' ? '#ffa828' : '#00c4ff' }} />
                                 </label>
                             ))}
+                        </div>
+
+                        <hr className="divider" />
+                        <div className="field-label" style={{ marginBottom: 10 }}>Duración aproximada</div>
+                        <div className="duration-row">
+                            <input
+                                className="duration-input"
+                                type="number"
+                                min="1"
+                                max="600"
+                                value={draft.durationMins}
+                                onChange={(event) => setDraft({ ...draft, durationMins: Math.min(600, Math.max(1, Number(event.target.value) || 1)) })}
+                                aria-label="Duración de la exposición en minutos"
+                            />
+                            <span className="duration-copy">minutos de exposición</span>
                         </div>
 
                         <hr className="divider" />

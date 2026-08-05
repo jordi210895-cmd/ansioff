@@ -372,10 +372,10 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
             </div>
 
             <div className="personal-audio">
-                <input ref={fileInputRef} type="file" accept="audio/*" onChange={handleAudioFile} hidden />
+                <input ref={fileInputRef} type="file" accept="audio/*,audio/mpeg,audio/mp4,audio/aac,audio/x-m4a,audio/x-caf,audio/wav,audio/ogg,audio/opus,audio/webm,.mp3,.m4a,.aac,.caf,.wav,.ogg,.opus,.weba,.mp4,.m4b" onChange={handleAudioFile} hidden />
                 <button className="upload-audio" onClick={() => isPremium ? fileInputRef.current?.click() : onUpgrade()}>
                     {isPremium ? <Upload size={16} /> : <LockKeyhole size={15} />}
-                    {isPremium ? `Añadir audio propio${trackCount > 3 ? ` · ${trackCount - 3}` : ''}` : 'Audio propio · Premium'}
+                    {isPremium ? `Añadir audio o nota de voz${trackCount > 3 ? ` · ${trackCount - 3}` : ''}` : 'Audio propio · Premium'}
                 </button>
             </div>
         </div>
