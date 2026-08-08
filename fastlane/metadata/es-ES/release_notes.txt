@@ -1,1 +1,1 @@
-Actualizamos la ficha de ANSIOFF con nuevas capturas, mejoras visuales y una presentación más clara de las herramientas de respiración, sonidos, diario y Kit SOS.
+Ahora puedes registrar exposiciones con objetivo personal, duración y niveles de malestar, y reflejarlas en un informe PDF más útil para compartir con tu profesional. También hemos mejorado el acceso a Ajustes y el cierre de sesión, el registro con referencia profesional, la compatibilidad con notas de voz y los ejercicios de respiración.
