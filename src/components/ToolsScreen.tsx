@@ -2,7 +2,7 @@
 
 import {
     Activity, Wind, Gamepad2, Music, PenLine, Heart,
-    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, UserCheck
+    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, UserCheck, Stethoscope
 } from 'lucide-react';
 
 interface ToolsScreenProps {
@@ -18,6 +18,7 @@ const moduleCategories = [
         title: 'Herramientas',
         tools: [
             { id: 'pause', name: 'Kit SOS', sub: 'Anclaje rápido 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
+            { id: 'sc-bodymap', name: 'Mapa Corporal', sub: 'Somatización y síntomas', icon: <Stethoscope />, color: '#38bdf8' },
             { id: 'sc-cbt', name: 'Pensamientos', sub: 'Registro y reflexión', icon: <Brain />, color: 'var(--p)' },
             { id: 'sc-act', name: 'Aceptación', sub: 'Ejercicios guiados', icon: <Heart />, color: 'var(--p2)' },
         ]

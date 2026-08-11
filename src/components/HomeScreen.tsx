@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Headphones, PencilLine } from 'lucide-react';
+import { Headphones, PencilLine, Stethoscope } from 'lucide-react';
 import { getAllTracks } from '@/lib/db';
 
 interface HomeScreenProps {
@@ -701,8 +701,31 @@ export default function HomeScreen({ onNav, trackCount = 0 }: HomeScreenProps) {
                         )}
                     </section>
 
-                    <div className="recent-label">Reciente</div>
+                    <div className="recent-label">Mapa Corporal & Recientes</div>
                     <section className="recent-row">
+                        <button
+                            className="recent-pill"
+                            onClick={() => onNav('sc-bodymap')}
+                            type="button"
+                            style={{
+                                gridColumn: '1 / -1',
+                                background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.14), rgba(129, 140, 248, 0.08))',
+                                border: '1px solid rgba(56, 189, 248, 0.3)',
+                                padding: '16px'
+                            }}
+                        >
+                            <div className="recent-top">
+                                <span className="recent-icon" style={{ color: '#38bdf8' }}><Stethoscope size={18} /></span>
+                                <span className="recent-badge" style={{ background: '#0284c7', color: '#fff', fontWeight: 800 }}>NUEVO</span>
+                            </div>
+                            <div className="recent-title" style={{ fontSize: '15px', fontWeight: '800', color: '#f1f0f5', marginTop: '4px' }}>
+                                Mapa Corporal de Ansiedad
+                            </div>
+                            <div className="recent-sub" style={{ color: 'rgba(241, 240, 245, 0.7)', fontSize: '12px', marginTop: '2px' }}>
+                                Entiende qué siente tu cuerpo zona a zona (mareos, opresión, nudo, hormigueo).
+                            </div>
+                        </button>
+
                         <button className="recent-pill" onClick={() => onNav('sounds')} type="button">
                             <div className="recent-top">
                                 <span className="recent-icon"><Headphones size={17} /></span>
@@ -721,6 +744,7 @@ export default function HomeScreen({ onNav, trackCount = 0 }: HomeScreenProps) {
                             <div className="recent-sub">{lastNote}</div>
                         </button>
                     </section>
+
                 </main>
             </div>
         </div>

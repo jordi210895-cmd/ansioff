@@ -23,6 +23,7 @@ import DisclaimerModal from '@/components/DisclaimerModal';
 import AuthScreen from '@/components/AuthScreen';
 import InstallPWA from '@/components/InstallPWA';
 import PsychologistsScreen from '@/components/PsychologistsScreen';
+import BodyMapScreen from '@/components/BodyMapScreen';
 
 interface Track {
   id?: number;
@@ -353,7 +354,7 @@ export default function App() {
         );
       case 'sounds':
       case 'sc-audio':
-        return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} isPremium={Boolean(profile?.is_premium ?? true)} />;
+        return <AudioScreen onBack={goBack} tracks={tracks} onAddTrack={addTrack} onDeleteTrack={removeTrack} trackCount={tracks.length} isPremium={Boolean(profile?.is_premium ?? true)} onUpgrade={() => {}} />;
       case 'notes':
       case 'sc-notes':
         return <NotesScreen onBack={goBack} />;
@@ -362,13 +363,14 @@ export default function App() {
         return <SOSScreen onBack={goBack} onFinished={() => handleNav('home')} />;
       case 'breath':
       case 'sc-breath':
-        return <BreathingScreen onBack={goBack} />;
+        return <BreathingScreen onBack={goBack} isPremium={Boolean(profile?.is_premium ?? true)} onUpgrade={() => {}} />;
+
       case 'progress':
       case 'sc-stats':
         return <StatsScreen onBack={goBack} />;
       // Modules / Tools Hub
       case 'sc-tools':
-        return <ToolsScreen onBack={goBack} onNav={handleNav} />;
+        return <ToolsScreen onBack={goBack} onNav={handleNav} isPremium={Boolean(profile?.is_premium ?? true)} />;
       case 'sc-games':
         return <GamesScreen onBack={goBack} />;
       case 'sc-act':
@@ -389,6 +391,9 @@ export default function App() {
         return <ExposureScreen onBack={goBack} />;
       case 'sc-psychologists':
         return <PsychologistsScreen onBack={goBack} />;
+      case 'sc-bodymap':
+      case 'bodymap':
+        return <BodyMapScreen onBack={goBack} onNav={handleNav} />;
       default:
         return (
           <>
