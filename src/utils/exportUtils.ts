@@ -52,6 +52,7 @@ interface ExposureEntry {
     after: number;
     tool: string;
     comment: string;
+    durationMins?: number;
     createdAt: string;
 }
 
@@ -445,7 +446,41 @@ export function generateReportPDF(options: ReportOptions) {
     if (options.includeExposure) {
         drawSectionHeader('Exposición gradual', '📈');
 
-        const realSituations: { title: string; initialLevel: number; count: number; avgReduction: string }[] = [];
+        const personalGoal = typeof window !== 'undefined'
+            ? localStorage.getItem(`ansioff_exposure_reason:${options.userId || 'guest'}`)
+                || localStorage.getItem('ansioff_exposure_reason')
+            : null;
+        if (personalGoal?.trim()) {
+            doc.setFillColor(242, 249, 252);
+            const goalLines = doc.splitTextToSize(personalGoal.trim(), pageWidth - 40);
+            const goalHeight = Math.max(18, 12 + goalLines.length * 4.5);
+            if (y + goalHeight > pageHeight - 20) {
+                doc.addPage();
+                y = 20;
+            }
+            doc.rect(14, y, pageWidth - 28, goalHeight, 'F');
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(8);
+            doc.setTextColor(0, 145, 190);
+            doc.text('OBJETIVO PERSONAL', 18, y + 6);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8.5);
+            doc.setTextColor(51, 51, 51);
+            doc.text(goalLines, 18, y + 12);
+            y += goalHeight + 5;
+        }
+
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(7.5);
+        doc.setTextColor(125, 125, 125);
+        const sudsHelp = doc.splitTextToSize(
+            'SUDs (0–10): malestar subjetivo registrado antes, en el punto de mayor intensidad y al finalizar. Este informe es descriptivo y no sustituye una valoración profesional.',
+            pageWidth - 28,
+        );
+        doc.text(sudsHelp, 14, y + 3);
+        y += sudsHelp.length * 4 + 7;
+
+        const realSituations: { title: string; initialLevel: number; entries: ExposureEntry[]; avgReduction: string }[] = [];
         if (typeof window !== 'undefined') {
             try {
                 const key = `ansioff_exposure_hierarchy_v1:${options.userId || 'guest'}`;
@@ -462,7 +497,7 @@ export function generateReportPDF(options: ReportOptions) {
                         realSituations.push({
                             title: s.name,
                             initialLevel: s.level,
-                            count: validEntries.length,
+                            entries: validEntries,
                             avgReduction: totalRed > 0 ? `-${avgRed}` : `${avgRed}`,
                         });
                     }
@@ -478,13 +513,13 @@ export function generateReportPDF(options: ReportOptions) {
             y += 12;
         } else {
             realSituations.forEach((exp) => {
-                if (y > pageHeight - 30) {
+                if (y > pageHeight - 42) {
                     doc.addPage();
                     y = 20;
                 }
 
                 doc.setFillColor(248, 249, 252);
-                doc.rect(14, y, pageWidth - 28, 16, 'F');
+                doc.rect(14, y, pageWidth - 28, 15, 'F');
 
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(9);
@@ -495,15 +530,43 @@ export function generateReportPDF(options: ReportOptions) {
                 doc.setFontSize(8);
                 doc.setTextColor(85, 85, 85);
                 doc.text(
-                    `Nivel inicial: ${exp.initialLevel} · ${exp.count} exposiciones este periodo · Reducción media: `,
+                    `Jerarquía: ${exp.initialLevel}/10 · ${exp.entries.length} exposiciones · Reducción media: ${exp.avgReduction}`,
                     18,
                     y + 11
                 );
-                doc.setTextColor(26, 158, 92);
-                doc.setFont('helvetica', 'bold');
-                doc.text(exp.avgReduction, 125, y + 11);
 
-                y += 20;
+                y += 19;
+                exp.entries.forEach((entry) => {
+                    const date = new Date(entry.createdAt);
+                    const dateText = Number.isNaN(date.getTime())
+                        ? 'Sin fecha'
+                        : date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    const summary = `${dateText} · SUDs inicial ${entry.before}/10 · pico ${entry.during}/10 · final ${entry.after}/10${entry.durationMins ? ` · ${entry.durationMins} min` : ''}`;
+                    const detailParts = [
+                        entry.tool ? `Herramienta: ${entry.tool}` : '',
+                        entry.comment ? `Observaciones: ${entry.comment}` : '',
+                    ].filter(Boolean);
+                    const detailLines = detailParts.length
+                        ? doc.splitTextToSize(detailParts.join(' · '), pageWidth - 44)
+                        : [];
+                    const entryHeight = 9 + detailLines.length * 4;
+                    if (y + entryHeight > pageHeight - 18) {
+                        doc.addPage();
+                        y = 20;
+                    }
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(8);
+                    doc.setTextColor(45, 45, 45);
+                    doc.text(summary, 18, y + 4);
+                    if (detailLines.length) {
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(7.5);
+                        doc.setTextColor(95, 95, 95);
+                        doc.text(detailLines, 18, y + 9);
+                    }
+                    y += entryHeight;
+                });
+                y += 4;
             });
             y += 4;
         }

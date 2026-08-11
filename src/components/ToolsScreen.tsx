@@ -2,7 +2,7 @@
 
 import {
     Activity, Wind, Gamepad2, Music, PenLine, Heart,
-    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, Settings
+    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, Settings, UserCheck
 } from 'lucide-react';
 
 interface ToolsScreenProps {
@@ -21,6 +21,12 @@ const moduleCategories = [
             { id: 'sc-exposure-why', name: 'Exposición gradual', sub: 'Enfrenta tus miedos paso a paso', icon: <Target />, color: 'var(--r2)' },
             { id: 'sc-cbt', name: 'Pensamientos', sub: 'Registro y reflexión', icon: <Brain />, color: 'var(--p)' },
             { id: 'sc-act', name: 'Aceptación', sub: 'Ejercicios guiados', icon: <Heart />, color: 'var(--p2)' },
+        ]
+    },
+    {
+        title: 'Apoyo profesional',
+        tools: [
+            { id: 'sc-psychologists', name: 'Psicólogos', sub: 'Directorio profesional en preparación', icon: <UserCheck />, color: 'var(--c2)' },
         ]
     },
     {

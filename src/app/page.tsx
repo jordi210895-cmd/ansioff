@@ -21,6 +21,7 @@ import { supabase, getUserProfile } from '@/lib/supabase';
 import ExposureScreen from '@/components/ExposureScreen';
 import AuthScreen from '@/components/AuthScreen';
 import ExportReportScreen from '@/components/ExportReportScreen';
+import PsychologistsScreen from '@/components/PsychologistsScreen';
 import InstallPWA from '@/components/InstallPWA';
 import OnboardingFlow from '@/components/OnboardingFlow';
 import Paywall, { PaywallPlacement } from '@/components/Paywall';
@@ -717,6 +718,8 @@ export default function App() {
         return <SettingsScreen onBack={goBack} profile={profile} session={session} onLogout={handleLogout} onDeleteAccount={session ? handleDeleteAccount : undefined} onLogin={() => setShowAuth(true)} isPremium={hasPremium} isComplimentary={isComplimentaryAccount} subscriptionStatus={subscription.status} managementURL={subscription.managementURL} onUpgrade={() => setPaywallPlacement('feature')} onRestore={handleRestore} />;
       case 'sc-exposure-why':
         return <ExposureScreen onBack={goBack} userId={currentUserId} />;
+      case 'sc-psychologists':
+        return <PsychologistsScreen onBack={goBack} />;
       default:
         return (
           <>
