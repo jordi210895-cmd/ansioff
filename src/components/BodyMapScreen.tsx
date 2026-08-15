@@ -169,7 +169,7 @@ export default function BodyMapScreen({ onBack, onNav }: BodyMapScreenProps) {
                 }
 
                 .map-header {
-                    padding: 22px 24px 16px;
+                    padding: max(60px, calc(var(--safe-top, 0px) + 18px)) 24px 16px;
                     display: flex;
                     align-items: center;
                     justify-content: space-between;

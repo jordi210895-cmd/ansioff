@@ -183,7 +183,7 @@ export default function AudioScreen({ onBack, tracks, onAddTrack, onDeleteTrack,
         #sounds .aurora-2{background:radial-gradient(circle,rgba(6,182,212,0.35),transparent 70%);top:250px;left:-80px;}
         #sounds .aurora-3{background:radial-gradient(circle,rgba(244,63,94,0.2),transparent 70%);bottom:60px;right:40px;}
 
-        .snd-hd{padding:max(14px,calc(env(safe-area-inset-top,0px) + 10px)) max(24px,calc(env(safe-area-inset-right,0px) + 20px)) 12px max(24px,calc(env(safe-area-inset-left,0px) + 20px));position:relative;z-index:5;}
+        .snd-hd{padding:max(60px, calc(var(--safe-top, 0px) + 18px)) max(24px,calc(env(safe-area-inset-right,0px) + 20px)) 12px max(24px,calc(env(safe-area-inset-left,0px) + 20px));position:relative;z-index:5;}
         .snd-title{font-size:34px;font-weight:800;letter-spacing:-.035em;color:var(--text);margin-bottom:2px;line-height:1;}
         .snd-sub{font-size:12px;color:var(--text2);}
         .snd-back{cursor:pointer;width:38px;height:38px;background:var(--glass);border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;}

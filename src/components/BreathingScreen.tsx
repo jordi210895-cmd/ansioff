@@ -109,7 +109,7 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
                 #breath .aurora-2{background:radial-gradient(circle,rgba(124,58,237,0.4),transparent 70%);bottom:100px;right:-80px;}
                 #breath .aurora-3{background:radial-gradient(circle,rgba(16,185,129,0.2),transparent 70%);bottom:200px;left:60px;}
 
-                .br-hd{width:100%;padding:18px 24px 0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5;}
+                .br-hd{width:100%;padding:max(60px, calc(var(--safe-top, 0px) + 18px)) 24px 0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5;}
                 .br-back{width:36px;height:36px;border-radius:12px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:16px;transition:var(--t);}
                 .br-back:hover{border-color:var(--border2);color:var(--text);}
                 .br-hd-title{font-size:13px;font-weight:700;color:var(--text2);letter-spacing:.06em;}

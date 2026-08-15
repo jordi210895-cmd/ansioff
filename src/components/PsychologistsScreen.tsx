@@ -438,7 +438,7 @@ export default function PsychologistsScreen({ onBack }: PsychologistsScreenProps
       {/* Ambient background glow */}
       <div className="pointer-events-none absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-indigo-600/15 blur-[120px]" />
 
-      <div className="relative mx-auto max-w-2xl px-6 pb-32 pt-6 flex flex-col">
+      <div className="relative mx-auto max-w-2xl px-6 pb-32 pt-[max(60px,calc(env(safe-area-inset-top,0px)+18px))] flex flex-col">
         {/* 1. Header */}
         <div className="flex items-center gap-4 mb-8">
           <button

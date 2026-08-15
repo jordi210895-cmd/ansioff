@@ -53,7 +53,7 @@ export default function SOSScreen({ onBack, onFinished }: SOSScreenProps) {
                 #sos-kit .aurora-1{background:radial-gradient(circle,rgba(244,63,94,0.65),transparent 70%);top:-100px;left:-60px;}
                 #sos-kit .aurora-2{background:radial-gradient(circle,rgba(245,158,11,0.3),transparent 70%);bottom:0;right:-80px;}
 
-                .sos-top{padding:24px 26px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5;}
+                .sos-top{padding:max(60px, calc(var(--safe-top, 0px) + 18px)) 26px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5;}
                 .sos-badge{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);border-radius:var(--radp);padding:6px 14px;color:var(--r2);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;}
                 
                 .sos-main{flex:1;padding:0 26px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;z-index:5;}

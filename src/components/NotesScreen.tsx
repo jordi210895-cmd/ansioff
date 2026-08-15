@@ -109,7 +109,7 @@ export default function NotesScreen({ onBack }: NotesScreenProps) {
         #notes .aurora-1{background:radial-gradient(circle,rgba(16,185,129,.4),transparent 70%);top:-80px;right:-40px;}
         #notes .aurora-2{background:radial-gradient(circle,rgba(6,182,212,.25),transparent 70%);bottom:40px;left:-60px;}
 
-        .nt-hd{padding:22px 24px 14px;position:relative;z-index:5;}
+        .nt-hd{padding:max(60px, calc(var(--safe-top, 0px) + 18px)) 24px 14px;position:relative;z-index:5;}
         .nt-title{font-size:36px;font-weight:800;letter-spacing:-.03em;color:var(--text);margin-bottom:3px;}
         .nt-sub{font-size:12px;color:var(--text2);}
 

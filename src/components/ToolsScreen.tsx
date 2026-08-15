@@ -59,7 +59,7 @@ export default function ToolsScreen({ onBack, onNav, isPremium }: ToolsScreenPro
                 #modules .aurora-1{background:radial-gradient(circle,rgba(124,58,237,0.35),transparent 70%);top:-60px;right:-40px;}
                 #modules .aurora-2{background:radial-gradient(circle,rgba(6,182,212,0.25),transparent 70%);bottom:100px;left:-80px;}
 
-                .mod-hd{padding:22px 24px 20px;position:relative;z-index:5;}
+                .mod-hd{padding:max(60px, calc(var(--safe-top, 0px) + 18px)) 24px 20px;position:relative;z-index:5;}
                 .mod-title{font-size:36px;font-weight:800;letter-spacing:-.03em;color:var(--text);margin-bottom:3px;}
                 .mod-sub{font-size:12px;color:var(--text2);}
 

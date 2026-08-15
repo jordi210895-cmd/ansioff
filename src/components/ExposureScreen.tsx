@@ -198,9 +198,9 @@ export default function ExposureScreen({ onBack, userId }: ExposureScreenProps) 
             <style jsx>{`
                 .exposure-screen{position:absolute;inset:0;overflow:hidden;background:#0f0c1e;color:#fff;}
                 .exposure-screen:before{content:"";position:absolute;top:-70px;left:-70px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(80,20,140,.46),transparent 70%);pointer-events:none;}
-                .exposure-scroll{position:relative;z-index:1;height:100%;overflow-y:auto;padding:calc(20px + var(--safe-top)) 0 calc(120px + var(--safe-bottom));scrollbar-width:none;}
+                .exposure-scroll{position:relative;z-index:1;height:100%;overflow-y:auto;padding:0 0 calc(120px + var(--safe-bottom));scrollbar-width:none;}
                 .exposure-scroll::-webkit-scrollbar{display:none;}
-                .exposure-header{display:flex;align-items:flex-start;justify-content:space-between;padding:8px 20px 20px;}
+                .exposure-header{display:flex;align-items:flex-start;justify-content:space-between;padding:max(60px, calc(var(--safe-top, 0px) + 18px)) 20px 20px;}
                 .exposure-title{font-size:36px;font-weight:800;line-height:1.03;letter-spacing:-.04em;}
                 .exposure-subtitle{font-size:14px;color:rgba(255,255,255,.48);margin-top:8px;}
                 .back-button{width:38px;height:38px;display:flex;align-items:center;justify-content:center;margin-top:2px;border-radius:13px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);cursor:pointer;}
