@@ -24,6 +24,7 @@ interface PaywallProps {
 type PlanKind = PaywallProduct['kind'];
 
 const FALLBACK_MONTHLY_PRICE = 8.99;
+const FALLBACK_MONTHLY_OFFER_PRICE = 3.99;
 const FALLBACK_ANNUAL_PRICE = 59.99;
 
 function formatEuro(value: number) {
@@ -87,32 +88,44 @@ export default function Paywall({ open, placement, plan, products, loading = fal
     }, [annual, monthly, open]);
 
     const selected = selectedKind === 'monthly' ? monthly : annual;
-    const storeName = Capacitor.getPlatform() === 'android' ? 'Play Store' : Capacitor.getPlatform() === 'ios' ? 'App Store' : 'la tienda';
+    const storeName = Capacitor.getPlatform() === 'android' ? 'Play Store' : Capacitor.getPlatform() === 'ios' ? 'App Store' : 'App Store';
     const monthlyPriceValue = monthly?.priceValue || FALLBACK_MONTHLY_PRICE;
     const annualPriceValue = annual?.priceValue || FALLBACK_ANNUAL_PRICE;
     const yearlyMonthlyCost = monthlyPriceValue * 12;
     const annualSavingsValue = Math.max(0, yearlyMonthlyCost - annualPriceValue);
     const annualSavingsPercent = yearlyMonthlyCost > 0 ? Math.max(0, Math.round((annualSavingsValue / yearlyMonthlyCost) * 100)) : 0;
-    const selectedPrice = selected?.price || (selectedKind === 'annual' ? formatEuro(FALLBACK_ANNUAL_PRICE) : formatEuro(FALLBACK_MONTHLY_PRICE));
+    
+    const monthlyRegularPrice = monthly?.price || formatEuro(FALLBACK_MONTHLY_PRICE);
+    const monthlyOfferPrice = monthly?.introPrice || formatEuro(FALLBACK_MONTHLY_OFFER_PRICE);
+
+    const selectedPrice = selectedKind === 'monthly'
+        ? monthlyOfferPrice
+        : (annual?.price || formatEuro(FALLBACK_ANNUAL_PRICE));
     const currencyCode = selected?.storeProduct.currencyCode || monthly?.storeProduct.currencyCode || annual?.storeProduct.currencyCode || 'EUR';
     const zeroPrice = formatZeroPrice(currencyCode);
     const selectedPeriod = selectedKind === 'annual' ? 'al año' : 'al mes';
     const selectedPlanName = selectedKind === 'annual' ? 'anual' : 'mensual';
+
     const planOptions: Array<{
         kind: PlanKind;
         product?: PaywallProduct;
         title: string;
         price: string;
+        originalPrice?: string;
         period: string;
         badge?: string;
+        trialText?: string;
         savings?: string;
     }> = [
         {
             kind: 'monthly',
             product: monthly,
             title: 'Mensual',
-            price: monthly?.price || formatEuro(FALLBACK_MONTHLY_PRICE),
+            badge: 'OFERTA LIMITADA',
+            price: monthlyOfferPrice,
+            originalPrice: monthlyRegularPrice,
             period: 'al mes',
+            trialText: undefined,
         },
         {
             kind: 'annual',
@@ -121,6 +134,7 @@ export default function Paywall({ open, placement, plan, products, loading = fal
             price: annual?.price || formatEuro(FALLBACK_ANNUAL_PRICE),
             period: 'al año',
             badge: annualSavingsPercent ? `Ahorra ${annualSavingsPercent}%` : 'Mejor valor',
+            trialText: annual?.trialLabel || 'Prueba gratuita de 7 días',
             savings: annualSavingsValue ? `Ahorras ${formatCurrency(annualSavingsValue, annual?.storeProduct.currencyCode || currencyCode)} al año` : undefined,
         },
     ];
@@ -182,7 +196,9 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 .plan.selected{border-color:#5aadcf;background:linear-gradient(180deg,rgba(90,173,207,.2),rgba(90,173,207,.07));box-shadow:0 0 0 1px rgba(90,173,207,.22),0 18px 38px rgba(25,95,125,.2);}
                 .plan-badge{position:absolute;top:-10px;right:10px;background:#5aadcf;color:#031018;border-radius:999px;padding:4px 8px;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.03em;}
                 .plan-name{font-size:13px;font-weight:850;margin-bottom:10px;letter-spacing:.02em;}
-                .plan-price{font-size:30px;font-weight:950;line-height:1.02;color:#f1fbff;margin-bottom:6px;letter-spacing:-.04em;}
+                .plan-price-wrap{display:flex;align-items:baseline;gap:6px;margin-bottom:6px;flex-wrap:wrap;}
+                .plan-original-price{font-size:15px;font-weight:700;text-decoration:line-through;color:rgba(210,232,240,.45);letter-spacing:-.02em;}
+                .plan-price{font-size:30px;font-weight:950;line-height:1.02;color:#f1fbff;letter-spacing:-.04em;}
                 .plan-period{font-size:11px;color:rgba(210,232,240,.58);margin-top:5px;}
                 .plan-trial{font-size:10px;color:rgba(155,231,198,.82);font-weight:750;line-height:1.25;margin:0 0 12px;}
                 .plan-saving{font-size:10px;line-height:1.35;color:#79d4ed;font-weight:800;margin-top:10px;}
@@ -221,8 +237,11 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                             <button key={option.kind} className={`plan ${selectedPlan ? 'selected' : ''}`} onClick={() => setSelectedKind(option.kind)} role="radio" aria-checked={selectedPlan}>
                                 {option.badge && <span className="plan-badge">{option.badge}</span>}
                                 <div className="plan-name">{option.title}</div>
-                                <div className="plan-trial">Prueba gratuita de 7 días</div>
-                                <div className="plan-price">{placement === 'recovery' && option.product?.winBackPrice ? option.product.winBackPrice : option.price}</div>
+                                {option.trialText && <div className="plan-trial">{option.trialText}</div>}
+                                <div className="plan-price-wrap">
+                                    {option.originalPrice && <span className="plan-original-price">{option.originalPrice}</span>}
+                                    <span className="plan-price">{placement === 'recovery' && option.product?.winBackPrice ? option.product.winBackPrice : option.price}</span>
+                                </div>
                                 <div className="plan-period">{placement === 'recovery' && option.product?.winBackPeriodLabel ? option.product.winBackPeriodLabel : option.period}</div>
                                 {option.savings && <div className="plan-saving">{option.savings}</div>}
                             </button>
@@ -240,11 +259,17 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 </div>
                 <button className="purchase" onClick={purchase} disabled={busy !== null || loading}>
                     {busy === 'purchase' && <Loader2 className="animate-spin" size={19} />}
-                    {placement === 'recovery' ? `Continuar ahora por ${selectedPrice}` : `Continuar ahora por ${zeroPrice}, tendrás 7 días gratis y después ${selectedPrice} ${selectedPeriod}`}
+                    {selectedKind === 'monthly'
+                        ? `Activar oferta por ${monthlyOfferPrice} el primer mes`
+                        : placement === 'recovery'
+                            ? `Continuar ahora por ${selectedPrice}`
+                            : `Continuar por ${zeroPrice}, tendrás 7 días gratis y después ${selectedPrice} ${selectedPeriod}`}
                 </button>
-                <p className="terms">{placement === 'recovery'
-                    ? 'La oferta y su elegibilidad proceden de la tienda. Después del periodo mostrado, la suscripción se renueva al precio ordinario indicado.'
-                    : `Al tocar continuar, se abrirá ${storeName} con el plan ${selectedPlanName}. La prueba dura 7 días. Después, la suscripción se cobra a ${selectedPrice} ${selectedPeriod} con renovación automática. Puedes cancelar antes de que termine la prueba desde las suscripciones de tu cuenta.`}</p>
+                <p className="terms">{selectedKind === 'monthly'
+                    ? `Oferta válida por tiempo limitado. Primer mes por ${monthlyOfferPrice}; después se renovará automáticamente al precio habitual al mes. Cancela cuando quieras desde los ajustes de tu cuenta de ${storeName}.`
+                    : placement === 'recovery'
+                        ? 'La oferta y su elegibilidad proceden de la tienda. Después del periodo mostrado, la suscripción se renueva al precio ordinario indicado.'
+                        : `Al tocar continuar, se abrirá ${storeName} con el plan ${selectedPlanName}. La prueba dura 7 días. Después, la suscripción se cobra a ${selectedPrice} ${selectedPeriod} con renovación automática. Puedes cancelar antes de que termine la prueba desde las suscripciones de tu cuenta.`}</p>
             </div>
         </div>
     );
