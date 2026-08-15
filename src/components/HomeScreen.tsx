@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Headphones, PencilLine, Stethoscope } from 'lucide-react';
+import { Headphones, PencilLine, Stethoscope, Sparkles, Wind, Brain, CheckCircle2, Circle, ArrowRight } from 'lucide-react';
 import { getAllTracks } from '@/lib/db';
 
 interface HomeScreenProps {
@@ -586,11 +586,77 @@ export default function HomeScreen({ onNav, trackCount = 0 }: HomeScreenProps) {
             <div className="home-content relative z-10">
                 <header className="home-head">
                     <div className="home-period">{greeting}</div>
-                    <h1 className="home-title">¿Cómo estás<br />hoy?</h1>
+                    <h1 className="home-title" style={{ maxWidth: '100%' }}>¿Cómo estás hoy?</h1>
+                    <p style={{ fontSize: '15px', fontWeight: '700', color: '#38bdf8', marginTop: '6px', lineHeight: '1.3' }}>
+                        ¿Qué necesitas o sientes ahora mismo?
+                    </p>
                 </header>
 
                 <main className="home-stack">
+                    {/* Guided quick actions section */}
+                    <section className="soft-card" style={{ background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(124, 58, 237, 0.08))', border: '1px solid rgba(56, 189, 248, 0.25)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                            <div className="card-label" style={{ margin: 0, color: '#7dd3fc', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <Sparkles size={14} /> <span>¿Qué necesitas o sientes ahora?</span>
+                            </div>
+                            <button onClick={() => onNav('sc-wizard')} type="button" style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(56, 189, 248, 0.16)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '999px', padding: '4px 10px', color: '#38bdf8', fontSize: '11px', fontWeight: 800, cursor: 'pointer' }}>
+                                <span>Te guío</span> <ArrowRight size={12} />
+                            </button>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '8px' }}>
+                            <button onClick={() => onNav('breath')} type="button" style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.25)', borderRadius: '14px', padding: '10px 12px', textAlign: 'left', cursor: 'pointer' }}>
+                                <div style={{ fontSize: '12px', fontWeight: 800, color: '#fca5a5' }}>🔴 Pánico / Falta aire</div>
+                                <div style={{ fontSize: '10px', color: 'rgba(252, 165, 165, 0.8)', marginTop: '2px' }}>Respiración & SOS</div>
+                            </button>
+                            <button onClick={() => onNav('sc-cbt')} type="button" style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '14px', padding: '10px 12px', textAlign: 'left', cursor: 'pointer' }}>
+                                <div style={{ fontSize: '12px', fontWeight: 800, color: '#7dd3fc' }}>🌀 Pensamientos bucle</div>
+                                <div style={{ fontSize: '10px', color: 'rgba(125, 211, 252, 0.8)', marginTop: '2px' }}>Reorganizar mente</div>
+                            </button>
+                            <button onClick={() => onNav('sc-bodymap')} type="button" style={{ background: 'rgba(129, 140, 248, 0.12)', border: '1px solid rgba(129, 140, 248, 0.25)', borderRadius: '14px', padding: '10px 12px', textAlign: 'left', cursor: 'pointer' }}>
+                                <div style={{ fontSize: '12px', fontWeight: 800, color: '#a5b4fc' }}>💓 Opresión o nudo</div>
+                                <div style={{ fontSize: '10px', color: 'rgba(165, 180, 252, 0.8)', marginTop: '2px' }}>Mapa de síntoma</div>
+                            </button>
+                            <button onClick={() => onNav('sounds')} type="button" style={{ background: 'rgba(192, 132, 252, 0.12)', border: '1px solid rgba(192, 132, 252, 0.25)', borderRadius: '14px', padding: '10px 12px', textAlign: 'left', cursor: 'pointer' }}>
+                                <div style={{ fontSize: '12px', fontWeight: 800, color: '#e9d5ff' }}>😴 No puedo dormir</div>
+                                <div style={{ fontSize: '10px', color: 'rgba(233, 213, 255, 0.8)', marginTop: '2px' }}>Audios de descanso</div>
+                            </button>
+                        </div>
+                    </section>
+
+                    {/* Daily Routine 3-Step Guided Journey */}
                     <section className="soft-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                            <div className="card-label" style={{ margin: 0, color: '#eef8ff' }}>🌱 Tu Rutina de Calma de Hoy</div>
+                            <div style={{ fontSize: '11px', fontWeight: 800, color: '#38bdf8' }}>
+                                {(savedMood ? 1 : 0) + (noteCount > 0 ? 1 : 0)} / 3 completados
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <div onClick={() => !savedMood && document.getElementById('mood-section')?.scrollIntoView({ behavior: 'smooth' })} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer' }}>
+                                {savedMood ? <CheckCircle2 className="w-5 h-5 text-sky-400" /> : <Circle className="w-5 h-5 text-slate-500" />}
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '13px', fontWeight: 700, color: savedMood ? '#7dd3fc' : '#eef8ff' }}>1. Check-in emocional</div>
+                                    <div style={{ fontSize: '11px', color: 'rgba(221,238,245,0.5)' }}>{savedMood ? `Registrado: ${savedMood.label}` : 'Haz tu registro de 30 segundos'}</div>
+                                </div>
+                            </div>
+                            <div onClick={() => onNav('breath')} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer' }}>
+                                <Circle className="w-5 h-5 text-slate-500" />
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#eef8ff' }}>2. Pausa de respiración (2 min)</div>
+                                    <div style={{ fontSize: '11px', color: 'rgba(221,238,245,0.5)' }}>Desacelera el ritmo de tu cuerpo</div>
+                                </div>
+                            </div>
+                            <div onClick={() => onNav('notes')} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer' }}>
+                                {noteCount > 0 ? <CheckCircle2 className="w-5 h-5 text-sky-400" /> : <Circle className="w-5 h-5 text-slate-500" />}
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '13px', fontWeight: 700, color: noteCount > 0 ? '#7dd3fc' : '#eef8ff' }}>3. Vaciado de mente (Diario)</div>
+                                    <div style={{ fontSize: '11px', color: 'rgba(221,238,245,0.5)' }}>{noteCount > 0 ? `${noteCount} nota(s) guardada(s)` : 'Escribe 1 frase para soltar preocupaciones'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="soft-card" id="mood-section">
                         <div className="card-label">Estado de hoy</div>
 
                         {savedMood ? (

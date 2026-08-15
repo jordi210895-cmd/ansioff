@@ -24,6 +24,7 @@ import AuthScreen from '@/components/AuthScreen';
 import InstallPWA from '@/components/InstallPWA';
 import PsychologistsScreen from '@/components/PsychologistsScreen';
 import BodyMapScreen from '@/components/BodyMapScreen';
+import CalmAssistantModal from '@/components/CalmAssistantModal';
 
 interface Track {
   id?: number;
@@ -391,6 +392,9 @@ export default function App() {
         return <ExposureScreen onBack={goBack} />;
       case 'sc-psychologists':
         return <PsychologistsScreen onBack={goBack} />;
+      case 'sc-wizard':
+      case 'wizard':
+        return <CalmAssistantModal onBack={goBack} onNav={handleNav} />;
       case 'sc-bodymap':
       case 'bodymap':
         return <BodyMapScreen onBack={goBack} onNav={handleNav} />;

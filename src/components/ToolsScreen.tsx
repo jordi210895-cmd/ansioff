@@ -2,7 +2,7 @@
 
 import {
     Activity, Wind, Gamepad2, Music, PenLine, Heart,
-    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, UserCheck, Stethoscope
+    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, UserCheck, Stethoscope, Sparkles
 } from 'lucide-react';
 
 interface ToolsScreenProps {
@@ -15,35 +15,36 @@ const premiumToolIds = new Set(['sc-cbt', 'sc-act', 'notes', 'sc-games', 'sc-nig
 
 const moduleCategories = [
     {
-        title: 'Herramientas',
+        title: 'Asistente Recomendado',
         tools: [
-            { id: 'pause', name: 'Kit SOS', sub: 'Anclaje rápido 5-4-3-2-1', icon: <Activity />, color: 'var(--r)' },
-            { id: 'sc-bodymap', name: 'Mapa Corporal', sub: 'Somatización y síntomas', icon: <Stethoscope />, color: '#38bdf8' },
-            { id: 'sc-cbt', name: 'Pensamientos', sub: 'Registro y reflexión', icon: <Brain />, color: 'var(--p)' },
-            { id: 'sc-act', name: 'Aceptación', sub: 'Ejercicios guiados', icon: <Heart />, color: 'var(--p2)' },
+            { id: 'sc-wizard', name: 'Asistente de Calma (Te guío)', sub: '¿No sabes qué hacer? Elige en 2 clics según lo que sientes', icon: <Sparkles />, color: '#38bdf8', featured: true },
         ]
     },
     {
-        title: 'Apoyo Profesional',
+        title: 'Herramientas de Alivio',
         tools: [
-            { id: 'sc-psychologists', name: 'Psicólogos Colaboradores', sub: 'Directorio de especialistas', icon: <UserCheck />, color: '#5aadcf' },
+            { id: 'pause', name: 'Vuelve al presente (Kit S.O.S.)', sub: 'Anclaje rápido 5-4-3-2-1 para frenar el pánico', icon: <Activity />, color: 'var(--r)' },
+            { id: 'sc-bodymap', name: '¿Dónde lo sientes? (Mapa Corporal)', sub: 'Somatización, taquicardia, mareos o nudo', icon: <Stethoscope />, color: '#38bdf8' },
+            { id: 'sc-cbt', name: 'Reorganiza tus pensamientos (TCC)', sub: 'Identifica y cambia trampas de la mente', icon: <Brain />, color: 'var(--p)' },
+            { id: 'sc-act', name: 'Aprende a soltar (ACT)', sub: 'Aceptación y defusión de pensamientos guiada', icon: <Heart />, color: 'var(--p2)' },
         ]
     },
     {
-        title: 'Rutinas',
+        title: 'Rutinas Diarias',
         tools: [
-            { id: 'breath', name: 'Ritmos guiados', sub: 'Patrones visuales', icon: <Wind />, color: 'var(--c)' },
-            { id: 'sounds', name: 'Audios relax', sub: 'Paisajes sonoros', icon: <Music />, color: 'var(--c2)' },
-            { id: 'notes', name: 'Diario', sub: 'Escritura consciente', icon: <PenLine />, color: 'var(--em)' },
+            { id: 'breath', name: 'Calma tu respiración (Ritmos guiados)', sub: 'Patrones 4-7-8 y 4-2-6 para desacelerar', icon: <Wind />, color: 'var(--c)' },
+            { id: 'sounds', name: 'Paisajes sonoros (Audios relax)', sub: 'Sonidos binaurales y lluvia para calmarte', icon: <Music />, color: 'var(--c2)' },
+            { id: 'notes', name: 'Vaciado de mente (Diario & IA)', sub: 'Escritura consciente y reflexión personal', icon: <PenLine />, color: 'var(--em)' },
         ]
     },
     {
-        title: 'Especiales',
+        title: 'Enfoque y Apoyo',
         tools: [
-            { id: 'sc-games', name: 'Juegos', sub: 'Atención y pausa', icon: <Gamepad2 />, color: 'var(--am)' },
-            { id: 'sc-eval', name: 'Check-in', sub: 'Seguimiento personal', icon: <FileText />, color: 'var(--p3)' },
-            { id: 'sc-night', name: 'Modo Noche', sub: 'Rutina nocturna', icon: <Moon />, color: 'var(--c3)' },
-            { id: 'sc-exposure-why', name: 'Mis Motivos', sub: 'Objetivos personales', icon: <Target />, color: 'var(--r2)' },
+            { id: 'sc-games', name: 'Juegos Antiestrés (Atención)', sub: 'Desviación del pánico y reconexión', icon: <Gamepad2 />, color: 'var(--am)' },
+            { id: 'sc-eval', name: 'Seguimiento Personal (Check-in)', sub: 'Evalúa tus niveles de ansiedad', icon: <FileText />, color: 'var(--p3)' },
+            { id: 'sc-night', name: 'Higiene del Sueño (Modo Noche)', sub: 'Rutina nocturna atenuada para descansar', icon: <Moon />, color: 'var(--c3)' },
+            { id: 'sc-exposure-why', name: 'Supera tus miedos (Exposición)', sub: 'Afronta situaciones agobiantes paso a paso', icon: <Target />, color: 'var(--r2)' },
+            { id: 'sc-psychologists', name: 'Psicólogos Colaboradores', sub: 'Directorio de especialistas profesionales', icon: <UserCheck />, color: '#5aadcf' },
         ]
     }
 ];

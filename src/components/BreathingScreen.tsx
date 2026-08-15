@@ -71,7 +71,7 @@ export default function BreathingScreen({ onBack, isPremium, onUpgrade, onPracti
             }, 1000);
         }
         return () => clearTimeout(timer);
-    }, [cycle, running, cnt, pi, phases, onPracticeComplete]);
+    }, [cycle, running, cnt, pi, phases, totalCycles, onPracticeComplete]);
 
     useEffect(() => {
         const completedMinutes = Math.floor(elapsedSeconds / 60);

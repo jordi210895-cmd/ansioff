@@ -19,6 +19,7 @@ export default defineConfig([
     'ios/build/**',
     'ios/App/App/public/**',
     'next-env.d.ts',
+    'ansioff-actual-jordi/**',
   ]),
   {
     rules: {
