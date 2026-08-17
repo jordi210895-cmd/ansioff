@@ -57,6 +57,10 @@ async function main() {
         name: RELEASE_NAME,
         versionCodes,
         status: RELEASE_STATUS,
+        countryTargeting: {
+          countries: ['ES'],
+          includeRestOfWorld: true,
+        },
         releaseNotes: [{
           language: 'es-ES',
           text: RELEASE_NOTES,
