@@ -41,7 +41,15 @@ jobs:
         run: npm run build
 
       - name: Sync Capacitor
-        run: npx cap sync ios
+        run: |
+          for attempt in 1 2 3 4; do
+            if npx cap sync ios; then
+              exit 0
+            fi
+            echo "Capacitor/iOS dependency sync failed (attempt ${attempt}/4); retrying after backoff..."
+            sleep $((attempt * 30))
+          done
+          exit 1
 
       - name: Install App Store Connect API Key
         env:
