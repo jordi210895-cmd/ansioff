@@ -4,7 +4,10 @@ const PACKAGE_NAME = 'com.ansioff.app';
 const SCOPE = 'https://www.googleapis.com/auth/androidpublisher';
 const SOURCE_TRACK = process.env.GOOGLE_PLAY_SOURCE_TRACK || 'internal';
 const TARGET_TRACK = process.env.GOOGLE_PLAY_TARGET_TRACK || 'production';
-const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'completed';
+// A draft avoids Play's production country-targeting restriction. The owner
+// can choose countries and send the staged production release for review in
+// Play Console.
+const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'draft';
 const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.7';
 const RELEASE_NOTES = process.env.GOOGLE_PLAY_RELEASE_NOTES || [
   'Primera versión de ANSIOFF para Android.',
@@ -57,10 +60,6 @@ async function main() {
         name: RELEASE_NAME,
         versionCodes,
         status: RELEASE_STATUS,
-        countryTargeting: {
-          countries: ['ES'],
-          includeRestOfWorld: true,
-        },
         releaseNotes: [{
           language: 'es-ES',
           text: RELEASE_NOTES,
