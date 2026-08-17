@@ -65,10 +65,11 @@ async function main() {
     },
   });
 
+  // Omit changesNotSentForReview so the production release is submitted to
+  // Google Play review instead of being left as an unsubmitted draft.
   const { data: commit } = await androidpublisher.edits.commit({
     packageName: PACKAGE_NAME,
     editId,
-    changesNotSentForReview: true,
   });
   console.log(`Committed production edit ${commit.id || editId}`);
 }
