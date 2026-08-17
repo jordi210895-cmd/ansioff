@@ -43,7 +43,7 @@ jobs:
       - name: Sync Capacitor
         run: |
           for attempt in 1 2 3 4; do
-            if npx cap sync ios; then
+            if npx cap sync ios --deployment; then
               exit 0
             fi
             echo "Capacitor/iOS dependency sync failed (attempt ${attempt}/4); retrying after backoff..."
