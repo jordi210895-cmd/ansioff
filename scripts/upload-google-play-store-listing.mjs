@@ -5,7 +5,10 @@ import { google } from 'googleapis';
 const PACKAGE_NAME = 'com.ansioff.app';
 const SCOPE = 'https://www.googleapis.com/auth/androidpublisher';
 const LISTING_DIR = path.resolve('store-assets/listing/es-ES');
-const SCREENSHOTS_DIR = path.resolve('store-assets/google-play/phone-screenshots');
+// Reuse the approved iPhone screenshots from the App Store listing so both
+// stores present the same product story. Play accepts these portrait phone
+// captures (2–8 images, JPEG/PNG); iPad screenshots are deliberately excluded.
+const SCREENSHOTS_DIR = path.resolve('fastlane/screenshots/es-ES');
 const ICON_PATH = path.resolve('assets/play-store-icon.png');
 const FEATURE_GRAPHIC_PATH = path.resolve('assets/play-feature-graphic.png');
 
@@ -22,7 +25,7 @@ function requireCredentials() {
 function listScreenshots() {
   if (!fs.existsSync(SCREENSHOTS_DIR)) throw new Error(`Missing screenshots dir: ${SCREENSHOTS_DIR}`);
   return fs.readdirSync(SCREENSHOTS_DIR)
-    .filter((file) => /\.(jpe?g|png)$/i.test(file))
+    .filter((file) => /\.(jpe?g|png)$/i.test(file) && !/-ipad-13\./i.test(file))
     .sort()
     .map((file) => path.join(SCREENSHOTS_DIR, file));
 }
