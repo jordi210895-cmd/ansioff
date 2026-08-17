@@ -11,6 +11,19 @@ const LISTING_DIR = path.resolve('store-assets/listing/es-ES');
 const SCREENSHOTS_DIR = path.resolve('fastlane/screenshots/es-ES');
 const ICON_PATH = path.resolve('assets/play-store-icon.png');
 const FEATURE_GRAPHIC_PATH = path.resolve('assets/play-feature-graphic.png');
+// Play allows a maximum of eight phone screenshots. Keep the two new
+// screenshots first and use a curated, non-duplicated set of the existing
+// captures for the remaining slots. Apple receives the complete iPhone set.
+const SCREENSHOT_FILES = [
+  '01-zona-de-confort.jpg',
+  '02-informe-para-tu-psicologo.jpg',
+  '03-calma-en-segundos.jpg',
+  '04-crea-tu-rutina-de-calma.jpg',
+  '05-sonidos-para-volver-a-ti.jpg',
+  '06-entiende-lo-que-se-repite.jpg',
+  '07-mide-tu-progreso.jpg',
+  '08-pulsa-sos-momentos-dificiles.jpg',
+];
 
 function readText(fileName) {
   return fs.readFileSync(path.join(LISTING_DIR, fileName), 'utf8').trim();
@@ -24,10 +37,11 @@ function requireCredentials() {
 
 function listScreenshots() {
   if (!fs.existsSync(SCREENSHOTS_DIR)) throw new Error(`Missing screenshots dir: ${SCREENSHOTS_DIR}`);
-  return fs.readdirSync(SCREENSHOTS_DIR)
-    .filter((file) => /\.(jpe?g|png)$/i.test(file) && !/-ipad-13\./i.test(file))
-    .sort()
-    .map((file) => path.join(SCREENSHOTS_DIR, file));
+  return SCREENSHOT_FILES.map((file) => {
+    const fullPath = path.join(SCREENSHOTS_DIR, file);
+    if (!fs.existsSync(fullPath)) throw new Error(`Missing phone screenshot: ${fullPath}`);
+    return fullPath;
+  });
 }
 
 async function replaceImage(androidpublisher, editId, language, imageType, imagePath) {
