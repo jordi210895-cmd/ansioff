@@ -42,11 +42,12 @@ jobs:
 
       - name: Sync Capacitor
         run: |
+          npx cap copy ios
           for attempt in 1 2 3 4; do
-            if npx cap sync ios --deployment; then
+            if (cd ios/App && pod install --no-repo-update --deployment); then
               exit 0
             fi
-            echo "Capacitor/iOS dependency sync failed (attempt ${attempt}/4); retrying after backoff..."
+            echo "CocoaPods install failed (attempt ${attempt}/4); retrying after backoff..."
             sleep $((attempt * 30))
           done
           exit 1
