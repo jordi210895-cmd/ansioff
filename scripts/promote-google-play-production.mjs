@@ -8,7 +8,7 @@ const TARGET_TRACK = process.env.GOOGLE_PLAY_TARGET_TRACK || 'production';
 // can choose countries and send the staged production release for review in
 // Play Console.
 const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'draft';
-const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.7';
+const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.8';
 const RELEASE_NOTES = process.env.GOOGLE_PLAY_RELEASE_NOTES || [
   'Primera versión de ANSIOFF para Android.',
   'Incluye diario personal, sonidos, pausas guiadas, rutinas y progreso.',
