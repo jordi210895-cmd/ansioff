@@ -8,6 +8,7 @@ const TARGET_TRACK = process.env.GOOGLE_PLAY_TARGET_TRACK || 'production';
 // can choose countries and send the staged production release for review in
 // Play Console.
 const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'draft';
+const CHANGES_NOT_SENT_FOR_REVIEW = process.env.GOOGLE_PLAY_CHANGES_NOT_SENT_FOR_REVIEW !== 'false';
 const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.8';
 const RELEASE_NOTES = process.env.GOOGLE_PLAY_RELEASE_NOTES || [
   'Primera versión de ANSIOFF para Android.',
@@ -71,7 +72,7 @@ async function main() {
   const { data: commit } = await androidpublisher.edits.commit({
     packageName: PACKAGE_NAME,
     editId,
-    changesNotSentForReview: true,
+    changesNotSentForReview: CHANGES_NOT_SENT_FOR_REVIEW,
   });
   console.log(`Committed production edit ${commit.id || editId}`);
 }

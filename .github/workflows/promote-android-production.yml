@@ -2,6 +2,20 @@ name: Promote Android Production
 
 on:
   workflow_dispatch:
+    inputs:
+      release_status:
+        description: 'Google Play release status'
+        required: false
+        default: draft
+        type: choice
+        options:
+          - draft
+          - completed
+      send_for_review:
+        description: 'Send the production changes to Google Play for review'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   promote:
@@ -24,4 +38,6 @@ jobs:
       - name: Promote internal release to production
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_PLAY_RELEASE_STATUS: ${{ inputs.release_status || 'draft' }}
+          GOOGLE_PLAY_CHANGES_NOT_SENT_FOR_REVIEW: ${{ inputs.send_for_review != true }}
         run: node scripts/promote-google-play-production.mjs
