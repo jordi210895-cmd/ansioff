@@ -6,7 +6,7 @@ on:
       app_version:
         description: 'App Store version to associate the build with'
         required: true
-        default: '1.1.1'
+        default: '1.1.9'
       build_number:
         description: 'Build number to associate with the App Store version'
         required: true

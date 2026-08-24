@@ -13,8 +13,8 @@ const PRODUCTS = [
     description: 'Acceso mensual a ANSIOFF Premium con 7 días de prueba.',
     descriptionEn: 'Monthly access to ANSIOFF Premium with a 7-day free trial.',
     billingPeriodDuration: 'P1M',
-    eurPrice: '8.99',
-    usdPrice: '8.99',
+    eurPrice: '4.99',
+    usdPrice: '4.99',
   },
   {
     productId: 'com.ansioff.premium.annual',

@@ -11,18 +11,12 @@ const LISTING_DIR = path.resolve('store-assets/listing/es-ES');
 const SCREENSHOTS_DIR = path.resolve('fastlane/screenshots/es-ES');
 const ICON_PATH = path.resolve('assets/play-store-icon.png');
 const FEATURE_GRAPHIC_PATH = path.resolve('assets/play-feature-graphic.png');
-// Play allows a maximum of eight phone screenshots. Keep the two new
-// screenshots first and use a curated, non-duplicated set of the existing
-// captures for the remaining slots. Apple receives the complete iPhone set.
+// Keep the public phone story identical in both stores and in the requested
+// order. The upload replaces every existing phone screenshot in Play.
 const SCREENSHOT_FILES = [
-  '01-zona-de-confort.jpg',
-  '02-informe-para-tu-psicologo.jpg',
-  '03-calma-en-segundos.jpg',
-  '04-crea-tu-rutina-de-calma.jpg',
-  '05-sonidos-para-volver-a-ti.jpg',
-  '06-entiende-lo-que-se-repite.jpg',
-  '07-mide-tu-progreso.jpg',
-  '08-pulsa-sos-momentos-dificiles.jpg',
+  '01-organiza-tu-dia.jpg',
+  '02-conoce-y-libera-tu-ansiedad.jpg',
+  '03-trabaja-tus-objetivos.jpg',
 ];
 
 function readText(fileName) {

@@ -23,7 +23,7 @@ interface PaywallProps {
 
 type PlanKind = PaywallProduct['kind'];
 
-const FALLBACK_MONTHLY_PRICE = 8.99;
+const FALLBACK_MONTHLY_PRICE = 4.99;
 const FALLBACK_ANNUAL_PRICE = 59.99;
 
 function formatEuro(value: number) {
@@ -120,7 +120,7 @@ export default function Paywall({ open, placement, plan, products, loading = fal
             title: 'Anual',
             price: annual?.price || formatEuro(FALLBACK_ANNUAL_PRICE),
             period: 'al año',
-            badge: annualSavingsPercent ? `Ahorra ${annualSavingsPercent}%` : 'Mejor valor',
+            badge: annualSavingsPercent ? `Ahorra ${annualSavingsPercent}%` : undefined,
             savings: annualSavingsValue ? `Ahorras ${formatCurrency(annualSavingsValue, annual?.storeProduct.currencyCode || currencyCode)} al año` : undefined,
         },
     ];

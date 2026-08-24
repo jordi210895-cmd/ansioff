@@ -4,7 +4,7 @@ const KEY_ID = process.env.APP_STORE_CONNECT_API_KEY_ID;
 const ISSUER_ID = process.env.APP_STORE_CONNECT_API_KEY_ISSUER_ID;
 const KEY_BASE64 = process.env.APP_STORE_CONNECT_API_KEY_BASE64 || process.env.APP_STORE_CONNECT_API_KEY;
 const BUNDLE_ID = process.env.APP_STORE_BUNDLE_ID || 'com.ansioff.app.jordi';
-const APP_VERSION = process.env.APP_STORE_VERSION || '1.1.1';
+const APP_VERSION = process.env.APP_STORE_VERSION || '1.1.9';
 
 function base64url(input) {
   return Buffer.from(input)
@@ -69,14 +69,25 @@ const apps = await request(`/v1/apps?filter[bundleId]=${encodeURIComponent(BUNDL
 const app = apps.data?.[0];
 if (!app) throw new Error(`App not found for bundleId ${BUNDLE_ID}`);
 
-const versions = await request(`/v1/apps/${app.id}/appStoreVersions?filter[platform]=IOS&filter[versionString]=${encodeURIComponent(APP_VERSION)}&include=build&limit=10`);
-const version = versions.data?.[0];
-if (!version) throw new Error(`iOS app version ${APP_VERSION} not found`);
+const versions = await request(`/v1/apps/${app.id}/appStoreVersions?filter[platform]=IOS&include=build&limit=200`);
+const candidates = (versions.data || []).filter(
+  (item) => String(item.attributes?.versionString || '').trim() === APP_VERSION.trim(),
+);
+if (!candidates.length) throw new Error(`iOS app version ${APP_VERSION} not found`);
 
-const submission = await request(`/v1/appStoreVersions/${version.id}/appStoreVersionSubmission`).catch((error) => {
-  if (error.status === 404) return null;
-  throw error;
-});
+let version = candidates[0];
+let submission = null;
+for (const candidate of candidates) {
+  const candidateSubmission = await request(`/v1/appStoreVersions/${candidate.id}/appStoreVersionSubmission`).catch((error) => {
+    if (error.status === 404) return null;
+    throw error;
+  });
+  if (candidateSubmission?.data?.id) {
+    version = candidate;
+    submission = candidateSubmission;
+    break;
+  }
+}
 
 console.log(JSON.stringify({
   app: { id: app.id, name: app.attributes?.name, bundleId: app.attributes?.bundleId },

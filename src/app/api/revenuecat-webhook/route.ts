@@ -152,7 +152,7 @@ async function sendMetaEvent(event: RevenueCatEvent, mapping: ConversionMapping)
                 currency: event.currency || 'EUR',
                 content_ids: event.product_id ? [event.product_id] : undefined,
                 content_type: 'product',
-                predicted_ltv: event.product_id?.includes('annual') ? 59.99 : 8.99,
+                predicted_ltv: event.product_id?.includes('annual') ? 59.99 : 4.99,
                 subscription_event_type: event.type,
                 period_type: event.period_type,
                 store: event.store,

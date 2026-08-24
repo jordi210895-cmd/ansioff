@@ -243,7 +243,7 @@ export default function MyTherapyScreen({ onBack, onNav }: MyTherapyScreenProps)
     setNewGoalText('');
   };
 
-  const useExample = (text: string) => {
+  const applyExample = (text: string) => {
     setNewGoalText(text);
   };
 
@@ -496,21 +496,21 @@ export default function MyTherapyScreen({ onBack, onNav }: MyTherapyScreenProps)
                 <div className="flex flex-wrap gap-2 mb-4">
                   <button
                     type="button"
-                    onClick={() => useExample('Ir a la farmacia solo')}
+                    onClick={() => applyExample('Ir a la farmacia solo')}
                     className="px-3 py-1.5 bg-[#0a0e1a] hover:bg-indigo-900/40 border border-indigo-900/50 rounded-full text-xs text-slate-300 transition-all hover:-translate-y-0.5"
                   >
                     🏥 Farmacia
                   </button>
                   <button
                     type="button"
-                    onClick={() => useExample('Caminar 20 minutos')}
+                    onClick={() => applyExample('Caminar 20 minutos')}
                     className="px-3 py-1.5 bg-[#0a0e1a] hover:bg-indigo-900/40 border border-indigo-900/50 rounded-full text-xs text-slate-300 transition-all hover:-translate-y-0.5"
                   >
                     🚶 Caminar
                   </button>
                   <button
                     type="button"
-                    onClick={() => useExample('Llamar a un amigo')}
+                    onClick={() => applyExample('Llamar a un amigo')}
                     className="px-3 py-1.5 bg-[#0a0e1a] hover:bg-indigo-900/40 border border-indigo-900/50 rounded-full text-xs text-slate-300 transition-all hover:-translate-y-0.5"
                   >
                     📞 Llamar

@@ -6,7 +6,7 @@ on:
       app_version:
         description: 'App Store version to submit for review'
         required: true
-        default: '1.1.1'
+        default: '1.1.9'
 
 jobs:
   submit:
