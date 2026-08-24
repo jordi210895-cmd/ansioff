@@ -4,7 +4,7 @@ const PACKAGE_NAME = process.env.GOOGLE_PLAY_PACKAGE_NAME || 'com.ansioff.app';
 const SCOPE = 'https://www.googleapis.com/auth/androidpublisher';
 const SOURCE_TRACK = process.env.GOOGLE_PLAY_SOURCE_TRACK || 'internal';
 const TARGET_TRACK_OVERRIDE = process.env.GOOGLE_PLAY_TARGET_TRACK;
-const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'draft';
+const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'completed';
 const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.9 - prueba cerrada';
 const RELEASE_NOTES = process.env.GOOGLE_PLAY_RELEASE_NOTES || [
   'Primera versión de ANSIOFF para Android.',
@@ -94,7 +94,6 @@ async function main() {
   const { data: commit } = await androidpublisher.edits.commit({
     packageName: PACKAGE_NAME,
     editId,
-    changesNotSentForReview: true,
   });
   console.log(`Committed closed-testing edit ${commit.id || editId}`);
 }

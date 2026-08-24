@@ -2,7 +2,7 @@ import { google } from 'googleapis';
 
 const PACKAGE_NAME = 'com.ansioff.app';
 const SCOPE = 'https://www.googleapis.com/auth/androidpublisher';
-const SOURCE_TRACK = process.env.GOOGLE_PLAY_SOURCE_TRACK || 'internal';
+const SOURCE_TRACK = process.env.GOOGLE_PLAY_SOURCE_TRACK || 'alpha';
 const TARGET_TRACK = process.env.GOOGLE_PLAY_TARGET_TRACK || 'production';
 // A draft avoids Play's production country-targeting restriction. The owner
 // can choose countries and send the staged production release for review in
@@ -69,11 +69,14 @@ async function main() {
     },
   });
 
-  const { data: commit } = await androidpublisher.edits.commit({
+  const commitOptions = {
     packageName: PACKAGE_NAME,
     editId,
-    changesNotSentForReview: CHANGES_NOT_SENT_FOR_REVIEW,
-  });
+  };
+  if (CHANGES_NOT_SENT_FOR_REVIEW) {
+    commitOptions.changesNotSentForReview = true;
+  }
+  const { data: commit } = await androidpublisher.edits.commit(commitOptions);
   console.log(`Committed production edit ${commit.id || editId}`);
 }
 
