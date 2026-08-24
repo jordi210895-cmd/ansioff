@@ -9,10 +9,10 @@ const TARGET_TRACK = process.env.GOOGLE_PLAY_TARGET_TRACK || 'production';
 // Play Console.
 const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'draft';
 const CHANGES_NOT_SENT_FOR_REVIEW = process.env.GOOGLE_PLAY_CHANGES_NOT_SENT_FOR_REVIEW !== 'false';
-const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.9';
+const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.10';
 const RELEASE_NOTES = process.env.GOOGLE_PLAY_RELEASE_NOTES || [
-  'Primera versión de ANSIOFF para Android.',
-  'Incluye diario personal, sonidos, pausas guiadas, rutinas y progreso.',
+  'Actualización de compatibilidad con Android 16.',
+  'Mantiene el diario personal, sonidos, pausas guiadas, rutinas y progreso.',
 ].join('\n');
 
 function requireCredentials() {
