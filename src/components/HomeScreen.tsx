@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Headphones, PencilLine, Stethoscope, Sparkles, Wind, Brain, CheckCircle2, Circle, ArrowRight } from 'lucide-react';
+import { Headphones, PencilLine, Stethoscope, Sparkles, Wind, Brain, CheckCircle2, Circle, ArrowRight, Users } from 'lucide-react';
 import { getAllTracks } from '@/lib/db';
 
 interface HomeScreenProps {
@@ -593,10 +593,42 @@ export default function HomeScreen({ onNav, trackCount = 0 }: HomeScreenProps) {
                 </header>
 
                 <main className="home-stack">
-                    {/* Guided quick actions section */}
-                    <section className="soft-card" style={{ background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(124, 58, 237, 0.08))', border: '1px solid rgba(56, 189, 248, 0.25)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                            <div className="card-label" style={{ margin: 0, color: '#7dd3fc', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {/* DESTACADO: Mi Terapia & Informe para Psicólogo */}
+                    <section onClick={() => onNav('sc-my-therapy')} className="soft-card" style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.15))', border: '1px solid rgba(129, 140, 248, 0.4)', cursor: 'pointer' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'rgba(129, 140, 248, 0.25)', border: '1px solid rgba(165, 180, 252, 0.3)', borderRadius: '999px', padding: '2px 8px', fontSize: '10px', fontWeight: 800, color: '#c7d2fe', textTransform: 'uppercase', marginBottom: '6px' }}>
+                                    <span>Canal Clínico</span>
+                                </div>
+                                <div style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>Mi Terapia & Informe PDF</div>
+                                <div style={{ fontSize: '11.5px', color: 'rgba(224, 231, 255, 0.8)', marginTop: '2px' }}>Objetivos, autoregistro dual y compartir con tu psicólogo/a</div>
+                            </div>
+                            <div style={{ width: '36px', height: '36px', borderRadius: '12px', background: 'rgba(129, 140, 248, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c7d2fe', flexShrink: 0 }}>
+                                <ArrowRight size={18} />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* DESTACADO: Comunidad Ansioff (Tribu Anónima) */}
+                    <section onClick={() => onNav('sc-community')} className="soft-card" style={{ background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.12))', border: '1px solid rgba(16, 185, 129, 0.35)', cursor: 'pointer' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'rgba(16, 185, 129, 0.2)', border: '1px solid rgba(52, 211, 153, 0.3)', borderRadius: '999px', padding: '2px 8px', fontSize: '10px', fontWeight: 800, color: '#a7f3d0', textTransform: 'uppercase', marginBottom: '6px' }}>
+                                    <Users size={10} /> <span>100% Anónimo</span>
+                                </div>
+                                <div style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>Comunidad Ansioff</div>
+                                <div style={{ fontSize: '11.5px', color: 'rgba(209, 250, 229, 0.85)', marginTop: '2px' }}>Tribu de apoyo: comparte pequeñas victorias, desahogo y ánimos</div>
+                            </div>
+                            <div style={{ width: '36px', height: '36px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a7f3d0', flexShrink: 0 }}>
+                                <ArrowRight size={18} />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Interactive Calma Assistant Shortcut */}
+                    <section className="soft-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                            <div className="card-label" style={{ margin: 0, color: '#eef8ff', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <Sparkles size={14} /> <span>¿Qué necesitas o sientes ahora?</span>
                             </div>
                             <button onClick={() => onNav('sc-wizard')} type="button" style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(56, 189, 248, 0.16)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '999px', padding: '4px 10px', color: '#38bdf8', fontSize: '11px', fontWeight: 800, cursor: 'pointer' }}>

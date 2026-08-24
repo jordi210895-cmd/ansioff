@@ -20,6 +20,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
+import { shareClinicalReportPDF } from '@/utils/exportUtils';
+import { Share2 } from 'lucide-react';
+
 export interface Psychologist {
   id: number | string;
   nombre: string;
@@ -95,6 +98,33 @@ const psicologos: Psychologist[] = [
     enfoque:
       "Utilizo la Terapia ACT (Aceptación y Compromiso) para cambiar la relación con los pensamientos de angustia. En lugar de gastar energía intentando 'eliminar' la ansiedad, trabajamos en herramientas de defusión cognitiva y compromisos de valor para que recuperes el timón de tu vida.",
     horarios: ["Lunes, Miércoles y Viernes: 10:00 - 19:00"],
+    whatsapp: "34600000000",
+    bookingUrl: "https://calendly.com",
+  },
+  {
+    id: 3,
+    nombre: "Dra. Laura Morales",
+    titulo: "Psicóloga Sanitaria · Activación Conductual",
+    colegiado: "Nº V-31045",
+    ubicacion: "Valencia / Online",
+    disponible: true,
+    tags: ["Depresión", "Apatía", "Activación Conductual", "Ansiedad Comórbida"],
+    bio: "Especializada en regulación del estado de ánimo, tratamiento de la depresión y recuperación de la motivación diaria mediante programas de Activación Conductual.",
+    avatarColor: "from-amber-400 to-teal-600",
+    iniciales: "LM",
+    rating: 4.9,
+    reseñas: 114,
+    precio: "60€ / sesión",
+    duracion: "50 min",
+    idiomas: ["Español", "Inglés"],
+    formacion: [
+      "Máster en Psicología General Sanitaria · Universitat de València",
+      "Especialista en Activación Conductual para la Depresión · AEPCCC",
+      "Investigación en Intervención Dual Ansiedad-Depresión",
+    ],
+    enfoque:
+      "Acompaño a personas que atraviesan desánimo, apatía o ansiedad comórbida mediante Activación Conductual (BA). Diseñamos micro-pasos medibles de placer y logro para romper la parálisis y recuperar el bienestar emocional de forma progresiva.",
+    horarios: ["Lunes a Jueves: 10:00 - 20:00"],
     whatsapp: "34600000000",
     bookingUrl: "https://calendly.com",
   },
@@ -457,7 +487,7 @@ export default function PsychologistsScreen({ onBack }: PsychologistsScreenProps
         </div>
 
         {/* 2. Hero Box (Bloque informativo separado) */}
-        <div className="w-full mb-10 rounded-3xl border border-indigo-500/25 bg-gradient-to-br from-indigo-500/[0.12] via-purple-500/[0.04] to-transparent p-6 shadow-xl">
+        <div className="w-full mb-8 rounded-3xl border border-indigo-500/25 bg-gradient-to-br from-indigo-500/[0.12] via-purple-500/[0.04] to-transparent p-6 shadow-xl">
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-indigo-300 mb-2">
             <BadgeCheck className="h-4 w-4 text-indigo-400" />
             <span>Especialistas Sanitarios Verificados</span>
@@ -465,9 +495,17 @@ export default function PsychologistsScreen({ onBack }: PsychologistsScreenProps
           <h2 className="font-serif text-[24px] font-medium leading-snug text-white mb-3">
             Encuentra tu acompañamiento profesional
           </h2>
-          <p className="text-[13.5px] leading-relaxed text-slate-300">
-            Selección de psicólogos sanitarios y clínicos especializados en regulación emocional, ataques de pánico y ansiedad que colaboran activamente en nuestra red.
+          <p className="text-[13.5px] leading-relaxed text-slate-300 mb-5">
+            Selección de psicólogos sanitarios y clínicos especializados en regulación emocional, depresión, ataques de pánico y ansiedad.
           </p>
+
+          <button
+            onClick={() => shareClinicalReportPDF()}
+            className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-600 px-4 py-3 text-[13.5px] font-semibold text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all cursor-pointer"
+          >
+            <Share2 className="h-4 w-4" />
+            <span>Compartir mi informe Ansioff con un psicólogo</span>
+          </button>
         </div>
 
         {/* 3. Buscador (Bloque de búsqueda totalmente independiente) */}
@@ -500,7 +538,7 @@ export default function PsychologistsScreen({ onBack }: PsychologistsScreenProps
                 className={`flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-medium transition-all ${
                   active
                     ? "bg-white text-[#070A12] shadow-lg font-semibold"
-                    : "border border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.08]"
+                    : "border border-white/10 bg-[#070A12] text-slate-300 hover:bg-white/[0.08]"
                 }`}
               >
                 {icon}

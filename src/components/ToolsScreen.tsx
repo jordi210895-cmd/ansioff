@@ -2,7 +2,7 @@
 
 import {
     Activity, Wind, Gamepad2, Music, PenLine, Heart,
-    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, UserCheck, Stethoscope, Sparkles
+    Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, UserCheck, Stethoscope, Sparkles, HeartHandshake, Users
 } from 'lucide-react';
 
 interface ToolsScreenProps {
@@ -15,9 +15,11 @@ const premiumToolIds = new Set(['sc-cbt', 'sc-act', 'notes', 'sc-games', 'sc-nig
 
 const moduleCategories = [
     {
-        title: 'Asistente Recomendado',
+        title: 'Canal Clínico & Comunidad',
         tools: [
-            { id: 'sc-wizard', name: 'Asistente de Calma (Te guío)', sub: '¿No sabes qué hacer? Elige en 2 clics según lo que sientes', icon: <Sparkles />, color: '#38bdf8', featured: true },
+            { id: 'sc-my-therapy', name: 'Mi Terapia & Informe Clínico', sub: 'Objetivos, registro Ansiedad/Depresión y PDF para tu psicólogo/a', icon: <HeartHandshake />, color: '#818cf8', featured: true },
+            { id: 'sc-community', name: 'Comunidad Ansioff (Tribu Anónima)', sub: 'Espacio seguro para compartir logros, desahogo y apoyarse', icon: <Users />, color: '#10b981' },
+            { id: 'sc-wizard', name: 'Asistente de Calma (Te guío)', sub: '¿No sabes qué hacer? Elige en 2 clics según lo que sientes', icon: <Sparkles />, color: '#38bdf8' },
         ]
     },
     {

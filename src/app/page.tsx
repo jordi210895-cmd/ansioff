@@ -23,6 +23,8 @@ import AuthScreen from '@/components/AuthScreen';
 import InstallPWA from '@/components/InstallPWA';
 import DisclaimerModal from '@/components/DisclaimerModal';
 import PsychologistsScreen from '@/components/PsychologistsScreen';
+import MyTherapyScreen from '@/components/MyTherapyScreen';
+import CommunityScreen from '@/components/CommunityScreen';
 import BodyMapScreen from '@/components/BodyMapScreen';
 import CalmAssistantModal from '@/components/CalmAssistantModal';
 import OnboardingFlow from '@/components/OnboardingFlow';
@@ -719,6 +721,10 @@ export default function App() {
         return <ExposureScreen onBack={goBack} userId={currentUserId} />;
       case 'sc-psychologists':
         return <PsychologistsScreen onBack={goBack} />;
+      case 'sc-my-therapy':
+        return <MyTherapyScreen onBack={goBack} onNav={handleNav} />;
+      case 'sc-community':
+        return <CommunityScreen onBack={goBack} onNav={handleNav} />;
       case 'sc-wizard':
       case 'wizard':
         return <CalmAssistantModal onBack={goBack} onNav={handleNav} />;
@@ -775,12 +781,16 @@ export default function App() {
         </div>
       </main>
 
-      <button className="sos-fab" onClick={() => handleNav('crisis')}>
-        <div className="sos-fab-pulse"></div>
-        <span>SOS</span>
-      </button>
+      {curScreen !== 'sc-community' && (
+        <button className="sos-fab" onClick={() => handleNav('crisis')}>
+          <div className="sos-fab-pulse"></div>
+          <span>SOS</span>
+        </button>
+      )}
 
-      <BottomNav activeScreen={curScreen} onNav={handleNav} isPremium={hasPremium} />
+      {curScreen !== 'sc-community' && (
+        <BottomNav activeScreen={curScreen} onNav={handleNav} isPremium={hasPremium} />
+      )}
       <DisclaimerModal />
       <InstallPWA />
       <Paywall
