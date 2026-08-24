@@ -149,6 +149,7 @@ async function configuredPrices(subscriptionId, territory) {
   return (result.data || []).map((price) => {
     const pointId = price.relationships?.subscriptionPricePoint?.data?.id;
     return {
+      id: price.id,
       startDate: price.attributes?.startDate || null,
       preserved: Boolean(price.attributes?.preserved),
       customerPrice: points.get(pointId)?.attributes?.customerPrice || null,
@@ -174,6 +175,10 @@ async function createPrice(subscriptionId, pricePointId) {
       },
     },
   });
+}
+
+async function deletePrice(priceId) {
+  await request('DELETE', `/v1/subscriptionPrices/${encodeURIComponent(priceId)}`);
 }
 
 async function applyInBatches(entries, subscriptionId) {
@@ -236,6 +241,18 @@ for (const target of TARGETS) {
   }, null, 2));
 
   if (APPLY && changes.length > 0) {
+    for (const [territory, , desiredPrice] of changes) {
+      const conflictingFuturePrices = (before[territory] || []).filter(
+        (price) => price.id
+          && price.startDate
+          && price.startDate >= START_DATE
+          && Math.abs(Number(price.customerPrice) - desiredPrice) >= 0.001,
+      );
+      for (const price of conflictingFuturePrices) {
+        await deletePrice(price.id);
+        console.log(`Deleted conflicting future price ${price.id} for ${territory}`);
+      }
+    }
     await applyInBatches(changes.map(([territory, point]) => [territory, point]), subscription.id);
   }
 
