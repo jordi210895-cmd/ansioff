@@ -44,7 +44,7 @@ jobs:
         run: |
           npx cap copy ios
           for attempt in 1 2 3 4; do
-            if (cd ios/App && pod install --no-repo-update --deployment); then
+            if (cd ios/App && pod install --no-repo-update); then
               exit 0
             fi
             echo "CocoaPods install failed (attempt ${attempt}/4); retrying after backoff..."

@@ -10,7 +10,7 @@ on:
       build_number:
         description: 'Build number to associate with the App Store version'
         required: true
-        default: '39'
+        default: '60'
       select_build:
         description: 'Set true to associate the build with the App Store version'
         required: true

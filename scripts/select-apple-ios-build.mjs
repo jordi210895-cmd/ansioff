@@ -5,7 +5,7 @@ const ISSUER_ID = process.env.APP_STORE_CONNECT_API_KEY_ISSUER_ID;
 const KEY_BASE64 = process.env.APP_STORE_CONNECT_API_KEY_BASE64 || process.env.APP_STORE_CONNECT_API_KEY;
 const BUNDLE_ID = process.env.APP_STORE_BUNDLE_ID || 'com.ansioff.app.jordi';
 const APP_VERSION = process.env.APP_STORE_VERSION || '1.1.9';
-const BUILD_NUMBER = process.env.APP_STORE_BUILD_NUMBER || '39';
+const BUILD_NUMBER = process.env.APP_STORE_BUILD_NUMBER || '60';
 const SELECT_BUILD = process.env.SELECT_BUILD === 'true';
 
 function base64url(input) {
