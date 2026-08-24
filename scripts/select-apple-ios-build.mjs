@@ -7,6 +7,8 @@ const BUNDLE_ID = process.env.APP_STORE_BUNDLE_ID || 'com.ansioff.app.jordi';
 const APP_VERSION = process.env.APP_STORE_VERSION || '1.1.9';
 const BUILD_NUMBER = process.env.APP_STORE_BUILD_NUMBER || '60';
 const SELECT_BUILD = process.env.SELECT_BUILD === 'true';
+const BUILD_WAIT_ATTEMPTS = Number(process.env.APP_STORE_BUILD_WAIT_ATTEMPTS || 45);
+const BUILD_WAIT_MS = Number(process.env.APP_STORE_BUILD_WAIT_MS || 20_000);
 
 function base64url(input) {
   return Buffer.from(input)
@@ -72,8 +74,17 @@ const versions = await request(`/v1/apps/${app.id}/appStoreVersions?filter[platf
 const version = versions.data?.[0];
 if (!version) throw new Error(`iOS app version ${APP_VERSION} not found`);
 
-const builds = await request(`/v1/builds?filter[app]=${app.id}&filter[version]=${encodeURIComponent(BUILD_NUMBER)}&sort=-uploadedDate&limit=10`);
-const build = builds.data?.[0];
+let build = null;
+for (let attempt = 1; attempt <= BUILD_WAIT_ATTEMPTS; attempt += 1) {
+  const builds = await request(`/v1/builds?filter[app]=${app.id}&filter[version]=${encodeURIComponent(BUILD_NUMBER)}&sort=-uploadedDate&limit=10`);
+  build = builds.data?.[0] || null;
+  if (build?.attributes?.processingState === 'VALID') break;
+  const state = build?.attributes?.processingState || 'not found';
+  console.log(`Build ${BUILD_NUMBER} is ${state}; waiting (${attempt}/${BUILD_WAIT_ATTEMPTS})...`);
+  if (attempt < BUILD_WAIT_ATTEMPTS) {
+    await new Promise((resolve) => setTimeout(resolve, BUILD_WAIT_MS));
+  }
+}
 
 console.log(JSON.stringify({
   app: { id: app.id, name: app.attributes?.name, bundleId: app.attributes?.bundleId },
