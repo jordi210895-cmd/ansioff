@@ -236,8 +236,8 @@ export const generateClinicalPDFDocument = (): jsPDF => {
     });
     yPos += 6;
 
-    let cbtEntries: CBTEntry[] = [];
-    const localCbtStr = localStorage.getItem('ansioff_local_cbt_records') || localStorage.getItem('ansioff_cbt_entries');
+    let cbtEntries: any[] = [];
+    const localCbtStr = localStorage.getItem('ansioff_local_cbt_records') || localStorage.getItem('ansioff_cbt_entries') || localStorage.getItem('ansioff_cbt_records');
     if (localCbtStr) {
         try {
             cbtEntries = JSON.parse(localCbtStr);
@@ -268,15 +268,17 @@ export const generateClinicalPDFDocument = (): jsPDF => {
             doc.text(dateStr, 20, yPos);
             yPos += 6;
 
-            const thoughtText = entry.thought || entry.negative_thought || entry.trigger || '';
-            const distortionText = entry.distortion || entry.cognitive_distortion || '';
+            const triggerText = entry.trigger || entry.situation || '';
+            const thoughtText = entry.thought || entry.negative_thought || entry.negativeThought || '';
+            const distortionText = entry.distortion || entry.cognitive_distortion || (Array.isArray(entry.distortions) ? entry.distortions.join(', ') : '');
             const evidenceText = entry.evidence || entry.emotions || '';
-            const alternativeText = entry.alternative || entry.alternative_thought || '';
+            const alternativeText = entry.alternative || entry.alternative_thought || entry.alternativeThought || '';
 
-            drawField('Detonante / Pensamiento', thoughtText);
-            drawField('Distorsion Cognitiva', distortionText);
-            drawField('Evidencias y Emociones', evidenceText);
-            drawField('Pensamiento Alternativo', alternativeText);
+            if (triggerText) drawField('Situacion / Detonante', triggerText);
+            if (thoughtText) drawField('Pensamiento Automatico', thoughtText);
+            if (distortionText) drawField('Distorsion Cognitiva', distortionText);
+            if (evidenceText) drawField('Evidencias y Emociones', evidenceText);
+            if (alternativeText) drawField('Pensamiento Alternativo', alternativeText);
 
             if (entry.belief_before !== undefined || entry.belief_after !== undefined) {
                 const beliefStr = `Creencia inicial: ${entry.belief_before ?? '—'}/10 | Creencia tras alternativa: ${entry.belief_after ?? '—'}/10`;
@@ -369,25 +371,173 @@ export const generateClinicalPDFDocument = (): jsPDF => {
         });
     }
 
+    // --- SECCIÓN 4: REGISTRO DE ESTADO DE ÁNIMO Y ANSIEDAD ---
+    checkAddPage(40);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(3, 8, 15);
+    doc.text('4. Registro de Estado de Animo y Ansiedad', 20, yPos);
+    yPos += 7;
+
+    const moodStr = localStorage.getItem('ansioff_mood_logs_minimal') || localStorage.getItem('ansioff_mood_logs');
+    let moodLogs: any[] = [];
+    if (moodStr) {
+        try {
+            moodLogs = JSON.parse(moodStr);
+        } catch (e) {
+            console.error("Error parsing mood logs:", e);
+        }
+    }
+
+    if (!Array.isArray(moodLogs) || moodLogs.length === 0) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(120, 120, 120);
+        doc.text('No hay registros de estado de animo guardados.', 20, yPos);
+        yPos += 14;
+    } else {
+        moodLogs.sort((a, b) => new Date(b.date || b.created_at || 0).getTime() - new Date(a.date || a.created_at || 0).getTime());
+
+        moodLogs.forEach(m => {
+            const rawDate = new Date(m.date || m.created_at || Date.now());
+            const dateStr = rawDate.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }) + (m.time ? ` (${m.time})` : '');
+
+            checkAddPage(25);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            doc.setTextColor(3, 8, 15);
+            doc.text(dateStr, 20, yPos);
+            yPos += 6;
+
+            const moodVal = m.moodLevel !== undefined ? `${m.moodLevel}/10` : '—';
+            const anxVal = m.anxietyLevel !== undefined ? `${m.anxietyLevel}/10` : '—';
+            drawField('Nivel de Animo / Ansiedad', `Animo: ${moodVal} | Ansiedad: ${anxVal}`, true);
+
+            if (m.notes) {
+                drawField('Notas de contexto', m.notes);
+            }
+
+            yPos += 4;
+            doc.setDrawColor(240, 240, 240);
+            doc.line(20, yPos, 190, yPos);
+            yPos += 8;
+        });
+    }
+
+    // --- SECCIÓN 5: OBJETIVOS TERAPÉUTICOS Y SITUACIONES EVITADAS ---
+    checkAddPage(40);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(3, 8, 15);
+    doc.text('5. Objetivos Terapeuticos y Mapa de Evitacion', 20, yPos);
+    yPos += 7;
+
+    const goalsStr = localStorage.getItem('ansioff_therapy_goals_v2');
+    let goals: any[] = [];
+    if (goalsStr) {
+        try {
+            goals = JSON.parse(goalsStr);
+        } catch (e) {
+            console.error("Error parsing goals:", e);
+        }
+    }
+
+    if (Array.isArray(goals) && goals.length > 0) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(90, 100, 220);
+        doc.text('Objetivos en desarrollo:', 20, yPos);
+        yPos += 6;
+
+        goals.forEach(g => {
+            checkAddPage(15);
+            const statusStr = g.completed ? '[COMPLETADO] ' : `[Progreso: ${g.progress || 0}%] `;
+            drawField('Objetivo', `${statusStr}${g.text || ''} (${g.category || 'General'})`);
+            yPos += 2;
+        });
+        yPos += 4;
+    }
+
+    const avoidedStr = localStorage.getItem('ansioff_avoided_situations');
+    let avoided: any[] = [];
+    if (avoidedStr) {
+        try {
+            avoided = JSON.parse(avoidedStr);
+        } catch (e) {
+            console.error("Error parsing avoided situations:", e);
+        }
+    }
+
+    if (Array.isArray(avoided) && avoided.length > 0) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(220, 90, 90);
+        doc.text('Situaciones que producen evitacion / agorafobia:', 20, yPos);
+        yPos += 6;
+
+        avoided.forEach(a => {
+            checkAddPage(15);
+            drawField('Situacion Evitada', `${a.situation || ''} | Malestar: ${a.distressLevel || 0}/10 (${a.category || 'Agorafobia'})`);
+            yPos += 2;
+        });
+        yPos += 6;
+    }
+
     return doc;
 };
 
-export const exportClinicalDiaryPDF = (): boolean => {
+export const exportClinicalDiaryPDF = async (): Promise<boolean> => {
     try {
         const doc = generateClinicalPDFDocument();
         const fileName = 'Ansioff_Informe_Clinico.pdf';
 
+        // 1. Intentar Web Share API primero (compatible con iOS, Android nativo y Safari/Chrome móvil)
+        if (typeof navigator !== 'undefined' && navigator.share && navigator.canShare) {
+            try {
+                const pdfBlob = doc.output('blob');
+                const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+                if (navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        title: 'Informe Clínico Ansioff',
+                        text: 'Informe clínico y diario de registro de Ansioff.',
+                        files: [file]
+                    });
+                    return true;
+                }
+            } catch (shareErr) {
+                console.warn('Share API cancelado o no disponible:', shareErr);
+            }
+        }
+
+        // 2. Intentar Data URI (funciona en WebViews donde doc.save o blob URLs son bloqueadas)
         try {
-            doc.save(fileName);
-        } catch (e) {
-            console.warn('doc.save failed, using blob fallback', e);
+            const dataUri = doc.output('datauristring');
+            const link = document.createElement('a');
+            link.href = dataUri;
+            link.download = fileName;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            return true;
+        } catch (dataErr) {
+            console.warn('Data URI download failed:', dataErr);
+        }
+
+        // 3. Fallback con Blob URL / jsPDF save
+        try {
             const pdfBlob = doc.output('blob');
             const blobUrl = URL.createObjectURL(pdfBlob);
             const a = document.createElement('a');
             a.href = blobUrl;
             a.download = fileName;
             a.target = '_blank';
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
+        } catch (e) {
+            console.warn('Blob fallback failed, using doc.save', e);
+            doc.save(fileName);
         }
 
         return true;
@@ -400,24 +550,24 @@ export const exportClinicalDiaryPDF = (): boolean => {
 export const shareClinicalReportPDF = async (): Promise<{ shared: boolean; error?: string }> => {
     try {
         const doc = generateClinicalPDFDocument();
+        const fileName = 'Ansioff_Informe_Clinico.pdf';
         const pdfBlob = doc.output('blob');
-        const file = new File([pdfBlob], 'Ansioff_Informe_Clinico.pdf', { type: 'application/pdf' });
+        const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
 
-        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        if (typeof navigator !== 'undefined' && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
             await navigator.share({
                 title: 'Mi Informe de Terapia Ansioff',
-                text: 'Adjunto mi registro clinico de ansiedad, exposiciones y estado de animo.',
+                text: 'Adjunto mi registro clínico de ansiedad, exposiciones y estado de ánimo.',
                 files: [file],
             });
             return { shared: true };
         } else {
-            // Fallback para navegadores que no soportan compartir archivos nativos
-            exportClinicalDiaryPDF();
-            return { shared: false };
+            await exportClinicalDiaryPDF();
+            return { shared: true };
         }
     } catch (err) {
         console.warn('Error in Web Share API:', err);
-        exportClinicalDiaryPDF();
+        await exportClinicalDiaryPDF();
         return { shared: false, error: String(err) };
     }
 };

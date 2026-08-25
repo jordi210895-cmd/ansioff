@@ -86,8 +86,8 @@ export default function StatsScreen({ onBack }: StatsScreenProps) {
                     </div>
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                         <button
-                            onClick={() => {
-                                const ok = exportClinicalDiaryPDF();
+                            onClick={async () => {
+                                const ok = await exportClinicalDiaryPDF();
                                 if (ok) alert("¡Informe en PDF exportado correctamente!");
                                 else alert("No se pudo exportar el PDF.");
                             }}

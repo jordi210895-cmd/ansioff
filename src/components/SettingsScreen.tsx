@@ -61,7 +61,7 @@ export default function SettingsScreen({ onBack, profile, session, onLogout, onD
         setIsExportingPdf(true);
         await new Promise(resolve => setTimeout(resolve, 150));
         try {
-            const success = exportClinicalDiaryPDF();
+            const success = await exportClinicalDiaryPDF();
             if (success) {
                 alert("¡Tu informe en PDF se ha generado e iniciado la descarga correctamente!");
             } else {

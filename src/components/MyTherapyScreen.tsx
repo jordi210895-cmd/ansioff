@@ -420,7 +420,7 @@ export default function MyTherapyScreen({ onBack, onNav }: MyTherapyScreenProps)
                 <span>Compartir</span>
               </button>
               <button
-                onClick={() => exportClinicalDiaryPDF()}
+                onClick={async () => await exportClinicalDiaryPDF()}
                 className="bg-white/10 hover:bg-white/20 px-4 py-2.5 rounded-lg text-sm text-white border border-white/20 transition flex items-center gap-1.5 cursor-pointer"
               >
                 <Download className="w-4 h-4" />
