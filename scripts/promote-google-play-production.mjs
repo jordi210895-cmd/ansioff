@@ -9,10 +9,10 @@ const TARGET_TRACK = process.env.GOOGLE_PLAY_TARGET_TRACK || 'production';
 // Play Console.
 const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'draft';
 const CHANGES_NOT_SENT_FOR_REVIEW = process.env.GOOGLE_PLAY_CHANGES_NOT_SENT_FOR_REVIEW !== 'false';
-const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.10';
+const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.11';
 const RELEASE_NOTES = process.env.GOOGLE_PLAY_RELEASE_NOTES || [
-  'Actualización de compatibilidad con Android 16.',
-  'Mantiene el diario personal, sonidos, pausas guiadas, rutinas y progreso.',
+  'Mejora de la exportación y el uso compartido del informe PDF.',
+  'El informe incluye más detalle del estado de ánimo, objetivos y registros terapéuticos.',
 ].join('\n');
 
 function requireCredentials() {
