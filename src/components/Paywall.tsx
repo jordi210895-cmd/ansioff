@@ -161,8 +161,14 @@ export default function Paywall({ open, placement, plan, products, loading = fal
             ? 'Tus 7 días gratis han terminado'
         : plan?.title || 'Tu plan completo está preparado';
     const subtitle = placement === 'trialExpired'
-        ? 'Para seguir usando todas las herramientas, elige Premium mensual o anual.'
+        ? 'Puedes cerrar esta pantalla y seguir con las herramientas gratuitas, o elegir Premium para desbloquearlo todo.'
         : 'Combina Kit SOS, reflexión y rutinas para volver cuando lo necesites.';
+    const benefits = [
+        'Mi Terapia, objetivos e informe PDF para tu psicólogo/a.',
+        'Diario, mapa corporal y herramientas para reorganizar pensamientos.',
+        'Paisajes sonoros, rutinas de noche y juegos antiestrés.',
+        'Seguimiento personal y todos los módulos sin bloqueos.',
+    ];
 
     return (
         <div className="paywall-root" role="dialog" aria-modal="true" aria-labelledby="paywall-title">
@@ -198,19 +204,14 @@ export default function Paywall({ open, placement, plan, products, loading = fal
                 @media(max-height:740px){.hero{padding-top:0;padding-bottom:14px}h1{font-size:26px}.subtitle{font-size:13px}.benefits{gap:8px;padding-bottom:14px}.plan{min-height:128px;padding:14px 12px}.plan-price{font-size:25px}.paywall-shell{padding-top:max(8px,env(safe-area-inset-top));}}
             `}</style>
             <div className="paywall-shell">
-                {placement !== 'trialExpired' && <button className="close" onClick={onClose} aria-label={placement === 'onboarding' ? 'Cerrar y crear cuenta para probar gratis' : 'Cerrar'}><X size={20} /></button>}
+                <button className="close" onClick={onClose} aria-label={placement === 'onboarding' ? 'Cerrar y crear cuenta para probar gratis' : placement === 'trialExpired' ? 'Cerrar y continuar con la versión gratuita' : 'Cerrar'}><X size={20} /></button>
                 <div className="hero">
                     <div className="eyebrow">ANSIOFF Premium</div>
                     <h1 id="paywall-title">{headline}</h1>
                     <p className="subtitle">{subtitle}</p>
                 </div>
                 <div className="benefits">
-                    {[
-                        'Kit SOS y herramientas breves cuando sube el malestar.',
-                        'Diario y reflexión IA para encontrar temas repetidos.',
-                        'Rutinas de foco, noche y organización personal.',
-                        'Actividad y constancia sin penalizar los descansos.',
-                    ].map((benefit) => <div className="benefit" key={benefit}><span className="benefit-icon"><Check size={15} /></span><span>{benefit}</span></div>)}
+                    {benefits.map((benefit) => <div className="benefit" key={benefit}><span className="benefit-icon"><Check size={15} /></span><span>{benefit}</span></div>)}
                 </div>
 
                 {actionError && <div className="error">{actionError}</div>}

@@ -1,21 +1,31 @@
 export type PremiumFeature =
+    | 'therapy'
     | 'notes'
     | 'cbt'
     | 'act'
     | 'games'
     | 'night'
-    | 'exposure'
+    | 'sounds'
+    | 'body_map'
+    | 'evaluation'
+    | 'psychologists'
     | 'progress'
     | 'custom_audio';
 
 export const PREMIUM_SCREEN_FEATURES: Record<string, PremiumFeature> = {
+    'sc-my-therapy': 'therapy',
     notes: 'notes',
     'sc-notes': 'notes',
     'sc-cbt': 'cbt',
     'sc-act': 'act',
     'sc-games': 'games',
     'sc-night': 'night',
-    'sc-exposure-why': 'exposure',
+    sounds: 'sounds',
+    'sc-audio': 'sounds',
+    'sc-bodymap': 'body_map',
+    bodymap: 'body_map',
+    'sc-eval': 'evaluation',
+    'sc-psychologists': 'psychologists',
     progress: 'progress',
     'sc-stats': 'progress',
 };
@@ -28,6 +38,7 @@ export const RECOVERY_INTERVAL_MS = 14 * 24 * 60 * 60 * 1000;
 export const MAX_RECOVERY_IMPRESSIONS = 3;
 export const ACCOUNT_TRIAL_KEY = 'ansioff_account_trial_v1';
 export const ACCOUNT_TRIAL_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
+export const TRIAL_EXPIRED_PAYWALL_DISMISSED_KEY = 'ansioff_trial_expired_paywall_dismissed_v1';
 
 export interface AccountTrialStatus {
     active: boolean;
@@ -75,6 +86,26 @@ export function startAccountTrial(userId?: string, now = Date.now()) {
         window.localStorage.setItem(ACCOUNT_TRIAL_KEY, JSON.stringify({ userId, startedAt: now }));
     }
     return getAccountTrialStatus(userId, now);
+}
+
+export function shouldShowTrialExpiredPaywall(trial: AccountTrialStatus, userId?: string) {
+    if (!trial.expired || trial.startedAt === null || typeof window === 'undefined') return false;
+    try {
+        const raw = window.localStorage.getItem(TRIAL_EXPIRED_PAYWALL_DISMISSED_KEY);
+        if (!raw) return true;
+        const dismissed = JSON.parse(raw) as { userId?: string; startedAt?: number };
+        return dismissed.startedAt !== trial.startedAt || (userId || '') !== (dismissed.userId || '');
+    } catch {
+        return true;
+    }
+}
+
+export function markTrialExpiredPaywallDismissed(trial: AccountTrialStatus, userId?: string) {
+    if (trial.startedAt === null || typeof window === 'undefined') return;
+    window.localStorage.setItem(TRIAL_EXPIRED_PAYWALL_DISMISSED_KEY, JSON.stringify({
+        userId: userId || '',
+        startedAt: trial.startedAt,
+    }));
 }
 
 export function recordFreeAction() {

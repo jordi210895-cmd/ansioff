@@ -37,7 +37,7 @@ export default function BottomNav({ activeScreen, onNav, isPremium = false }: Bo
             <NavItem id="sc-tools" activeScreen={activeScreen} onNav={onNav} label="Módulos">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill={activeScreen === 'sc-tools' ? 'rgba(14, 165, 233, 0.2)' : 'none'} stroke={activeScreen === 'sc-tools' ? 'var(--p)' : 'var(--text3)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>
             </NavItem>
-            <NavItem id="sc-my-therapy" activeScreen={activeScreen} onNav={onNav} label="Mi Terapia">
+            <NavItem id="sc-my-therapy" activeScreen={activeScreen} onNav={onNav} label="Mi Terapia" locked={!isPremium}>
                 <HeartHandshake size={22} color={activeScreen === 'sc-my-therapy' ? '#818cf8' : 'var(--text3)'} />
             </NavItem>
 

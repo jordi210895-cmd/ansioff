@@ -9,10 +9,10 @@ const TARGET_TRACK = process.env.GOOGLE_PLAY_TARGET_TRACK || 'production';
 // Play Console.
 const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'draft';
 const CHANGES_NOT_SENT_FOR_REVIEW = process.env.GOOGLE_PLAY_CHANGES_NOT_SENT_FOR_REVIEW !== 'false';
-const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.11';
+const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.12';
 const RELEASE_NOTES = process.env.GOOGLE_PLAY_RELEASE_NOTES || [
-  'Mejora de la exportación y el uso compartido del informe PDF.',
-  'El informe incluye más detalle del estado de ánimo, objetivos y registros terapéuticos.',
+  'Tras la prueba de 7 días puedes seguir usando gratis las herramientas esenciales.',
+  'Los módulos Premium muestran claramente su bloqueo y permiten desbloquearlos al suscribirte.',
 ].join('\n');
 
 function requireCredentials() {

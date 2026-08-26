@@ -43,8 +43,9 @@ import {
 } from '@/lib/onboarding';
 import {
   AccountTrialStatus, getAccountTrialStatus, markGeneralPaywallShown, markRecoveryPaywallShown,
+  markTrialExpiredPaywallDismissed,
   PREMIUM_SCREEN_FEATURES, recordFreeAction, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
-  startAccountTrial,
+  shouldShowTrialExpiredPaywall, startAccountTrial,
 } from '@/lib/access';
 import { registerNativeReviewResumeListener, requestNativeReviewIfDue } from '@/lib/appReview';
 import { registerInactivityLifecycle, scheduleInactivityReminders } from '@/lib/reminders';
@@ -121,7 +122,7 @@ export default function App() {
     const refreshTrial = () => {
       const nextTrial = getAccountTrialStatus(currentUserId);
       setAccountTrial(nextTrial);
-      if (nextTrial.expired) {
+      if (shouldShowTrialExpiredPaywall(nextTrial, currentUserId)) {
         setPaywallPlacement('trialExpired');
       }
     };
@@ -178,12 +179,12 @@ export default function App() {
         }));
         if (nextSubscription.isPremium) {
           setPaywallPlacement((current) => current === 'trialExpired' ? null : current);
-        } else if (nextTrial.expired) {
+        } else if (shouldShowTrialExpiredPaywall(nextTrial, currentUserId)) {
           setPaywallPlacement('trialExpired');
         }
       } catch (error) {
         console.warn('Subscription refresh skipped:', error);
-        if (active && nextTrial.expired) setPaywallPlacement('trialExpired');
+        if (active && shouldShowTrialExpiredPaywall(nextTrial, currentUserId)) setPaywallPlacement('trialExpired');
       }
     };
 
@@ -541,11 +542,6 @@ export default function App() {
       setAccountTrial(currentTrial);
     }
     const canUsePremiumFeature = hasPaidPremium || (isNativeApp && currentTrial.active);
-    const expiredWithoutPremium = isNativeApp && currentTrial.expired && !hasPaidPremium;
-    if (expiredWithoutPremium && id !== 'sc-settings') {
-      setPaywallPlacement('trialExpired');
-      return;
-    }
     if (isNativeApp && !canUsePremiumFeature && PREMIUM_SCREEN_FEATURES[id]) {
       setPaywallPlacement('feature');
       return;
@@ -565,11 +561,7 @@ export default function App() {
     ) {
       setAccountTrial(currentTrial);
     }
-    if (hasPaidPremium || currentTrial.active) return;
-    if (currentTrial.expired) {
-      setPaywallPlacement('trialExpired');
-      return;
-    }
+    if (hasPaidPremium || currentTrial.active || currentTrial.expired) return;
     const actionCount = recordFreeAction();
     if (shouldShowGeneralPaywall(actionCount)) {
       markGeneralPaywallShown();
@@ -613,7 +605,14 @@ export default function App() {
 
   const closePaywall = () => {
     const currentPlacement = paywallPlacement;
-    if (currentPlacement === 'trialExpired') return;
+    if (currentPlacement === 'trialExpired') {
+      const currentTrial = getAccountTrialStatus(currentUserId);
+      markTrialExpiredPaywallDismissed(currentTrial, currentUserId);
+      if (PREMIUM_SCREEN_FEATURES[curScreen]) {
+        setPrevScreen(curScreen);
+        setCurScreen('home');
+      }
+    }
     const shouldOfferSetup = currentPlacement === 'onboarding' && localStorage.getItem('ansioff_post_onboarding_setup_v1') !== 'done';
     setPaywallPlacement(null);
     if (currentPlacement === 'onboarding') {

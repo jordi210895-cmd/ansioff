@@ -4,14 +4,13 @@ import {
     Activity, Wind, Gamepad2, Music, PenLine, Heart,
     Brain, FileText, Moon, Target, ChevronRight, LockKeyhole, UserCheck, Stethoscope, Sparkles, HeartHandshake, Users
 } from 'lucide-react';
+import { PREMIUM_SCREEN_FEATURES } from '@/lib/access';
 
 interface ToolsScreenProps {
     onBack: () => void;
     onNav: (screen: string) => void;
     isPremium: boolean;
 }
-
-const premiumToolIds = new Set(['sc-cbt', 'sc-act', 'notes', 'sc-games', 'sc-night', 'sc-exposure-why']);
 
 const moduleCategories = [
     {
@@ -104,7 +103,7 @@ export default function ToolsScreen({ onBack, onNav, isPremium }: ToolsScreenPro
                     <div className="cat-lbl">{cat.title}</div>
                     <div className="mod-grid">
                         {cat.tools.map((t, ti) => {
-                            const locked = !isPremium && premiumToolIds.has(t.id);
+                            const locked = !isPremium && Boolean(PREMIUM_SCREEN_FEATURES[t.id]);
                             return (
                             <div key={ti} className={`mod-row ${locked ? 'locked' : ''}`} onClick={() => onNav(t.id)}>
                                 <div className="mod-ico-box" style={{ color: t.color }}>

@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     ACCOUNT_TRIAL_DURATION_MS, GENERAL_PAYWALL_INTERVAL_MS, getAccountTrialStatus,
-    markGeneralPaywallShown, markRecoveryPaywallShown,
+    markGeneralPaywallShown, markRecoveryPaywallShown, markTrialExpiredPaywallDismissed,
     MAX_RECOVERY_IMPRESSIONS, PREMIUM_SCREEN_FEATURES, recordFreeAction,
     RECOVERY_INTERVAL_MS, shouldShowGeneralPaywall, shouldShowRecoveryPaywall,
-    startAccountTrial,
+    shouldShowTrialExpiredPaywall, startAccountTrial,
 } from './access';
 
 class MemoryStorage {
@@ -24,11 +24,17 @@ describe('premium access and commercial cadence', () => {
         vi.setSystemTime(new Date('2026-07-10T12:00:00Z'));
     });
 
-    it('keeps premium modules mapped while basic tools remain outside the gate', () => {
+    it('keeps only the agreed post-trial tools outside the premium gate', () => {
+        expect(PREMIUM_SCREEN_FEATURES['sc-my-therapy']).toBe('therapy');
         expect(PREMIUM_SCREEN_FEATURES.notes).toBe('notes');
         expect(PREMIUM_SCREEN_FEATURES.progress).toBe('progress');
+        expect(PREMIUM_SCREEN_FEATURES.sounds).toBe('sounds');
+        expect(PREMIUM_SCREEN_FEATURES['sc-bodymap']).toBe('body_map');
         expect(PREMIUM_SCREEN_FEATURES.breath).toBeUndefined();
-        expect(PREMIUM_SCREEN_FEATURES.sounds).toBeUndefined();
+        expect(PREMIUM_SCREEN_FEATURES.pause).toBeUndefined();
+        expect(PREMIUM_SCREEN_FEATURES['sc-community']).toBeUndefined();
+        expect(PREMIUM_SCREEN_FEATURES['sc-wizard']).toBeUndefined();
+        expect(PREMIUM_SCREEN_FEATURES['sc-exposure-why']).toBeUndefined();
     });
 
     it('shows a reminder after the third completed free action', () => {
@@ -89,5 +95,16 @@ describe('premium access and commercial cadence', () => {
         const restarted = startAccountTrial('user-1');
         expect(restarted.active).toBe(false);
         expect(restarted.expired).toBe(true);
+    });
+
+    it('shows the expired-trial paywall once and keeps it dismissed for that trial', () => {
+        startAccountTrial('user-1');
+        vi.advanceTimersByTime(ACCOUNT_TRIAL_DURATION_MS);
+        const expired = getAccountTrialStatus('user-1');
+
+        expect(shouldShowTrialExpiredPaywall(expired, 'user-1')).toBe(true);
+        markTrialExpiredPaywallDismissed(expired, 'user-1');
+        expect(shouldShowTrialExpiredPaywall(expired, 'user-1')).toBe(false);
+        expect(shouldShowTrialExpiredPaywall(expired, 'user-2')).toBe(true);
     });
 });

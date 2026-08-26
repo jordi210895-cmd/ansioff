@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Headphones, PencilLine, Stethoscope, Sparkles, Wind, Brain, CheckCircle2, Circle, ArrowRight, Users } from 'lucide-react';
+import { Headphones, PencilLine, Stethoscope, Sparkles, Wind, Brain, CheckCircle2, Circle, ArrowRight, Users, LockKeyhole } from 'lucide-react';
 import { getAllTracks } from '@/lib/db';
 
 interface HomeScreenProps {
@@ -67,7 +67,7 @@ const getGreeting = () => {
     return 'Buenas noches';
 };
 
-export default function HomeScreen({ onNav, trackCount = 0 }: HomeScreenProps) {
+export default function HomeScreen({ onNav, trackCount = 0, isPremium = false }: HomeScreenProps) {
     const todayKey = useMemo(() => getTodayKey(), []);
     const [greeting, setGreeting] = useState(getGreeting);
     const [selectedMood, setSelectedMood] = useState<MoodOption | null>(null);
@@ -604,7 +604,7 @@ export default function HomeScreen({ onNav, trackCount = 0 }: HomeScreenProps) {
                                 <div style={{ fontSize: '11.5px', color: 'rgba(224, 231, 255, 0.8)', marginTop: '2px' }}>Objetivos, autoregistro dual y compartir con tu psicólogo/a</div>
                             </div>
                             <div style={{ width: '36px', height: '36px', borderRadius: '12px', background: 'rgba(129, 140, 248, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c7d2fe', flexShrink: 0 }}>
-                                <ArrowRight size={18} />
+                                {isPremium ? <ArrowRight size={18} /> : <LockKeyhole size={17} />}
                             </div>
                         </div>
                     </section>
@@ -641,15 +641,15 @@ export default function HomeScreen({ onNav, trackCount = 0 }: HomeScreenProps) {
                                 <div style={{ fontSize: '10px', color: 'rgba(252, 165, 165, 0.8)', marginTop: '2px' }}>Respiración & SOS</div>
                             </button>
                             <button onClick={() => onNav('sc-cbt')} type="button" style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '14px', padding: '10px 12px', textAlign: 'left', cursor: 'pointer' }}>
-                                <div style={{ fontSize: '12px', fontWeight: 800, color: '#7dd3fc' }}>🌀 Pensamientos bucle</div>
+                                <div style={{ fontSize: '12px', fontWeight: 800, color: '#7dd3fc', display: 'flex', justifyContent: 'space-between', gap: '6px' }}>🌀 Pensamientos bucle {!isPremium && <LockKeyhole size={12} />}</div>
                                 <div style={{ fontSize: '10px', color: 'rgba(125, 211, 252, 0.8)', marginTop: '2px' }}>Reorganizar mente</div>
                             </button>
                             <button onClick={() => onNav('sc-bodymap')} type="button" style={{ background: 'rgba(129, 140, 248, 0.12)', border: '1px solid rgba(129, 140, 248, 0.25)', borderRadius: '14px', padding: '10px 12px', textAlign: 'left', cursor: 'pointer' }}>
-                                <div style={{ fontSize: '12px', fontWeight: 800, color: '#a5b4fc' }}>💓 Opresión o nudo</div>
+                                <div style={{ fontSize: '12px', fontWeight: 800, color: '#a5b4fc', display: 'flex', justifyContent: 'space-between', gap: '6px' }}>💓 Opresión o nudo {!isPremium && <LockKeyhole size={12} />}</div>
                                 <div style={{ fontSize: '10px', color: 'rgba(165, 180, 252, 0.8)', marginTop: '2px' }}>Mapa de síntoma</div>
                             </button>
                             <button onClick={() => onNav('sounds')} type="button" style={{ background: 'rgba(192, 132, 252, 0.12)', border: '1px solid rgba(192, 132, 252, 0.25)', borderRadius: '14px', padding: '10px 12px', textAlign: 'left', cursor: 'pointer' }}>
-                                <div style={{ fontSize: '12px', fontWeight: 800, color: '#e9d5ff' }}>😴 No puedo dormir</div>
+                                <div style={{ fontSize: '12px', fontWeight: 800, color: '#e9d5ff', display: 'flex', justifyContent: 'space-between', gap: '6px' }}>😴 No puedo dormir {!isPremium && <LockKeyhole size={12} />}</div>
                                 <div style={{ fontSize: '10px', color: 'rgba(233, 213, 255, 0.8)', marginTop: '2px' }}>Audios de descanso</div>
                             </button>
                         </div>
