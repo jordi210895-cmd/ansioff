@@ -7,10 +7,21 @@ on:
         description: 'App Store version to submit for review'
         required: true
         default: '1.1.9'
+      build_number:
+        description: 'Build number to select and submit'
+        required: true
+        default: '62'
 
 jobs:
   submit:
     runs-on: macos-26
+    env:
+      APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+      APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 || secrets.APP_STORE_CONNECT_API_KEY }}
+      APP_STORE_BUNDLE_ID: com.ansioff.app.jordi
+      APP_STORE_VERSION: ${{ inputs.app_version }}
+      APP_STORE_BUILD_NUMBER: ${{ inputs.build_number }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,11 +31,34 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Submit iOS version for review
+      - name: Wait for the new build to finish processing
         env:
-          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 || secrets.APP_STORE_CONNECT_API_KEY }}
-          APP_STORE_BUNDLE_ID: com.ansioff.app.jordi
-          APP_STORE_VERSION: ${{ inputs.app_version }}
-        run: node scripts/submit-apple-review.mjs
+          SELECT_BUILD: 'false'
+        run: node scripts/select-apple-ios-build.mjs
+
+      - name: Remove the previous build from review
+        run: node scripts/cancel-apple-app-review.mjs
+
+      - name: Select the new build
+        env:
+          SELECT_BUILD: 'true'
+        run: |
+          for attempt in 1 2 3 4; do
+            if node scripts/select-apple-ios-build.mjs; then
+              exit 0
+            fi
+            echo "Build selection failed (attempt ${attempt}/4); retrying after 30 seconds..."
+            sleep 30
+          done
+          exit 1
+
+      - name: Submit iOS version for review
+        run: |
+          for attempt in 1 2 3 4; do
+            if node scripts/submit-apple-review.mjs; then
+              exit 0
+            fi
+            echo "Review submission failed (attempt ${attempt}/4); retrying after 30 seconds..."
+            sleep 30
+          done
+          exit 1
