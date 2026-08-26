@@ -18,7 +18,7 @@ on:
 
 jobs:
   select:
-    runs-on: ubuntu-22.04
+    runs-on: macos-26
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
