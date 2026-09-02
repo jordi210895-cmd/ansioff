@@ -5,7 +5,7 @@ const SCOPE = 'https://www.googleapis.com/auth/androidpublisher';
 const SOURCE_TRACK = process.env.GOOGLE_PLAY_SOURCE_TRACK || 'internal';
 const TARGET_TRACK_OVERRIDE = process.env.GOOGLE_PLAY_TARGET_TRACK;
 const RELEASE_STATUS = process.env.GOOGLE_PLAY_RELEASE_STATUS || 'completed';
-const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.12 - prueba cerrada';
+const RELEASE_NAME = process.env.GOOGLE_PLAY_RELEASE_NAME || 'ANSIOFF 1.1.13 - prueba cerrada';
 const RELEASE_NOTES = process.env.GOOGLE_PLAY_RELEASE_NOTES || [
   'Tras la prueba de 7 días puedes seguir usando gratis las herramientas esenciales.',
   'Los módulos Premium muestran claramente su bloqueo y permiten desbloquearlos al suscribirte.',

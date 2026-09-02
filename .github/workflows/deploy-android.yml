@@ -74,7 +74,7 @@ jobs:
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ansioff-android-1.1.12
+          name: ansioff-android-1.1.13
           path: android/app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload to Google Play internal testing

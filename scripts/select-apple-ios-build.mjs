@@ -4,9 +4,10 @@ const KEY_ID = process.env.APP_STORE_CONNECT_API_KEY_ID;
 const ISSUER_ID = process.env.APP_STORE_CONNECT_API_KEY_ISSUER_ID;
 const KEY_BASE64 = process.env.APP_STORE_CONNECT_API_KEY_BASE64 || process.env.APP_STORE_CONNECT_API_KEY;
 const BUNDLE_ID = process.env.APP_STORE_BUNDLE_ID || 'com.ansioff.app.jordi';
-const APP_VERSION = process.env.APP_STORE_VERSION || '1.1.9';
-const BUILD_NUMBER = process.env.APP_STORE_BUILD_NUMBER || '60';
+const APP_VERSION = process.env.APP_STORE_VERSION || '1.1.10';
+const BUILD_NUMBER = process.env.APP_STORE_BUILD_NUMBER || '63';
 const SELECT_BUILD = process.env.SELECT_BUILD === 'true';
+const CREATE_VERSION = process.env.CREATE_APP_STORE_VERSION === 'true';
 const BUILD_WAIT_ATTEMPTS = Number(process.env.APP_STORE_BUILD_WAIT_ATTEMPTS || 45);
 const BUILD_WAIT_MS = Number(process.env.APP_STORE_BUILD_WAIT_MS || 20_000);
 
@@ -70,8 +71,31 @@ const apps = await request(`/v1/apps?filter[bundleId]=${encodeURIComponent(BUNDL
 const app = apps.data?.[0];
 if (!app) throw new Error(`App not found for bundleId ${BUNDLE_ID}`);
 
-const versions = await request(`/v1/apps/${app.id}/appStoreVersions?filter[platform]=IOS&filter[versionString]=${encodeURIComponent(APP_VERSION)}&include=build&limit=10`);
-const version = versions.data?.[0];
+let versions = await request(`/v1/apps/${app.id}/appStoreVersions?filter[platform]=IOS&filter[versionString]=${encodeURIComponent(APP_VERSION)}&include=build&limit=10`);
+let version = versions.data?.[0];
+if (!version && CREATE_VERSION) {
+  version = (await request('/v1/appStoreVersions', {
+    method: 'POST',
+    body: JSON.stringify({
+      data: {
+        type: 'appStoreVersions',
+        attributes: {
+          platform: 'IOS',
+          versionString: APP_VERSION,
+          copyright: 'ANSIOFF',
+          releaseType: 'AFTER_APPROVAL',
+          usesIdfa: false,
+        },
+        relationships: {
+          app: { data: { type: 'apps', id: app.id } },
+        },
+      },
+    }),
+  })).data;
+  console.log(`Created iOS app version ${APP_VERSION} (${version.id}).`);
+  versions = await request(`/v1/apps/${app.id}/appStoreVersions?filter[platform]=IOS&filter[versionString]=${encodeURIComponent(APP_VERSION)}&include=build&limit=10`);
+  version = versions.data?.[0] || version;
+}
 if (!version) throw new Error(`iOS app version ${APP_VERSION} not found`);
 
 let build = null;

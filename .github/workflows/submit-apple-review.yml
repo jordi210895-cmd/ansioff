@@ -6,11 +6,11 @@ on:
       app_version:
         description: 'App Store version to submit for review'
         required: true
-        default: '1.1.9'
+        default: '1.1.10'
       build_number:
         description: 'Build number to select and submit'
         required: true
-        default: '62'
+        default: '63'
 
 jobs:
   submit:
@@ -22,6 +22,7 @@ jobs:
       APP_STORE_BUNDLE_ID: com.ansioff.app.jordi
       APP_STORE_VERSION: ${{ inputs.app_version }}
       APP_STORE_BUILD_NUMBER: ${{ inputs.build_number }}
+      CREATE_APP_STORE_VERSION: 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

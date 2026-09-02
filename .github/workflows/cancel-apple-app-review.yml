@@ -6,7 +6,7 @@ on:
       app_version:
         description: 'App Store version to remove from review'
         required: true
-        default: '1.1.9'
+        default: '1.1.10'
 
 jobs:
   cancel:
