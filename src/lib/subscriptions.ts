@@ -15,6 +15,9 @@ export interface PaywallProduct {
     trialLabel?: string;
     trialEligible: boolean;
     priceValue: number;
+    introPrice?: string;
+    introPriceValue?: number;
+    hasIntroPrice?: boolean;
     winBackOffer?: PurchasesWinBackOffer;
     winBackPrice?: string;
     winBackDiscountPercent?: number;
@@ -135,6 +138,8 @@ async function loadProducts(packages: PurchasesPackage[]) {
         const winBackDiscountPercent = winBackOffer && item.product.price > 0
             ? Math.round((1 - (winBackOffer.price / item.product.price)) * 100)
             : undefined;
+        const introPriceObj = item.product.introPrice;
+        const hasIntroPrice = Boolean(introPriceObj && introPriceObj.price > 0);
         return {
             id: item.product.identifier,
             kind: isAnnual ? 'annual' : 'monthly',
@@ -144,6 +149,9 @@ async function loadProducts(packages: PurchasesPackage[]) {
             monthlyEquivalent: isAnnual ? item.product.pricePerMonthString : undefined,
             trialLabel: trialEligible ? formatTrial(item.product.introPrice) || '7 días gratis' : undefined,
             trialEligible,
+            introPrice: introPriceObj?.priceString,
+            introPriceValue: introPriceObj?.price,
+            hasIntroPrice,
             winBackOffer,
             winBackPrice: winBackOffer?.priceString,
             winBackDiscountPercent,
@@ -173,6 +181,8 @@ async function loadDirectProducts(products: PurchasesStoreProduct[]) {
         const trialEligible = Capacitor.getPlatform() === 'android'
             ? Boolean(item.defaultOption?.freePhase)
             : introStatus === INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_ELIGIBLE;
+        const introPriceObj = item.introPrice;
+        const hasIntroPrice = Boolean(introPriceObj && introPriceObj.price > 0);
         return {
             id: item.identifier,
             kind: isAnnual ? 'annual' : 'monthly',
@@ -182,6 +192,9 @@ async function loadDirectProducts(products: PurchasesStoreProduct[]) {
             monthlyEquivalent: isAnnual ? item.pricePerMonthString : undefined,
             trialLabel: trialEligible ? formatTrial(item.introPrice) || '7 días gratis' : undefined,
             trialEligible,
+            introPrice: introPriceObj?.priceString,
+            introPriceValue: introPriceObj?.price,
+            hasIntroPrice,
             storeProduct: item,
         };
     }).sort((a, b) => a.kind === 'annual' ? -1 : b.kind === 'annual' ? 1 : 0);
